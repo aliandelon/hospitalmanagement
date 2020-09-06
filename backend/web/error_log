@@ -1,0 +1,7 @@
+[16-Jan-2017 03:58:12 America/Chicago] PHP Parse error:  syntax error, unexpected ''mbbs_year'' (T_CONSTANT_ENCAPSED_STRING), expecting ']' in /home/mastermbbs/public_html/backend/views/student/view.php on line 41
+[16-Jan-2017 03:58:45 America/Chicago] PHP Parse error:  syntax error, unexpected ''mbbs_year'' (T_CONSTANT_ENCAPSED_STRING), expecting ']' in /home/mastermbbs/public_html/backend/views/student/view.php on line 41
+[22-Mar-2017 05:18:42 America/Chicago] PHP Parse error:  syntax error, unexpected ']' in /home/mastermbbs/public_html/backend/models/StudentLogSearch.php on line 52
+[22-Mar-2017 05:33:28 America/Chicago] PHP Parse error:  syntax error, unexpected ''' (T_CONSTANT_ENCAPSED_STRING), expecting ']' in /home/mastermbbs/public_html/backend/views/student-log/index.php on line 46
+[22-Mar-2017 05:46:35 America/Chicago] PHP Parse error:  syntax error, unexpected '}' in /home/mastermbbs/public_html/backend/views/student-log/index.php on line 45
+[22-Mar-2017 05:47:48 America/Chicago] PHP Parse error:  syntax error, unexpected '}' in /home/mastermbbs/public_html/backend/views/student-log/index.php on line 45
+[22-Mar-2017 05:50:39 America/Chicago] PHP Parse error:  syntax error, unexpected '$model' (T_VARIABLE) in /home/mastermbbs/public_html/backend/views/student-log/index.php on line 44
