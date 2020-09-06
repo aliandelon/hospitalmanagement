@@ -1,0 +1,18 @@
+<?php
+$this->title = 'Choose Plan';
+$this->params['breadcrumbs'][] = ['label' => 'Student Plans', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+
+<section class="login">
+    <div class="container">
+        <div class="row">
+            <?=
+            $this->render('_form', [
+                'model' => $model, 'planDetails' => $planDetails, 'studentdetails' => $studentdetails
+            ]);
+            ?>
+        </div>
+    </div>
+</section>
+
