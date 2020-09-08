@@ -272,8 +272,9 @@ DashboardAsset::register($this);
                 </div>
             </div>
         <!-- </div> -->
-
+            <div class="testjoyal" style="max-width: 850px;margin-left: 250px;">
             <?= $content ?>
+            </div>
             <div class="footer-copyright-area">
             <div class="container-fluid">
                 <div class="row">
