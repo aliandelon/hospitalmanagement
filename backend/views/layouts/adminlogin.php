@@ -17,11 +17,18 @@ LoginAsset::register($this);
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
     </head>
-    <body class="hold-transition login-page">
+    <body>
         <?php $this->beginBody() ?>
-
-        <?= $content ?>
-
+        <div class="limiter">
+                <div class="container-login100">
+                    <div class="wrap-login100">
+                        <div class="login100-pic js-tilt" data-tilt>
+                            <img src='<?= Yii::$app->request->baseUrl; ?>/login/images/img-01.png' alt="IMG">
+                        </div>
+                         <?= $content ?>
+                    </div>
+                </div>
+        </div>
         <?php $this->endBody() ?>
     </body>
 </html>

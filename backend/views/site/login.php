@@ -10,55 +10,70 @@ use yii\helpers\Url;
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="login-box">
-    <div class="login-logo">
-        <img src="<?= Url::base().'/dist/img/logo.png' ?>">
-    </div>
-    <!-- /.login-logo -->
-    <div class="login-box-body">
-        <p class="login-box-msg">mastermbbs Admin Panel</p>
 
-        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+          <?php $form = ActiveForm::begin(
+                [
+                    
+                    'options' => [
+                        'class' => 'login100-form validate-form'
+                     ]
+                ]
+            ); ?>
+      
 
-        <div class="form-group has-feedback">
+        
+        
+                    <form class="login100-form validate-form">
+                    <span class="login100-form-title">
+                        Admin Login
+                    </span>
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'class' => 'form-control'])->label(false); ?>
-            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-        </div>
-        <div class="form-group has-feedback">
+                    <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+                        <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'class' => 'input100','placeholder' => 'Email'])->label(false); ?>
+                        <!-- <input class="input100" type="text" name="email" placeholder="Email"> -->
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                        </span>
+                    </div>
 
-            <?= $form->field($model, 'password')->passwordInput(['class' => 'form-control', 'placeholder' => 'password'])->label(false); ?>
-            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-        </div>
-        <div class="row">
-            <div class="col-xs-8">
-                <div class="checkbox icheck">
-                    <label>
-                        <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                    <div class="wrap-input100 validate-input" data-validate = "Password is required">
+                        <?= $form->field($model, 'password')->passwordInput(['class' => 'input100', 'placeholder' => 'password'])->label(false); ?>
+                        <!-- <input class="input100" type="password" name="pass" placeholder="Password"> -->
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="fa fa-lock" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    
+                    <div class="container-login100-form-btn">
+                          <?= Html::submitButton('Login', ['class' => 'login100-form-btn', 'name' => 'login-button']) ?>
 
-                    </label>
-                </div>
-            </div>
-            <!-- /.col -->
-            <div class="col-xs-4">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
+                        <!-- <button class="login100-form-btn">
+                            Login
+                        </button> -->
+                    </div>
 
-            </div>
-            <!-- /.col -->
-        </div>
+                    <div class="text-center p-t-12">
+                        <span class="txt1">
+                            <!-- Forgot -->
+                        </span>
+                        <a class="txt2" href="#">
+                            <!-- Username / Password? -->
+                        </a>
+                    </div>
+
+                    <div class="text-center p-t-136">
+                        <a class="txt2" href="#">
+                           <!--  Create your Account -->
+                            <!-- <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i> -->
+                        </a>
+                    </div>
+                
         <?php ActiveForm::end(); ?>
 
 
-        <!-- /.social-auth-links -->
-
-        <a href="#">I forgot my password</a><br>
-       
-
-    </div>
-    <!-- /.login-box-body -->
-</div>
-<!-- /.login-box -->
-
+        
 
 
 
