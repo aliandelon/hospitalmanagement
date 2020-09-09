@@ -44,15 +44,31 @@ DashboardAsset::register($this);
                 <nav class="sidebar-nav left-sidebar-menu-pro">
                     <ul class="metismenu" id="menu1">
                         <li id="removable">
-                            <a class="has-arrow" href="#" aria-expanded="false"><span class="educate-icon educate-pages icon-wrap"></span> <span class="mini-click-non">Pages</span></a>
-                            <ul class="submenu-angle page-mini-nb-dp" aria-expanded="false">
+                            <a class="has-arrow" href="#" aria-expanded="false"><span class="educate-icon educate-pages icon-wrap"></span> <span class="mini-click-non">Masters</span></a>
+                            <!-- <ul class="submenu-angle page-mini-nb-dp" aria-expanded="false">
                                 <li><a title="Login" href="login.html"><span class="mini-sub-pro">Login</span></a></li>
                                 <li><a title="Register" href="register.html"><span class="mini-sub-pro">Register</span></a></li>
-                                <li><a title="Lock" href="lock.html"><span class="mini-sub-pro">Lock</span></a></li>
-                                <li><a title="Password Recovery" href="password-recovery.html"><span class="mini-sub-pro">Password Recovery</span></a></li>
-                                <li><a title="404 Page" href="404.html"><span class="mini-sub-pro">404 Page</span></a></li>
-                                <li><a title="500 Page" href="500.html"><span class="mini-sub-pro">500 Page</span></a></li>
-                            </ul>
+                                
+                            </ul> -->
+                            <?=\yii\widgets\Menu::widget([
+                                'options' => ['class' => 'sidebar-menu treeview'],
+                                'items' => [
+
+                                    ['label' => 'Admin Details', 'url' => ['/admin-details/index']],
+                                    ['label' => 'Investigation ', 'url' => ['/investigations/index']],
+                                    // ['label' => 'Submenu',  
+                                    //     'url' => ['#'],
+                                    //     'template' => '<a href="{url}" >{label}<i class="fa fa-angle-left pull-right"></i></a>',
+                                    //     'items' => [
+                                    //         ['label' => 'Action', 'url' => '#'],
+                                    //         ['label' => 'Another action', 'url' => '#'],
+                                    //         ['label' => 'Something else here', 'url' => '#'],
+                                    //     ],
+                                    // ],
+                                ],
+                                'submenuTemplate' => "\n<ul class='treeview-menu'>\n{items}\n</ul>\n",
+                                'encodeLabels' => false, //allows you to use html in labels
+                                'activateParents' => true,   ]);  ?>
                         </li>
                     </ul>
                 </nav>
