@@ -35,7 +35,6 @@
 	$('#sidebarCollapse').on('click', function () {
 		 $('#sidebar').toggleClass('active');
 		 if($('#sidebar').hasClass('active')){
-		 	alert($('#sidebar').hasClass('active'));
 		 	$(".static-table-area").addClass("ml80");
 		 	$(".submenu-angle").addClass("adjustSide");
 		 }else{
