@@ -10,9 +10,7 @@ $this->title = 'mastermbbs';
             
   </div> -->
 <!-- Static Table Start -->
-        <div class="static-table-area">
-            <div class="container-fluid">
-                <div class="row">
+        
                     <div class="analytics-sparkle-area">
                         <div class="container-fluid">
                             <div class="row">
@@ -210,87 +208,45 @@ $this->title = 'mastermbbs';
                                             <h2>Top Rated Hospitals</h2>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification1/1.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification1/1.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Lisie Hospital</h3>
                                                 <p>Ernakulam</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification1/1.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification1/1.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Lourdes Hospital</h3>
                                                 <p>Kochi</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification1/1.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification1/1.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Jubilee Mission Hospital</h3>
                                                 <p>Thrissur</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification1/1.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification1/1.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Sun Medical</h3>
                                                 <p>Thrissur</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification1/1.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification1/1.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>St.Joseph's Hospital</h3>
                                                 <p>Karunagapilly</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification1/1.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification1/1.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Sunrise Hospital</h3>
                                                 <p>Kakkanad</p>
-                                            </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -301,87 +257,45 @@ $this->title = 'mastermbbs';
                                             <h2>Top Investigations</h2>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification2/1.jpeg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification2/1.jpeg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Kidney function test</h3>
                                                 <p>5700 in this month</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification2/1.jpeg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification2/1.jpeg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Liver function test</h3>
                                                 <p>580 in this month</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification2/1.jpeg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification2/1.jpeg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Malabsorption test</h3>
                                                 <p>150 in this month</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification2/1.jpeg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification2/1.jpeg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Thyroid function test</h3>
                                                 <p>2500 in this month</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification2/1.jpeg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification2/1.jpeg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Toxicology test</h3>
                                                 <p>50 in this month</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification2/1.jpeg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification2/1.jpeg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Pregnancy test</h3>
                                                 <p>250 in this month</p>
-                                            </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -392,87 +306,45 @@ $this->title = 'mastermbbs';
                                             <h2>Top Rated Doctors</h2>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification/1.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification/1.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Sarah Graves</h3>
                                                 <p>Cardiologist</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification/2.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification/2.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Garbease sha</h3>
                                                 <p>Neurologist</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification/3.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification/3.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Gobetro pro</h3>
                                                 <p>Neurologist</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification/4.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification/4.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Siam Graves</h3>
                                                 <p>Cardiologist</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification/5.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification/5.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Sarah Graves</h3>
                                                 <p>Cardiologist</p>
                                             </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
-                                            </div>
                                         </div>
                                         <div class="single-review-st-text">
-                                            <img src="img/notification/6.jpg" alt="">
+                                            <img src="<?= Yii::$app->request->baseUrl?>/img/notification/6.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Julsha Grav</h3>
                                                 <p>Pediatrician</p>
-                                            </div>
-                                            <div class="review-item-rating">
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star"></i>
-                                                <i class="educate-icon educate-star-half"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -480,6 +352,4 @@ $this->title = 'mastermbbs';
                             </div>
                         </div>
                     </div>
-                  </div>
-                </div>
-              </div>
+                  
