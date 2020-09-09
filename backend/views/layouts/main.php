@@ -56,6 +56,7 @@ DashboardAsset::register($this);
 
                                     ['label' => 'Admin Details', 'url' => ['/admin-details/index']],
                                     ['label' => 'Investigation ', 'url' => ['/investigations/index']],
+                                    ['label' => 'Category ', 'url' => ['/category/index']],
                                     // ['label' => 'Submenu',  
                                     //     'url' => ['#'],
                                     //     'template' => '<a href="{url}" >{label}<i class="fa fa-angle-left pull-right"></i></a>',
