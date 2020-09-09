@@ -271,10 +271,15 @@ DashboardAsset::register($this);
                         </div>
                     </div>
                 </div>
-            </div></div>
-        <!-- </div> -->
-
-            <?= $content ?>
+            </div>
+        </div>
+        <div class="static-table-area">
+            <div class="container-fluid">
+                <div class="row">
+                        <?= $content ?>
+                    </div>
+                </div>
+              </div>
             <div class="footer-copyright-area">
                 <div class="container-fluid">
                     <div class="row">
