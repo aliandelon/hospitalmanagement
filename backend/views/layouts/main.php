@@ -276,10 +276,12 @@ DashboardAsset::register($this);
         <div class="static-table-area">
             <div class="container-fluid">
                 <div class="row">
+                    <div class="content-div">
                         <?= $content ?>
                     </div>
+                    </div>
                 </div>
-              </div>
+            </div>
             <div class="footer-copyright-area">
                 <div class="container-fluid">
                     <div class="row">
