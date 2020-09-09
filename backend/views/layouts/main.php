@@ -28,6 +28,7 @@ DashboardAsset::register($this);
 
                 </script>
                 <?php $this->head() ?>
+                <script src="/hospitalmanagement/admin/js/vendor/modernizr-2.8.3.min.js"></script>
 
 
         </head>
@@ -44,32 +45,15 @@ DashboardAsset::register($this);
                 <nav class="sidebar-nav left-sidebar-menu-pro">
                     <ul class="metismenu" id="menu1">
                         <li id="removable">
-                            <a class="has-arrow" href="#" aria-expanded="false"><span class="educate-icon educate-pages icon-wrap"></span> <span class="mini-click-non">Masters</span></a>
-                            <!-- <ul class="submenu-angle page-mini-nb-dp" aria-expanded="false">
+                            <a class="has-arrow" href="#" aria-expanded="false"><span class="   glyphicon glyphicon-file icon-wrap"></span> <span class="mini-click-non">Pages</span></a>
+                            <ul class="submenu-angle page-mini-nb-dp" aria-expanded="false">
                                 <li><a title="Login" href="login.html"><span class="mini-sub-pro">Login</span></a></li>
                                 <li><a title="Register" href="register.html"><span class="mini-sub-pro">Register</span></a></li>
-                                
-                            </ul> -->
-                            <?=\yii\widgets\Menu::widget([
-                                'options' => ['class' => 'sidebar-menu treeview'],
-                                'items' => [
-
-                                    ['label' => 'Admin Details', 'url' => ['/admin-details/index']],
-                                    ['label' => 'Investigation ', 'url' => ['/investigations/index']],
-                                    ['label' => 'Category ', 'url' => ['/category/index']],
-                                    // ['label' => 'Submenu',  
-                                    //     'url' => ['#'],
-                                    //     'template' => '<a href="{url}" >{label}<i class="fa fa-angle-left pull-right"></i></a>',
-                                    //     'items' => [
-                                    //         ['label' => 'Action', 'url' => '#'],
-                                    //         ['label' => 'Another action', 'url' => '#'],
-                                    //         ['label' => 'Something else here', 'url' => '#'],
-                                    //     ],
-                                    // ],
-                                ],
-                                'submenuTemplate' => "\n<ul class='treeview-menu'>\n{items}\n</ul>\n",
-                                'encodeLabels' => false, //allows you to use html in labels
-                                'activateParents' => true,   ]);  ?>
+                                <li><a title="Lock" href="lock.html"><span class="mini-sub-pro">Lock</span></a></li>
+                                <li><a title="Password Recovery" href="password-recovery.html"><span class="mini-sub-pro">Password Recovery</span></a></li>
+                                <li><a title="404 Page" href="404.html"><span class="mini-sub-pro">404 Page</span></a></li>
+                                <li><a title="500 Page" href="500.html"><span class="mini-sub-pro">500 Page</span></a></li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
@@ -89,7 +73,7 @@ DashboardAsset::register($this);
                                     <div class="col-lg-1 col-md-0 col-sm-1 col-xs-12">
                                         <div class="menu-switcher-pro">
                                             <button type="button" id="sidebarCollapse" class="btn bar-button-pro header-drl-controller-btn btn-info navbar-btn">
-                                                    <i class="educate-icon educate-nav"></i>
+                                                    <i class="glyphicon glyphicon-th-list"></i>
                                                 </button>
                                         </div>
                                     </div>
@@ -287,23 +271,22 @@ DashboardAsset::register($this);
                         </div>
                     </div>
                 </div>
-            </div>
+            </div></div>
         <!-- </div> -->
-            <div class="testjoyal" style="max-width: 850px;margin-left: 250px;">
+
             <?= $content ?>
-            </div>
             <div class="footer-copyright-area">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="footer-copy-right">
-                            <p>Copyright © 2018. All rights reserved. Template by <a href="https://colorlib.com/wp/templates/">Colorlib</a></p>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="footer-copy-right">
+                                <p>Copyright © <?=date("Y")?>. All rights reserved. Template by <a href="https://colorlib.com/wp/templates/">Colorlib</a></p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
                         <?php $this->endBody() ?>
         </body>
