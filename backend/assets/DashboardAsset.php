@@ -32,9 +32,9 @@ class DashboardAsset extends AssetBundle {
             'css/calendar/fullcalendar.print.min.css',
             'css/style.css',
             'css/responsive.css',
+            'css/developer.css'
         ];
         public $js = [
-            'js/vendor/modernizr-2.8.3.min.js',
             'js/vendor/jquery-1.12.4.min.js',
             'js/bootstrap.min.js',
             'js/wow.min.js',
@@ -52,7 +52,7 @@ class DashboardAsset extends AssetBundle {
             'js/metisMenu/metisMenu-active.js',
             'js/morrisjs/raphael-min.js',
             'js/morrisjs/morris.js',
-            'js/morrisjs/home3-active.js',
+            'js/morrisjs/morris-active.js',
             'js/sparkline/jquery.sparkline.min.js',
             'js/sparkline/jquery.charts-sparkline.js',
             'js/sparkline/sparkline-active.js',
