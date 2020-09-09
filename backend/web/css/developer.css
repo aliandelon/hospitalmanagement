@@ -1,0 +1,12 @@
+.static-table-area{
+	margin-left: 200px;
+	margin-bottom: 20px;
+}
+.ml80{
+	margin-left: 80px !important;
+}
+
+.adjustSide{
+	position: unset !important;
+	margin-left:80px !important;
+}
