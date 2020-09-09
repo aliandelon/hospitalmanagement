@@ -34,6 +34,14 @@
 	
 	$('#sidebarCollapse').on('click', function () {
 		 $('#sidebar').toggleClass('active');
+		 if($('#sidebar').hasClass('active')){
+		 	alert($('#sidebar').hasClass('active'));
+		 	$(".static-table-area").addClass("ml80");
+		 	$(".submenu-angle").addClass("adjustSide");
+		 }else{
+		 	$(".static-table-area").removeClass("ml80");
+		 	$(".submenu-angle").removeClass("adjustSide");
+		 }
 	 });
 	// Collapse ibox function
 	$('#sidebar ul li').on('click', function () {
@@ -48,7 +56,7 @@
 		
 	$('#sidebarCollapse').on('click', function () {
 		$("body").toggleClass("mini-navbar");
-		SmoothlyMenu();
+		// SmoothlyMenu();
 	});
 	$(document).on('click', '.header-right-menu .dropdown-menu', function (e) {
 		  e.stopPropagation();
