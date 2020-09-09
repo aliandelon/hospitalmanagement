@@ -10,3 +10,12 @@
 	position: unset !important;
 	margin-left:80px !important;
 }
+.content-div{
+	margin: 10px;
+    padding: 15px;
+    background-color: #fff;
+}
+.footer-copyright-area{
+   margin-top: 10%;
+   bottom:0;
+}
