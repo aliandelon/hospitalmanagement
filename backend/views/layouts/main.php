@@ -54,16 +54,16 @@ DashboardAsset::register($this);
                             <?=\yii\widgets\Menu::widget([
                                 'options' => ['class' => 'sidebar-menu treeview'],
                                 'items' => [
-                                    ['label' => 'Masters', 
+                                    ['label' => '<span class="glyphicon glyphicon-th"></span>&nbsp;<span class="menulist">Masters<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
-                                        'template' => '<a href="{url}" >{label}<i class="fa fa-angle-left pull-right"></i></a>',
+                                        'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => 'Admin Details', 'url' => ['/admin-details/index']],
-                                    ['label' => 'Investigation ', 'url' => ['/investigations/index']],
-                                    ['label' => 'Category ', 'url' => ['/category/index']],
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">Admin Details</span>', 'url' => ['/admin-details/index']],
+                                    ['label' => '<span class="glyphicon glyphicon-search"></span>&nbsp;<span class="menulist">Investigation</span> ', 'url' => ['/investigations/index']],
+                                    ['label' => '<span class="glyphicon glyphicon-list-alt"></span>&nbsp;<span class="menulist">Category</span> ', 'url' => ['/category/index']],
                                 ],],
-                                ['label' => 'New Request', 
+                                ['label' => '<span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="menulist">New Request</span>', 
                                     'url' => ['hospital-clinic-details/index'],
                                     ]
                                     // ['label' => 'Submenu',  
