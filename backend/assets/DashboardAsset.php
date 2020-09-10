@@ -35,7 +35,7 @@ class DashboardAsset extends AssetBundle {
             'css/developer.css'
         ];
         public $js = [
-            'js/vendor/jquery-1.12.4.min.js',
+            // 'js/vendor/jquery-1.12.4.min.js',
             'js/bootstrap.min.js',
             'js/wow.min.js',
             'js/jquery-price-slider.js',
