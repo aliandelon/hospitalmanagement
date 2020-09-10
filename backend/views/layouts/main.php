@@ -44,45 +44,80 @@ DashboardAsset::register($this);
             <div class="left-custom-menu-adp-wrap comment-scrollbar">
                 <nav class="sidebar-nav left-sidebar-menu-pro">
                     <ul class="metismenu" id="menu1">
-                       <!--  <li id="removable">
-                            <a class="has-arrow" href="#" aria-expanded="false"><span class="educate-icon educate-pages icon-wrap"></span> <span class="mini-click-non">Masters</span></a> -->
-                            <!-- <ul class="submenu-angle page-mini-nb-dp" aria-expanded="false">
-                                <li><a title="Login" href="login.html"><span class="mini-sub-pro">Login</span></a></li>
-                                <li><a title="Register" href="register.html"><span class="mini-sub-pro">Register</span></a></li>
-                                
-                            </ul> -->
+                       
                             <?=\yii\widgets\Menu::widget([
                                 'options' => ['class' => 'sidebar-menu treeview'],
                                 'items' => [
-                                    ['label' => '<span class="glyphicon glyphicon-th"></span>&nbsp;<span class="menulist">Masters<i class="fa fa-angle-left pull-right"></i></span>', 
+
+                                    // roles start here
+                                    ['label' => '<span class="educate-icon educate-apps icon-wrap"></span>&nbsp;<span class="menulist">Roles<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">Admin Details</span>', 'url' => ['/admin-details/index']],
-                                    ['label' => '<span class="glyphicon glyphicon-search"></span>&nbsp;<span class="menulist">Investigation</span> ', 'url' => ['/investigations/index']],
-                                    ['label' => '<span class="glyphicon glyphicon-list-alt"></span>&nbsp;<span class="menulist">Category</span> ', 'url' => ['/category/index']],
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Roles</span>', 'url' => ['/admin-details/create']],
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
                                 ],],
+
+                                // roles end here
+                                 // user roles start here
+                                    ['label' => '<span class="educate-icon educate-apps icon-wrap"></span>&nbsp;<span class="menulist">Assign Roles<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    'url' => ['#'],
+                                        'template' => '<a href="{url}" >{label}</a>',
+                                        'items' => [ 
+
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Assigned Roles</span>', 'url' => ['/user-roles-mapping/index']],
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">Assign New Roles</span>', 'url' => ['/user-roles-mapping/create']],
+                                ],],
+                                // user roles end
+                                    ['label' => '<span class="glyphicon glyphicon-th"></span>&nbsp;<span class="menulist">Admin<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    'url' => ['#'],
+                                        'template' => '<a href="{url}" >{label}</a>',
+                                        'items' => [ 
+
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
+                                ],],
+
+                                ['label' => '<span class="glyphicon glyphicon-list-alt"></span>&nbsp;<span class="menulist">Category<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    'url' => ['#'],
+                                        'template' => '<a href="{url}" >{label}</a>',
+                                        'items' => [ 
+
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">Create Category</span>', 'url' => ['/category/create']],
+                                    
+                                    ['label' => '<span class="glyphicon glyphicon-search"></span>&nbsp;<span class="menulist">List Category</span> ', 'url' => ['/category/index']],
+                                    
+                                ],],    
+
+
+
+
+
+                            ['label' => '<span class="glyphicon glyphicon-search"></span></span>&nbsp;<span class="menulist">Investigation<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    'url' => ['#'],
+                                        'template' => '<a href="{url}" >{label}</a>',
+                                        'items' => [ 
+
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">Create Investigations</span>', 'url' => ['/investigations/create']],
+                                    
+                                    ['label' => '<span class="glyphicon glyphicon-search"></span>&nbsp;<span class="menulist">List Investigation</span> ', 'url' => ['/investigations/index']],
+                                    
+                                ],],    
+
+                                
+
+
+
                                 ['label' => '<span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="menulist">New Request</span>', 
                                     'url' => ['hospital-clinic-details/index'],
                                     ]
-                                    // ['label' => 'Submenu',  
-                                    //     'url' => ['#'],
-                                    //     'template' => '<a href="{url}" >{label}<i class="fa fa-angle-left pull-right"></i></a>',
-                                    //     'items' => [
-                                    //         ['label' => 'Action', 'url' => '#'],
-                                    //         ['label' => 'Another action', 'url' => '#'],
-                                    //         ['label' => 'Something else here', 'url' => '#'],
-                                    //     ],
-                                    // ],
+                                    
                                 ],
                                 'submenuTemplate' => "\n<ul class='treeview-menu'>\n{items}\n</ul>\n",
                                 'encodeLabels' => false, //allows you to use html in labels
                                 'activateParents' => true,   ]);  ?>
-                       <!--  </li>
-                        <li id="removable">
-                            <a class="has-arrow" href="#" aria-expanded="false"><span class="educate-icon educate-pages icon-wrap"></span>New Request</a>
-                        </li> -->
+                        
                     </ul>
                 </nav>
             </div>
