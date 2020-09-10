@@ -37,9 +37,11 @@
 		 if($('#sidebar').hasClass('active')){
 		 	$(".static-table-area").addClass("ml80");
 		 	$(".submenu-angle").addClass("adjustSide");
+		 	$(".menulist").hide();
 		 }else{
 		 	$(".static-table-area").removeClass("ml80");
 		 	$(".submenu-angle").removeClass("adjustSide");
+		 	$(".menulist").show();
 		 }
 	 });
 	// Collapse ibox function
