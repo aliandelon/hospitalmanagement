@@ -55,8 +55,8 @@ DashboardAsset::register($this);
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '&nbsp;<span class="menulist">List Roles</span>', 'url' => ['/roles-mst/index']],
-                                    ['label' => '&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/roles-mst/create']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Roles"></span>&nbsp;<span class="menulist">List Roles</span>', 'url' => ['/roles-mst/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/roles-mst/create']],
                                     ],],
 
                                 // roles end here
@@ -66,8 +66,8 @@ DashboardAsset::register($this);
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '&nbsp;<span class="menulist">List Assigned Roles</span>', 'url' => ['/user-roles-mapping/index']],
-                                    ['label' => '&nbsp;<span class="menulist">Assign New Roles</span>', 'url' => ['/user-roles-mapping/create']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Assigned Roles"></span>&nbsp;<span class="menulist">List Assigned Roles</span>', 'url' => ['/user-roles-mapping/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="Assign New Roles"></span>&nbsp;<span class="menulist">Assign New Roles</span>', 'url' => ['/user-roles-mapping/create']],
                                 ],],
                                 // user roles end
                                     ['label' => '<span class="fa fa-child icon-wrap"></span>&nbsp;<span class="menulist">Admin<i class="fa fa-angle-left pull-right"></i></span>', 
@@ -75,8 +75,8 @@ DashboardAsset::register($this);
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
-                                    ['label' => '&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Admin Details"></span>&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
                                 ],],
 
                                 ['label' => '<span class="fa fa-bars icon-wrap"></span>&nbsp;<span class="menulist">Category<i class="fa fa-angle-left pull-right"></i></span>', 
@@ -84,9 +84,9 @@ DashboardAsset::register($this);
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '&nbsp;<span class="menulist">Create Category</span>', 'url' => ['/category/create']],
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Category"></span>&nbsp;<span class="menulist">Create Category</span>', 'url' => ['/category/create']],
                                     
-                                    ['label' => '&nbsp;<span class="menulist">List Category</span> ', 'url' => ['/category/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Category"></span>&nbsp;<span class="menulist">List Category</span> ', 'url' => ['/category/index']],
                                     
                                 ],],    
 
@@ -99,9 +99,9 @@ DashboardAsset::register($this);
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '&nbsp;<span class="menulist">Create Investigations</span>', 'url' => ['/investigations/create']],
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Investigations"></span>&nbsp;<span class="menulist">Create Investigations</span>', 'url' => ['/investigations/create']],
                                     
-                                    ['label' => '&nbsp;<span class="menulist">List Investigation</span> ', 'url' => ['/investigations/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Investigations"></span>&nbsp;<span class="menulist">List Investigations</span> ', 'url' => ['/investigations/index']],
                                     
                                 ],],    
 
@@ -111,8 +111,8 @@ DashboardAsset::register($this);
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Banners</span>', 'url' => ['/banners/create']],
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/banners/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Banners"></span>&nbsp;<span class="menulist">List Banners</span>', 'url' => ['/banners/create']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/banners/index']],
                                     ],],
 
 
