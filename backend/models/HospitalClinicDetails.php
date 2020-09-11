@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models;
+namespace app\models;
 
 use Yii;
 
@@ -24,44 +24,14 @@ use Yii;
  * @property string $area
  * @property string $latitude
  * @property string $longitude
+ * @property integer $status
  * @property integer $package_id
  * @property integer $created_by
- * @property integer $status
- * @property string $lab_name
- * @property string $lab_phone_number
- * @property string $lab_email
- * @property string $lab_address
- * @property integer $lab_pincode
- * @property string $lab_street1
- * @property string $lab_street2
- * @property string $lab_city
- * @property string $lab_area
- * @property string $lab_latitude
- * @property string $lab_longitude
+ * @property integer $commision_type
+ * @property integer $commision
  */
 class HospitalClinicDetails extends \yii\db\ActiveRecord
 {
-    public $lab_name;
-
-    public $lab_phone_number;
-
-    public $lab_email;
-
-    public $lab_address;
-
-    public $lab_pincode;
-
-    public $lab_street1;
-
-    public $lab_street2;
-
-    public $lab_city;
-
-    public $lab_area;
-
-    public $lab_latitude;
-
-    public $lab_longitude;
     /**
      * @inheritdoc
      */
@@ -76,18 +46,12 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'name', 'type', 'phone_number', 'email', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'address', 'pincode', 'street1', 'street2', 'city', 'area', 'latitude', 'longitude', 'package_id', 'created_by', 'status'], 'required'],
-            [['user_id', 'type', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'pincode', 'package_id', 'created_by', 'status'], 'integer'],
+            [['user_id', 'name', 'type', 'phone_number', 'email', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'address', 'pincode', 'street1', 'street2', 'city', 'area', 'latitude', 'status', 'package_id', 'created_by'], 'required'],
+            [['user_id', 'type', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'pincode', 'status', 'package_id', 'created_by', 'commision_type', 'commision'], 'integer'],
             [['address'], 'string'],
             [['name', 'city', 'area'], 'string', 'max' => 150],
             [['phone_number'], 'string', 'max' => 20],
             [['email', 'street1', 'street2', 'latitude', 'longitude'], 'string', 'max' => 250],
-            ['email', 'unique'],
-            ['email', 'email'],
-            [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'safe'],
-            [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'required', 'when' => function($model) {
-                return ($model->have_diagnostic_center == '1' && $model->same_as_hospital_details_flag == 0);
-            }],
         ];
     }
 
@@ -114,9 +78,11 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
             'area' => 'Area',
             'latitude' => 'Latitude',
             'longitude' => 'Longitude',
+            'status' => 'Status',
             'package_id' => 'Package ID',
             'created_by' => 'Created By',
-            'status' => 'Status',
+            'commision_type' => 'Commision Type',
+            'commision' => 'Commision',
         ];
     }
 }
