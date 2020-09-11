@@ -3,8 +3,9 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\UserRolesMapping;
+use common\models\RolesMst;
 use common\models\UserRolesMappingSearch;
+use common\models\UserRolesMapping;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -64,12 +65,12 @@ class UserRolesMappingController extends Controller
     public function actionCreate()
     {
         $model = new UserRolesMapping();
-
+        $tasks=RolesMst::find()->select('task')->distinct()->where(['status'=>1])->orderBy(['task' => SORT_ASC])->All();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
-                'model' => $model,
+                'model' => $model,'tasks'=>$tasks
             ]);
         }
     }

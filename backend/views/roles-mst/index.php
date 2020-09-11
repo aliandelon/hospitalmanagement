@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter'=>['1'=>'Active','0'=>'In Active'],
                 'filterInputOptions' => ['class' => 'form-control', 'id' => 'leave_status'],
                 'value'=>function($model){
-                    if($model->task=="1"){
+                    if($model->status=="1"){
                      return Html::a('<span class="label label-success">Active</span>');
                      }else{
                     return Html::a("<span class='label label-warning'>In Active</span>");
