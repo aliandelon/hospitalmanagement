@@ -63,9 +63,7 @@ class SiteController extends Controller {
          */
         public function actionIndex() {
         	$params = [];
-        	
-
-                return $this->render('index',['params'=>$params]);
+        	return $this->render('index',['params'=>$params]);
         }
 
         /**
@@ -81,7 +79,7 @@ class SiteController extends Controller {
 
                 $model = new LoginForm();
                 if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                        return $this->goBack();
+                    return $this->goBack();
                 } else {
                         return $this->render('login', [
                                     'model' => $model,

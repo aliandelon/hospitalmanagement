@@ -31,10 +31,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
            // 'id',
            // 'admin_id',
+           
             'name',
             'email:email',
             'phone_number',
             'address:ntext',
+             [
+
+                'attribute'=>'profile_image',
+
+                'value'=>Yii::$app->request->baseUrl .'/../uploads/admin-details/'.$model->id.'/'.$model->id.'.'.$model->profile_image,
+
+                'format' => ['image',['width'=>'100','height'=>'100']],
+
+            ],
             'role_id',
             [                                                  // the owner name of the model
                 'label' => 'Status',

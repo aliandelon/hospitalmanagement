@@ -9,6 +9,7 @@ use common\models\AdminDetailsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * AdminDetailsController implements the CRUD actions for AdminDetails model.
@@ -72,10 +73,18 @@ class AdminDetailsController extends Controller
             $model2->auth_key = '123';
             $model2->password = Yii::$app->getSecurity()->hashData($model->password, $model2->auth_key);
             $model2->type = 2;
+            $file = UploadedFile::getInstance($model, 'profile_image');
+            // echo $file->extension;exit;
+            if ($file) {
+                   $model->profile_image = $file->extension;     
+                }
             if($model2->save()){
                 $model->admin_id = $model2->id;
                 if($model->save())
                 {
+                    if ($file) {
+                        $model->upload($file, $model->id, $model->id);
+                    }
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
@@ -99,12 +108,19 @@ class AdminDetailsController extends Controller
         $model2 = Login::findOne($model->admin_id);
         $encryptedPassword = $model2->password;
         $model->password = Yii::$app->getSecurity()->validateData($encryptedPassword, $model2->auth_key);
+        $images = $model->profile_image;
         if ($model->load(Yii::$app->request->post())) {
             $model2->email = $model->email;
             $model2->auth_key = '123';
             $model2->password = Yii::$app->getSecurity()->hashData($model->password, $model2->auth_key);
             $model2->type = 2;
+             $file = UploadedFile::getInstance($model, 'profile_image');
             if($model2->save()){
+            if ($file) {
+                $model->profile_image = $file->extension;
+            } else {
+                $model->profile_image = $images;
+            }
                 if($model->save())
                 {
                     return $this->redirect(['view', 'id' => $model->id]);

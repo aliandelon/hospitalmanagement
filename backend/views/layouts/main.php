@@ -55,9 +55,9 @@ DashboardAsset::register($this);
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Roles</span>', 'url' => ['/admin-details/create']],
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
-                                ],],
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Roles</span>', 'url' => ['/roles-mst/index']],
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/roles-mst/create']],
+                                    ],],
 
                                 // roles end here
                                  // user roles start here
@@ -105,7 +105,15 @@ DashboardAsset::register($this);
                                     
                                 ],],    
 
-                                
+                                // roles start here
+                                    ['label' => '<span class="educate-icon educate-apps icon-wrap"></span>&nbsp;<span class="menulist">Banners<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    'url' => ['#'],
+                                        'template' => '<a href="{url}" >{label}</a>',
+                                        'items' => [ 
+
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Banners</span>', 'url' => ['/banners/create']],
+                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/banners/index']],
+                                    ],],
 
 
 
