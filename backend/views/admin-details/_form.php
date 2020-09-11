@@ -50,7 +50,7 @@ use kartik\file\FileInput;
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
             <?php
-            if ($model->profile_image != '' && $model->id != "") {
+            if ($model->profile_image != '' && $model->id != "" && $model->profile_image != 0) {
 
                 echo '<img width="125" style="border: 2px solid #d2d2d2;margin-right:.5em;" src="' . Yii::$app->request->baseUrl . '/../uploads/admin-details/' . $model->id . '/' . $model->id . '.' . $model->profile_image . '" />'
                 ?>

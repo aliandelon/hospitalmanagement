@@ -19,3 +19,17 @@ $this->params['breadcrumbs'][] = 'Update';
     ]) ?>
 
 </div>
+<?php $this->registerJs("
+     $(document).ready(function() {
+     	$('body').on('click', '.toggle-password', function() {
+		  $(this).toggleClass('fa-eye fa-eye-slash');
+		  var input = $('#admindetails-password');
+		  if (input.attr('type') === 'password') {
+		    input.attr('type', 'text');
+		  } else {
+		    input.attr('type', 'password');
+		  }
+
+		});
+     });
+")?>  
