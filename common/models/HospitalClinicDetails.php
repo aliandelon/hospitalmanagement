@@ -62,6 +62,9 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
     public $lab_latitude;
 
     public $lab_longitude;
+
+    public $password;
+
     /**
      * @inheritdoc
      */
@@ -76,7 +79,7 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'name', 'type', 'phone_number', 'email', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'address', 'pincode', 'street1', 'street2', 'city', 'area', 'latitude', 'longitude', 'package_id', 'created_by', 'status'], 'required'],
+            [['user_id', 'name', 'email', 'status', 'created_by'], 'required'],
             [['user_id', 'type', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'pincode', 'package_id', 'created_by', 'status'], 'integer'],
             [['address'], 'string'],
             [['name', 'city', 'area'], 'string', 'max' => 150],
@@ -87,6 +90,12 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
             [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'safe'],
             [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'required', 'when' => function($model) {
                 return ($model->have_diagnostic_center == '1' && $model->same_as_hospital_details_flag == 0);
+            }],
+            [['name','email', 'password','commision','commision_type'], 'required','on' => 'newrequest'],
+            [['password'],'safe'],
+            [['commision'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
+            ['commision', 'compare', 'compareValue' => 100, 'operator' => '<=','when' => function($model) {
+                return $model->commision_type == '2'; 
             }],
         ];
     }
@@ -118,5 +127,18 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
             'created_by' => 'Created By',
             'status' => 'Status',
         ];
+    }
+
+    public function getStatusName($status)
+    {
+        if($status == 2)
+        {
+            return 'Created';
+        }else if($status == 3)
+        {
+            return 'Verification Pending';
+        }else{
+            return 'Verified';
+        }
     }
 }

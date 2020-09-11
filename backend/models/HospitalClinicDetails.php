@@ -46,7 +46,7 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'name', 'type', 'phone_number', 'email', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'address', 'pincode', 'street1', 'street2', 'city', 'area', 'latitude', 'status', 'package_id', 'created_by'], 'required'],
+            [['user_id', 'name', 'email', 'status', 'created_by'], 'required'],
             [['user_id', 'type', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'pincode', 'status', 'package_id', 'created_by', 'commision_type', 'commision'], 'integer'],
             [['address'], 'string'],
             [['name', 'city', 'area'], 'string', 'max' => 150],

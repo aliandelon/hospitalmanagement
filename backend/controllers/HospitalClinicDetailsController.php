@@ -8,6 +8,7 @@ use common\models\HospitalClinicDetailsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\Login;
 
 /**
  * HospitalClinicDetailsController implements the CRUD actions for HospitalClinicDetails model.
@@ -44,6 +45,17 @@ class HospitalClinicDetailsController extends Controller
         ]);
     }
 
+    public function actionNewRequestIndex()
+    {
+        $searchModel = new HospitalClinicDetailsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('new-request-index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single HospitalClinicDetails model.
      * @param integer $id
@@ -52,6 +64,13 @@ class HospitalClinicDetailsController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    public function actionNewrequestView($id)
+    {
+        return $this->render('newrequest_view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -78,6 +97,35 @@ class HospitalClinicDetailsController extends Controller
         }
     }
 
+    public function actionNewRequest()
+    {
+        $model = new HospitalClinicDetails();
+        $model2 = new Login();
+        $model->scenario = 'newrequest';
+        if ($model->load(Yii::$app->request->post())) {
+            $model2->email = $model->email;
+            $model2->auth_key = '123';
+            $model2->password = Yii::$app->getSecurity()->hashData($model->password, $model2->auth_key);
+            $model2->type = 3;
+            if($model2->save()){
+                $model->user_id = $model2->id;
+                $model->status = 2;
+                $model->created_by = (Yii::$app->user->identity->id == 1)?1:2;
+                if($model->save())
+                {
+                    return $this->redirect(['newrequest-view', 'id' => $model->id]);
+                }else{
+                    print_r($model->getErrors()); exit;
+
+                }
+            }
+        } else {
+            return $this->render('new-request-create', [
+                'model' => $model,
+            ]);
+        }
+    }
+
     /**
      * Updates an existing HospitalClinicDetails model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -92,6 +140,30 @@ class HospitalClinicDetailsController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionNewrequestUpdate($id)
+    {
+        $model = $this->findModel($id);
+        $model->scenario = 'newrequest';
+        $model2 = Login::findOne($model->user_id);
+        $encryptedPassword = $model2->password;
+        $model->password = Yii::$app->getSecurity()->validateData($encryptedPassword, $model2->auth_key);
+        if ($model->load(Yii::$app->request->post())) {
+            $model2->email = $model->email;
+            $model2->auth_key = '123';
+            $model2->password = Yii::$app->getSecurity()->hashData($model->password, $model2->auth_key);
+            if($model2->save()){
+                if($model->save())
+                {
+                    return $this->redirect(['newrequest-view', 'id' => $model->id]);
+                }
+            }
+        } else {
+            return $this->render('newrequest-update', [
                 'model' => $model,
             ]);
         }

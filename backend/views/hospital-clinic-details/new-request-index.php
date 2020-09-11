@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel common\models\HospitalClinicDetailsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Hospital Clinic Details';
+$this->title = 'New Request Details';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="hospital-clinic-details-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Hospital Clinic Details', ['create'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('New Request', ['new-request'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -41,19 +41,50 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'area',
             // 'latitude',
             // 'longitude',
-            // 'status',
+            [                                                  
+                'label' => 'Status',
+                'value' => function($model)
+                {
+                    return $model->getStatusName($model->status);
+                    }        
+            ],
             // 'package_id',
             // 'created_by',
             // 'commision_type',
             // 'commision',
 
-            ['class' => 'yii\grid\ActionColumn',
+            /*['class' => 'yii\grid\ActionColumn',
                     'header' => 'update',
                     'template' => '{update}'],
             ['class' => 'yii\grid\ActionColumn',
                 'header' => 'view',
                 'template' => '{view}',
-            ],
+            ],*/
+
+            [
+          'class' => 'yii\grid\ActionColumn',
+          'header' => 'Actions',
+          'headerOptions' => ['style' => 'color:#337ab7'],
+          'template' => '{view}{update}',
+          'buttons' => [
+            'view' => function ($url, $model) {
+                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['newrequest-view','id'=>$model->id], [
+                            'title' => Yii::t('app', 'lead-view'),
+                ]);
+            },
+
+            'update' => function ($url, $model) {
+                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['newrequest-update','id'=>$model->id], [
+                            'title' => Yii::t('app', 'lead-update'),
+                ]);
+            },
+
+          ],
+      ]
+
+
+
+
         ],
     ]); ?>
 </div>
