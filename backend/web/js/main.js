@@ -35,10 +35,12 @@
 	$('#sidebarCollapse').on('click', function () {
 		 $('#sidebar').toggleClass('active');
 		 if($('#sidebar').hasClass('active')){
+		 	$('.mCSB_container').css('width','auto');
 		 	$(".static-table-area").addClass("ml80");
 		 	$(".submenu-angle").addClass("adjustSide");
 		 	$(".menulist").hide();
 		 }else{
+		 	$('.mCSB_container').css('width','200px');
 		 	$(".static-table-area").removeClass("ml80");
 		 	$(".submenu-angle").removeClass("adjustSide");
 		 	$(".menulist").show();
