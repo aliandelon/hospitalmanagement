@@ -15,6 +15,7 @@ use Yii;
  * @property string $address
  * @property int $role_id
  * @property int $status
+ * @property string profile_image
  */
 class AdminDetails extends \yii\db\ActiveRecord
 {
@@ -34,12 +35,14 @@ class AdminDetails extends \yii\db\ActiveRecord
     {
         return [
             [['admin_id', 'name', 'email', 'phone_number', 'address', 'role_id', 'status','password'], 'required'],
+            ['profile_image', 'image', 'minWidth' => 100, 'maxWidth' => 610,'minHeight' => 100, 'maxHeight' => 610, 'extensions' => 'jpg, gif, png', 'maxSize' => 1024 * 1024 * 2],
             [['admin_id', 'role_id', 'status'], 'integer'],
             [['address'], 'string'],
             [['name'], 'string', 'max' => 150],
             [['email'], 'string', 'max' => 250],
+            ['email', 'unique'],
             ['email', 'email'],
-            [['password'],'safe'],
+            [['password','profile_image'],'safe'],
             [['phone_number'], 'string', 'max' => 20],
         ];
     }
@@ -56,8 +59,22 @@ class AdminDetails extends \yii\db\ActiveRecord
             'email' => Yii::t('app', 'Email'),
             'phone_number' => Yii::t('app', 'Phone Number'),
             'address' => Yii::t('app', 'Address'),
-            'role_id' => Yii::t('app', 'Role ID'),
+            'role_id' => Yii::t('app', 'Role'),
             'status' => Yii::t('app', 'Status'),
+            'profile_image' => Yii::t('app', 'Profile Image'),
+          
         ];
+    }
+    public function upload($file, $id, $name) {
+
+       $targetFolder = \yii::$app->basePath . '/../uploads/admin-details/' . $id . '/';
+        if (!file_exists($targetFolder)) {
+            mkdir($targetFolder, 0777, true);
+        }
+        if ($file->saveAs($targetFolder . $name . '.' . $file->extension)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

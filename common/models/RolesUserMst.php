@@ -3,23 +3,23 @@
 namespace common\models;
 
 use Yii;
- 
+
 /**
- * This is the model class for table "user_roles_mapping".
+ * This is the model class for table "roles_user_mst".
  *
  * @property integer $id
  * @property integer $user_id
  * @property integer $role_id
  * @property integer $status
  */
-class UserRolesMapping extends \yii\db\ActiveRecord
+class RolesUserMst extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'user_roles_mapping';
+        return 'roles_user_mst';
     }
 
     /**
@@ -40,8 +40,8 @@ class UserRolesMapping extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'Sub Super Admin',
-            'role_id' => 'Roles',
+            'user_id' => 'User ID',
+            'role_id' => 'Role ID',
             'status' => 'Status',
         ];
     }

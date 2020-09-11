@@ -32,6 +32,7 @@ class Banners extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'expiry_date', 'image', 'hospital_clinic_id', 'sort_order', 'status'], 'required','on'=>'oncreate'],
+            
             [['name', 'expiry_date', 'hospital_clinic_id', 'sort_order', 'status'], 'required','on'=>'onupdate'],
             [['expiry_date'], 'safe'],
             [['image'], 'string'],
