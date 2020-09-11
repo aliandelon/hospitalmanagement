@@ -50,43 +50,43 @@ DashboardAsset::register($this);
                                 'items' => [
 
                                     // roles start here
-                                    ['label' => '<span class="educate-icon educate-apps icon-wrap"></span>&nbsp;<span class="menulist">Roles<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    ['label' => '<span class="fa fa-users icon-wrap"></span>&nbsp;<span class="menulist">Roles<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Roles</span>', 'url' => ['/roles-mst/index']],
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/roles-mst/create']],
+                                    ['label' => '&nbsp;<span class="menulist">List Roles</span>', 'url' => ['/roles-mst/index']],
+                                    ['label' => '&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/roles-mst/create']],
                                     ],],
 
                                 // roles end here
                                  // user roles start here
-                                    ['label' => '<span class="educate-icon educate-apps icon-wrap"></span>&nbsp;<span class="menulist">Assign Roles<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    ['label' => '<span class="fa fa-user icon-wrap"></span>&nbsp;<span class="menulist">Assign Roles<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Assigned Roles</span>', 'url' => ['/user-roles-mapping/index']],
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">Assign New Roles</span>', 'url' => ['/user-roles-mapping/create']],
+                                    ['label' => '&nbsp;<span class="menulist">List Assigned Roles</span>', 'url' => ['/user-roles-mapping/index']],
+                                    ['label' => '&nbsp;<span class="menulist">Assign New Roles</span>', 'url' => ['/user-roles-mapping/create']],
                                 ],],
                                 // user roles end
-                                    ['label' => '<span class="glyphicon glyphicon-th"></span>&nbsp;<span class="menulist">Admin<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    ['label' => '<span class="fa fa-child icon-wrap"></span>&nbsp;<span class="menulist">Admin<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
+                                    ['label' => '&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
+                                    ['label' => '&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
                                 ],],
 
-                                ['label' => '<span class="glyphicon glyphicon-list-alt"></span>&nbsp;<span class="menulist">Category<i class="fa fa-angle-left pull-right"></i></span>', 
+                                ['label' => '<span class="fa fa-bars icon-wrap"></span>&nbsp;<span class="menulist">Category<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">Create Category</span>', 'url' => ['/category/create']],
+                                    ['label' => '&nbsp;<span class="menulist">Create Category</span>', 'url' => ['/category/create']],
                                     
-                                    ['label' => '<span class="glyphicon glyphicon-search"></span>&nbsp;<span class="menulist">List Category</span> ', 'url' => ['/category/index']],
+                                    ['label' => '&nbsp;<span class="menulist">List Category</span> ', 'url' => ['/category/index']],
                                     
                                 ],],    
 
@@ -94,19 +94,19 @@ DashboardAsset::register($this);
 
 
 
-                            ['label' => '<span class="glyphicon glyphicon-search"></span></span>&nbsp;<span class="menulist">Investigation<i class="fa fa-angle-left pull-right"></i></span>', 
+                            ['label' => '<span class="fa fa-medkit icon-wrap"></span>&nbsp;<span class="menulist">Investigation<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="glyphicon glyphicon-user"></span>&nbsp;<span class="menulist">Create Investigations</span>', 'url' => ['/investigations/create']],
+                                    ['label' => '&nbsp;<span class="menulist">Create Investigations</span>', 'url' => ['/investigations/create']],
                                     
-                                    ['label' => '<span class="glyphicon glyphicon-search"></span>&nbsp;<span class="menulist">List Investigation</span> ', 'url' => ['/investigations/index']],
+                                    ['label' => '&nbsp;<span class="menulist">List Investigation</span> ', 'url' => ['/investigations/index']],
                                     
                                 ],],    
 
                                 // roles start here
-                                    ['label' => '<span class="educate-icon educate-apps icon-wrap"></span>&nbsp;<span class="menulist">Banners<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    ['label' => '<span class="fa fa-picture-o icon-wrap"></span>&nbsp;<span class="menulist">Banners<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
@@ -117,8 +117,8 @@ DashboardAsset::register($this);
 
 
 
-                                ['label' => '<span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="menulist">New Request</span>', 
-                                    'url' => ['hospital-clinic-details/new-request-index'],
+                                ['label' => '<span class="fa fa-plus icon-wrap"></span>&nbsp;<span class="menulist">New Request</span>', 
+                                    'url' => ['hospital-clinic-details/index'],
                                     ]
                                     
                                 ],
