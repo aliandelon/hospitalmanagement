@@ -19,3 +19,12 @@
    margin-top: 10%;
    bottom:0;
 }
+
+.mCSB_container{
+	width:200px !important;
+	
+}
+
+.sidebar-nav .metismenu a{
+	font-size: 12px !important;
+}
