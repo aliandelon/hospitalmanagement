@@ -115,7 +115,9 @@ DashboardAsset::register($this);
                                     ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/banners/index']],
                                     ],],
 
-
+                                    ['label' => '<span class="fa fa-pencil icon-wrap"></span>&nbsp;<span class="menulist">Super Admin</span>', 
+                                    'url' => ['super-admin-details/update'],
+                                    ],
 
                                 ['label' => '<span class="fa fa-plus icon-wrap"></span>&nbsp;<span class="menulist">New Request</span>', 
                                     'url' => ['hospital-clinic-details/index'],
