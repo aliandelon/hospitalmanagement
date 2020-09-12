@@ -39,7 +39,7 @@ DashboardAsset::register($this);
         <nav id="sidebar" class="">
             <div class="sidebar-header">
                 <a href="index.html"><img class="main-logo" src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png" alt="" /></a>
-                <strong><a href="index.html"><img src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logosn.png" alt="" /></a></strong>
+                <strong><a href="index.html"><img src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logosn.png" alt="" style="margin-left: 22px;" /></a></strong>
             </div>
             <div class="left-custom-menu-adp-wrap comment-scrollbar">
                 <nav class="sidebar-nav left-sidebar-menu-pro">
