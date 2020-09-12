@@ -85,7 +85,7 @@ class AdminDetailsController extends Controller
                     if ($file) {
                         $model->upload($file, $model->id, $model->id);
                     }
-                    return $this->redirect(['view', 'id' => $model->id]);
+                    return $this->redirect(['index']);
                 }
             }
         }
@@ -123,7 +123,10 @@ class AdminDetailsController extends Controller
             }
                 if($model->save())
                 {
-                    return $this->redirect(['view', 'id' => $model->id]);
+                    if ($file) {
+                        $model->upload($file, $model->id, $model->id);
+                    }
+                    return $this->redirect(['index']);
                 }
             }
         }
