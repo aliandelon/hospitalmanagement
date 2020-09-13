@@ -120,7 +120,7 @@ DashboardAsset::register($this);
                                     ],
 
                                 ['label' => '<span class="fa fa-plus icon-wrap"></span>&nbsp;<span class="menulist">New Request</span>', 
-                                    'url' => ['hospital-clinic-details/index'],
+                                    'url' => ['hospital-clinic-details/new-request-index'],
                                     ]
                                     
                                 ],
