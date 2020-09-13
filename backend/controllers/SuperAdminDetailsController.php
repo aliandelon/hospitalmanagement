@@ -38,7 +38,7 @@ class SuperAdminDetailsController extends Controller
     public function actionIndex()
     {
         $searchModel = new AdminDetailsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search2(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -83,7 +83,8 @@ class SuperAdminDetailsController extends Controller
             $model2->email = $model->email;
             $model2->auth_key = '123';
             $model2->password = Yii::$app->getSecurity()->hashData($model->password, $model2->auth_key);
-            $model2->type = 10;
+            $model2->type = 1;
+            $model->role_id = 10;
              $file = UploadedFile::getInstance($model, 'profile_image');
             if($model2->save()){
             if ($file) {

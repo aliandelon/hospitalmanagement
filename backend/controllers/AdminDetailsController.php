@@ -72,7 +72,7 @@ class AdminDetailsController extends Controller
             $model2->email = $model->email;
             $model2->auth_key = '123';
             $model2->password = Yii::$app->getSecurity()->hashData($model->password, $model2->auth_key);
-            $model2->type = 2;
+            $model2->type = 1;
             $file = UploadedFile::getInstance($model, 'profile_image');
             // echo $file->extension;exit;
             if ($file) {
@@ -113,7 +113,7 @@ class AdminDetailsController extends Controller
             $model2->email = $model->email;
             $model2->auth_key = '123';
             $model2->password = Yii::$app->getSecurity()->hashData($model->password, $model2->auth_key);
-            $model2->type = 2;
+            $model2->type = 1;
              $file = UploadedFile::getInstance($model, 'profile_image');
             if($model2->save()){
             if ($file) {
