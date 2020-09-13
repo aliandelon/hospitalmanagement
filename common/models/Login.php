@@ -148,10 +148,14 @@ class Login  extends ActiveRecord implements IdentityInterface
      * @param string $password password to validate
      * @return boolean if password provided is valid for current user
      */
-    public function validatePassword($password)
+    public function validatePassword($typepassword,$savepassword)
     {   
-       
-        return Yii::$app->security->validatePassword($password, $this->password);
+        if(Yii::$app->getSecurity()->hashData($typepassword , '123') == $savepassword){
+            return true;
+        }else{
+            return false;
+        }
+        // return Yii::$app->security->validatePassword($password, $this->password);
     }
 
     /**
