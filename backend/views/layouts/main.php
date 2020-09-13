@@ -50,13 +50,13 @@ DashboardAsset::register($this);
                                 'items' => [
 
                                     // roles start here
-                                    ['label' => '<span class="fa fa-users icon-wrap"></span>&nbsp;<span class="menulist">Roles<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    ['label' => '<span class="fa fa-users icon-wrap"></span>&nbsp;<span class="menulist">Tasks<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="fa fa-sitemap" title="List Roles"></span>&nbsp;<span class="menulist">List Roles</span>', 'url' => ['/roles-mst/index']],
-                                    ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/roles-mst/create']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Tasks"></span>&nbsp;<span class="menulist">List Tasks</span>', 'url' => ['/roles-mst/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Tasks"></span>&nbsp;<span class="menulist">Create Tasks</span>', 'url' => ['/roles-mst/create']],
                                     ],],
 
                                 // roles end here

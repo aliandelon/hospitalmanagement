@@ -72,16 +72,18 @@ class SuperAdminDetailsController extends Controller
         $model2 = Login::find()
                 ->where(['type' => 1])
                 ->one();
+
         $model = $this->findModel($model2->id);
         $encryptedPassword = $model2->password;     
         $model2->auth_key = '123';
         $model->password = Yii::$app->getSecurity()->validateData($encryptedPassword, $model2->auth_key);
+
         $images = $model->profile_image;
         if ($model->load(Yii::$app->request->post())) {
             $model2->email = $model->email;
             $model2->auth_key = '123';
             $model2->password = Yii::$app->getSecurity()->hashData($model->password, $model2->auth_key);
-            $model2->type = 1;
+            $model2->type = 10;
              $file = UploadedFile::getInstance($model, 'profile_image');
             if($model2->save()){
             if ($file) {

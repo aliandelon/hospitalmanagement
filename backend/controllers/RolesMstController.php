@@ -69,9 +69,7 @@ class RolesMstController extends Controller
             if($model->save()){
              return $this->redirect(['index']);
             }
-            else{
-                print_r($model->getErrors());exit;
-            }
+           
         } else {
             return $this->render('create', [
                 'model' => $model,
