@@ -32,11 +32,6 @@ use kartik\file\FileInput;
     <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'address')->textarea(['rows' => 6]) ?>
-
-    <?php
-        echo $form->field($model, 'role_id')->dropDownList(
-            ['1' => 'Super Admin', '2' => 'Sub Admin', '3' => 'Admin']
-    ); ?>
      <?=
     $form->field($model, 'profile_image')->widget(FileInput::classname(), [
           'pluginOptions' => ['previewFileType' => 'any',
