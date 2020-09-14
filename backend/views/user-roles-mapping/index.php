@@ -23,13 +23,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+            'name',
+            'email:email',
+            // 'id',
+            // 'user_id',
+            // ['attribute'=>'user_id',
+            // 'label' => 'Admin',
+            // 'value' => function($model){
+            //      $data = common\models\AdminDetails::find()->where(['admin_id'=>$model->user_id])->one();
+            //      return $data->name;
+               
+            // }
+            // ],
+            // 'role_id',
+            // 'status',
 
-            'id',
-            'user_id',
-            'role_id',
-            'status',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            // ['class' => 'yii\grid\ActionColumn'],
+            
+            ['class' => 'yii\grid\ActionColumn',
+                'header' => 'update',
+                'template' => '{update}'],
         ],
     ]); ?>
 </div>
