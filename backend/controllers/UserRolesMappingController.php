@@ -118,17 +118,22 @@ class UserRolesMappingController extends Controller
             $userId = $model->user_id;
             $status = $model->status;
             $postData = Yii::$app->request->post('UserRolesMapping');
-            foreach ($postData['role_id'] as $key => $value) {
-                $model = new UserRolesMapping();
-                $model->user_id = $userId;
-                $model->status = $status;
-                $model->role_id = $value;
-                $model->save();
-                $count++;
+            if(isset($postData['role_id'])){
+                foreach ($postData['role_id'] as $key => $value) {
+                    $model = new UserRolesMapping();
+                    $model->user_id = $userId;
+                    $model->status = $status;
+                    $model->role_id = $value;
+                    $model->save();
+                    $count++;
+                }
+                if ($count) {
+                    return $this->redirect(['index']);
+                }
+            }else{
+                    return $this->redirect(['index']);
             }
-            if ($count) {
-                return $this->redirect(['index']);
-            }
+            
         } else {
             return $this->render('update', [
                 'model' => $model,'tasks'=>$tasks,'roles'=>$roles,'id'=>$id
