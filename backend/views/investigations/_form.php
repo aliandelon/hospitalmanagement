@@ -20,7 +20,7 @@ use common\models\Category;
     echo $form->field($model, 'mst_id')->dropDownList(
         $listData,
         ['prompt'=>'Select...']
-        );
+        )->label('Category');
     ?>
     <?= $form->field($model, 'investigation_name')->textInput(['maxlength' => true]) ?>
 

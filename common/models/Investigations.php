@@ -44,7 +44,7 @@ class Investigations extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'mst_id' => Yii::t('app', 'Mst ID'),
+            'mst_id' => Yii::t('app', 'Category'),
             'investigation_name' => Yii::t('app', 'Investigation Name'),
             'status' => Yii::t('app', 'Status'),
             'created_on' => Yii::t('app', 'Created On'),
