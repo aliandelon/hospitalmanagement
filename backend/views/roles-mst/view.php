@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model common\models\RolesMst */
 
-$this->title = $model->id;
+$this->title = $model->sub_task;
 $this->params['breadcrumbs'][] = ['label' => 'Roles Msts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -28,11 +28,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'task',
+            //'id',
+            [   
+                'label'=>'Task',
+                'value'=>$model->getTaskName($model->task)
+            ],
             'sub_task',
             'sort_order',
-            'status',
+            [                                                  
+                'label' => 'Status',
+                'value' => ($model->status == 1)?'Active':'Inactive'          
+            ],
         ],
     ]) ?>
 
