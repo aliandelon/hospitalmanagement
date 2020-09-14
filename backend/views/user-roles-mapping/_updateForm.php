@@ -13,6 +13,7 @@ use common\models\RolesMst;
     <?php $form = ActiveForm::begin(); ?>
 
 	<?= $form->field($model, 'user_id')->dropDownList(yii\helpers\ArrayHelper::map(common\models\AdminDetails::find()->where(['status' => 1,'role_id'=>1])->all(), 'admin_id', 'name'), array("disabled" => "disabled"), ['prompt' => 'Select Sub Super Admin']) ?>
+    <input type="hidden" name="UserRolesMapping[user_id]" value="<?=$id?>">
         <?php if(!empty($tasks)){?>
             <div class="row">
                 <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
