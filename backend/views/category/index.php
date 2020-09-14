@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use common\models\User;
+use common\models\Category;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\CategorySearch */
@@ -28,19 +30,27 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            'category_name',
             [
-               'label' => 'Status',
-               'value' => function ($model) {
-                   return ($model->status == 1)?'Active':'Inactive';
-               }
+              'label' => 'Category',
+              'attribute'=>'category_name',
+              'filter'=>ArrayHelper::map(Category::find()->asArray()->all(), 'id', 'category_name'),
+                'filterInputOptions' => ['class' => 'form-control', 'id' => 'category'],
+              ],
+            [   
+                'attribute'=>'status',
+                'format'=>'raw',//raw,
+                'filter'=>['1'=>'Active','0'=>'In Active'],
+                'filterInputOptions' => ['class' => 'form-control', 'id' => 'leave_status'],
+                'value'=>function($model){
+                    if($model->status=="1"){
+                     return Html::a('<span class="label label-success">Active</span>');
+                     }else{
+                    return Html::a("<span class='label label-warning'>In Active</span>");
+                     }    
+                     
+                }
             ],
-            [
-               'label' => 'Created by',
-               'value' => function ($model) {
-                   return User::findIdentity($model->created_by)->username;
-               }
-            ],
+            'user.name',
             
             ['class' => 'yii\grid\ActionColumn',
                 'header' => 'update',

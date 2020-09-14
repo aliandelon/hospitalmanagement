@@ -32,16 +32,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             //'id',
             'category_name',
-            [                                                  // the owner name of the model
+            [                                                  
                 'label' => 'Status',
                 'value' => ($model->status == 1)?'Active':'Inactive'          
             ],
-            [                                                  // the owner name of the model
-                'label' => 'Created By',
-                'value' => function ($model) {
-                   return User::findIdentity($model->created_by)->username;
-               }        
-            ],
+            'user.name'
         ],
     ]) ?>
 

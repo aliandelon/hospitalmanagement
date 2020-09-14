@@ -46,4 +46,9 @@ class Category extends \yii\db\ActiveRecord
             'created_by' => Yii::t('app', 'Created By'),
         ];
     }
+
+    public function getUser()
+    {
+        return $this->hasOne(AdminDetails::class, ['id' => 'created_by']);
+    }
 }
