@@ -35,6 +35,7 @@ use common\models\RolesMst;
 
             <?php $taskArr = [1 => 'Category', 2 => 'Investigations',3=>'Banners',4=>'New Requests',5=>'Active Users']; ?>
             <?php foreach($tasks as $tsks){ 
+                $roleIdArray = array();
                 $subtasks=RolesMst::find()->where(['task'=>$tsks->task])->orderBy(['sort_order' => SORT_ASC])->All();
                 foreach ($subtasks as $key => $value) {
                    $roleIdArray[] = $value['id'];
@@ -72,7 +73,7 @@ use common\models\RolesMst;
     ); ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+         <?= Html::submitButton('Update', ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
