@@ -6,6 +6,7 @@ use Yii;
 use common\models\RolesMst;
 use common\models\UserRolesMappingSearch;
 use common\models\UserRolesMapping;
+use common\models\AdminDetailsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -36,7 +37,7 @@ class UserRolesMappingController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UserRolesMappingSearch();
+        $searchModel = new AdminDetailsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -52,9 +53,10 @@ class UserRolesMappingController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        // return $this->render('view', [
+        //     'model' => $this->findModel($id),
+        // ]);
+        return $this->redirect(['index']);
     }
 
     /**
@@ -66,13 +68,26 @@ class UserRolesMappingController extends Controller
     {
         $model = new UserRolesMapping();
         $tasks=RolesMst::find()->select('task')->distinct()->where(['status'=>1])->orderBy(['task' => SORT_ASC])->All();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if($model->load(Yii::$app->request->post())){
+            $count = 0;
+            $userId = $model->user_id;
+            $status = $model->status;
+            foreach (Yii::$app->request->post('role_id') as $key => $value) {
+                $model = new UserRolesMapping();
+                $model->user_id = $userId;
+                $model->status = $status;
+                $model->role_id = $value;
+                $model->save();
+                $count++;
+            }
+            if ($count) {
+                return $this->redirect(['index']);
+            }
         } else {
-            return $this->render('create', [
-                'model' => $model,'tasks'=>$tasks
-            ]);
-        }
+                return $this->render('create', [
+                    'model' => $model,'tasks'=>$tasks
+                ]);
+            }
     }
 
     /**
@@ -83,13 +98,40 @@ class UserRolesMappingController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model = new UserRolesMapping();
+        $model->id = $id;
+        $role = [];
+        $tasks = [];
+        $roles = [];
+        $tasks=RolesMst::find()->select('task')->distinct()->where(['status'=>1])->orderBy(['task' => SORT_ASC])->All();
+        foreach ($tasks as $key => $value) {
+           // print_r($value['task']);
+        }
+        $role=UserRolesMapping::find()->select('role_id')->where(['user_id'=>$id])->andFilterWhere(['=', 'status', '1'])->All();
+        foreach ($role as $key => $value) {
+           $roles[] = $value['role_id'];
+        }
+        // print_r($roles);exit;
+        if ($model->load(Yii::$app->request->post())) {
+            UserRolesMapping::deleteAll('user_id = :user', [':user' => $id]);
+            $count = 0;
+            $userId = $model->user_id;
+            $status = $model->status;
+            $postData = Yii::$app->request->post('UserRolesMapping');
+            foreach ($postData['role_id'] as $key => $value) {
+                $model = new UserRolesMapping();
+                $model->user_id = $userId;
+                $model->status = $status;
+                $model->role_id = $value;
+                $model->save();
+                $count++;
+            }
+            if ($count) {
+                return $this->redirect(['index']);
+            }
         } else {
             return $this->render('update', [
-                'model' => $model,
+                'model' => $model,'tasks'=>$tasks,'roles'=>$roles,'id'=>$id
             ]);
         }
     }
