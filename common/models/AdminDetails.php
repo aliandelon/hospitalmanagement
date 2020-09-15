@@ -34,7 +34,7 @@ class AdminDetails extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['admin_id', 'name', 'email', 'phone_number', 'address', 'role_id', 'status','password'], 'required'],
+            [['admin_id', 'name', 'email', 'phone_number', 'address', 'status','password'], 'required'],
             ['profile_image', 'image', 'minWidth' => 100, 'maxWidth' => 610,'minHeight' => 100, 'maxHeight' => 610, 'extensions' => 'jpg, gif, png', 'maxSize' => 1024 * 1024 * 2],
             [['admin_id', 'role_id', 'status'], 'integer'],
             [['address'], 'string'],
