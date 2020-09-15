@@ -7,6 +7,7 @@ use common\models\RolesMst;
 use common\models\UserRolesMappingSearch;
 use common\models\UserRolesMapping;
 use common\models\AdminDetailsSearch;
+use common\models\AdminDetails;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -100,13 +101,13 @@ class UserRolesMappingController extends Controller
     {
         $model = new UserRolesMapping();
         $model->id = $id;
+        $mod=AdminDetails::find()->where(['id'=>$id,'role_id'=>1])->one();
+        $model->user_id=$mod->admin_id;
         $role = [];
         $tasks = [];
         $roles = [];
         $tasks=RolesMst::find()->select('task')->distinct()->where(['status'=>1])->orderBy(['task' => SORT_ASC])->All();
-        foreach ($tasks as $key => $value) {
-           // print_r($value['task']);
-        }
+        
         $role=UserRolesMapping::find()->select('role_id')->where(['user_id'=>$id])->andFilterWhere(['=', 'status', '1'])->All();
         foreach ($role as $key => $value) {
            $roles[] = $value['role_id'];

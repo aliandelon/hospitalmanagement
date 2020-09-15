@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => ['image',['width'=>'100','height'=>'100']],
 
             ],
-            'role_id',
+            // 'role_id',
             [                                                  // the owner name of the model
                 'label' => 'Status',
                 'value' => ($model->status == 1)?'Active':'Inactive'          

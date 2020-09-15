@@ -60,6 +60,14 @@ DashboardAsset::register($this);
                                     ],],
 
                                 // roles end here
+                                     ['label' => '<span class="fa fa-child icon-wrap"></span>&nbsp;<span class="menulist">Admin<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    'url' => ['#'],
+                                        'template' => '<a href="{url}" >{label}</a>',
+                                        'items' => [ 
+
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Admin Details"></span>&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
+                                ],],
                                  // user roles start here
                                     ['label' => '<span class="fa fa-user icon-wrap"></span>&nbsp;<span class="menulist">Assign Roles<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
@@ -70,14 +78,7 @@ DashboardAsset::register($this);
                                     ['label' => '<span class="fa fa-sitemap" title="Assign New Roles"></span>&nbsp;<span class="menulist">Assign New Roles</span>', 'url' => ['/user-roles-mapping/create']],
                                 ],],
                                 // user roles end
-                                    ['label' => '<span class="fa fa-child icon-wrap"></span>&nbsp;<span class="menulist">Admin<i class="fa fa-angle-left pull-right"></i></span>', 
-                                    'url' => ['#'],
-                                        'template' => '<a href="{url}" >{label}</a>',
-                                        'items' => [ 
-
-                                    ['label' => '<span class="fa fa-sitemap" title="Create Admin Details"></span>&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
-                                    ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
-                                ],],
+                                   
 
                                 ['label' => '<span class="fa fa-bars icon-wrap"></span>&nbsp;<span class="menulist">Category<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
@@ -160,8 +161,15 @@ DashboardAsset::register($this);
                                             <ul class="nav navbar-nav mai-top-nav header-right-menu">
                                             <li class="nav-item">
                                                 <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
-                    <img src="<?= Yii::$app->request->baseUrl; ?>/img/product/pro4.jpg" alt="" />
-                                                        <span class="admin-name">Prof.Anderson</span>
+    <?php $userDetails=common\models\AdminDetails::find()->where(['admin_id'=>Yii::$app->user->identity->id])->one();
+ if($userDetails->profile_image==""){
+   $imagePath=Yii::$app->request->baseUrl . '/../backend/web/img/Missing_avatar.png';
+ }else{
+   $imagePath=Yii::$app->request->baseUrl . '/../uploads/admin-details/' . $userDetails->id . '/' . $userDetails->id . '.' . $userDetails->profile_image;
+ }                                     
+echo '<img src="' .$imagePath. '" />';
+  ?>                   
+                    <span class="admin-name"><?=Yii::$app->user->identity->email?></span>
                                                             <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
                                                 </a>
                                                 <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
@@ -360,7 +368,7 @@ DashboardAsset::register($this);
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="footer-copy-right">
-                                <p>Copyright © <?=date("Y")?>. All rights reserved. Template by <a href="https://colorlib.com/wp/templates/">Colorlib</a></p>
+                                <p>Copyright © <?=date("Y")?>. All rights reserved. <a href="https://colorlib.com/wp/templates/">InvestiGo</a></p>
                             </div>
                         </div>
                     </div>

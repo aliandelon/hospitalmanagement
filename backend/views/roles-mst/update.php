@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\RolesMst */
 
-$this->title = 'Update Roles Mst: ' . $model->sub_task;
+$this->title = 'Update Task ';
 $this->params['breadcrumbs'][] = ['label' => 'Roles Msts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';

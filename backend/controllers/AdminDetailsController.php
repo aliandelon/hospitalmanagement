@@ -80,6 +80,7 @@ class AdminDetailsController extends Controller
                 }
             if($model2->save()){
                 $model->admin_id = $model2->id;
+                $model->role_id=1;
                 if($model->save())
                 {
                     if ($file) {

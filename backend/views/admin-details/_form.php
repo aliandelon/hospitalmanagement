@@ -33,10 +33,7 @@ use kartik\file\FileInput;
 
     <?= $form->field($model, 'address')->textarea(['rows' => 6]) ?>
 
-    <?php
-        echo $form->field($model, 'role_id')->dropDownList(
-            ['1' => 'Role 1', '2' => 'Role 2', '3' => 'Role 3']
-    ); ?>
+    
      <?=
     $form->field($model, 'profile_image')->widget(FileInput::classname(), [
           'pluginOptions' => ['previewFileType' => 'any',
@@ -50,7 +47,8 @@ use kartik\file\FileInput;
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
             <?php
-            if ($model->profile_image != '' && $model->id != "" && $model->profile_image != 0) {
+           
+            if ($model->profile_image != '') {
 
                 echo '<img width="125" style="border: 2px solid #d2d2d2;margin-right:.5em;" src="' . Yii::$app->request->baseUrl . '/../uploads/admin-details/' . $model->id . '/' . $model->id . '.' . $model->profile_image . '" />'
                 ?>
