@@ -14,6 +14,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\ContactForm;
 use frontend\models\Students;
 use yii\web\Response;
+use common\models\LoginForm;
 use common\models\ImageForm;
 use common\models\Visitors;
 use backend\models\WeRecommend;
@@ -31,15 +32,13 @@ class SiteController extends Controller {
                 return [
                     'access' => [
                         'class' => AccessControl::className(),
-                        'only' => ['logout', 'signup'],
                         'rules' => [
                             [
-                                'actions' => ['signup'],
+                                'actions' => ['login', 'error'],
                                 'allow' => true,
-                                'roles' => ['?'],
                             ],
                             [
-                                'actions' => ['logout'],
+                                'actions' => ['logout', 'index'],
                                 'allow' => true,
                                 'roles' => ['@'],
                             ],
@@ -92,31 +91,56 @@ class SiteController extends Controller {
          *
          * @return mixed
          */
+        // public function actionLogin() {
+                // if (!Yii::$app->user->isGuest) {
+                //         return $this->goHome();
+                // }
+
+                // $ip = $this->getUserIP();
+                // $this->ipTrack($ip, "Login");
+
+                // $model = new StudentLoginForm();
+                // if ($model->load(Yii::$app->request->post()) && $model->login()) {
+                //         $stdmodel = Students::find()->where(['id' => Yii::$app->user->identity->id])->one();
+                //         $stdmodel->multi_token = sha1(date('Y-m-d:H:i:s'));
+                //         if ($stdmodel->save(false)) {
+                //                 Yii::$app->session['multi_token'] = $stdmodel->multi_token;
+                //         } else {
+                //                 Yii::$app->params['multi_token'] = "";
+                //         }
+
+                //         Yii::$app->studentsLog->loging(Yii::$app->user->identity->id, 'logged in');
+                //         return $this->redirect(['students/my-account']);
+                // } else {
+                        // return $this->render('login', [
+                        //             'model' => $model,
+                        // ]);
+                // }
+        // }
+
+        /**
+         * Login action.
+         *
+         * @return string
+         */
         public function actionLogin() {
-                if (!Yii::$app->user->isGuest) {
-                        return $this->goHome();
-                }
+            $this->layout = 'userlogin';
+            // if (!Yii::$app->user->isGuest) {
+            //     print_r('123');exit;
+            //     return $this->goHome();
+            // }
 
-                $ip = $this->getUserIP();
-                $this->ipTrack($ip, "Login");
-
-                $model = new StudentLoginForm();
-                if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                        $stdmodel = Students::find()->where(['id' => Yii::$app->user->identity->id])->one();
-                        $stdmodel->multi_token = sha1(date('Y-m-d:H:i:s'));
-                        if ($stdmodel->save(false)) {
-                                Yii::$app->session['multi_token'] = $stdmodel->multi_token;
-                        } else {
-                                Yii::$app->params['multi_token'] = "";
-                        }
-
-                        Yii::$app->studentsLog->loging(Yii::$app->user->identity->id, 'logged in');
-                        return $this->redirect(['students/my-account']);
-                } else {
-                        return $this->render('login', [
-                                    'model' => $model,
-                        ]);
-                }
+            $model = new LoginForm();
+            if ($model->load(Yii::$app->request->post())) {
+                if($model->login())
+                    return $this->render('dashboard', [
+                                'model' => $model,
+                    ]);
+            } else {
+                    return $this->render('login', [
+                                'model' => $model,
+                    ]);
+            }
         }
 
         /**
