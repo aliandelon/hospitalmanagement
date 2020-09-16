@@ -28,30 +28,30 @@ class SiteController extends Controller {
         /**
          * @inheritdoc
          */
-        public function behaviors() {
-                return [
-                    'access' => [
-                        'class' => AccessControl::className(),
-                        'rules' => [
-                            [
-                                'actions' => ['login', 'error'],
-                                'allow' => true,
-                            ],
-                            [
-                                'actions' => ['logout', 'index'],
-                                'allow' => true,
-                                'roles' => ['@'],
-                            ],
-                        ],
-                    ],
-                    'verbs' => [
-                        'class' => VerbFilter::className(),
-                        'actions' => [
-                            'logout' => ['post'],
-                        ],
-                    ],
-                ];
-        }
+        // public function behaviors() {
+        //         return [
+        //             'access' => [
+        //                 'class' => AccessControl::className(),
+        //                 'rules' => [
+        //                     [
+        //                         'actions' => ['login', 'error'],
+        //                         'allow' => true,
+        //                     ],
+        //                     [
+        //                         'actions' => ['logout', 'index'],
+        //                         'allow' => true,
+        //                         'roles' => ['@'],
+        //                     ],
+        //                 ],
+        //             ],
+        //             'verbs' => [
+        //                 'class' => VerbFilter::className(),
+        //                 'actions' => [
+        //                     'logout' => ['post'],
+        //                 ],
+        //             ],
+        //         ];
+        // }
 
         /**
          * @inheritdoc
@@ -123,25 +123,22 @@ class SiteController extends Controller {
          *
          * @return string
          */
-        public function actionLogin() {
-            $this->layout = 'userlogin';
-            // if (!Yii::$app->user->isGuest) {
-            //     print_r('123');exit;
-            //     return $this->goHome();
-            // }
+        // public function actionLogin() {
+        //     $this->layout = 'userlogin';
+            
 
-            $model = new LoginForm();
-            if ($model->load(Yii::$app->request->post())) {
-                if($model->login())
-                    return $this->render('dashboard', [
-                                'model' => $model,
-                    ]);
-            } else {
-                    return $this->render('login', [
-                                'model' => $model,
-                    ]);
-            }
-        }
+        //     $model = new LoginForm();
+            // if ($model->load(Yii::$app->request->post())) {
+            //     if($model->login())
+            //         return $this->render('dashboard', [
+            //                     'model' => $model,
+            //         ]);
+            // } else {
+                    // return $this->render('login', [
+                    //             'model' => $model,
+                    // ]);
+            // }
+        // }
 
         /**
          * Logs out the current user.
@@ -155,24 +152,12 @@ class SiteController extends Controller {
                 return $this->goHome();
         }
 
-        public function actionWeRecommend() {
-                $we_recommends = WeRecommend::find()->where(['status' => 1])->all();
-                return $this->render('weRecommend', [
-                            'we_recommends' => $we_recommends,
-                ]);
+        public function actionDashboard() {
+              
+                return $this->render('dashboard');
         }
 
-        public function actionBookIndex() {
-                $subjects = Subjects::find()->where(['status' => 1])->all();
-
-                return $this->render('books', ['subjects' => $subjects]);
-        }
-
-        public function actionTermsCondition() {
-
-
-                return $this->render('termsAndConditions');
-        }
+       
 
         /**
          * Displays contact page.
