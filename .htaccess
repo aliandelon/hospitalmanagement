@@ -31,6 +31,12 @@ RewriteRule ^js/(.*)$ frontend/web/js/$1 [L]
 RewriteRule ^images/(.*)$ frontend/web/images/$1 [L]
 RewriteRule ^video/(.*)$ frontend/web/video/$1 [L]
 
+RewriteRule ^login/css/(.*)$ frontend/web/login/css/$1 [L]
+RewriteRule ^login/js/(.*)$ frontend/web/login/js/$1 [L]
+RewriteRule ^login/fonts/(.*)$ frontend/web/login/fonts/$1 [L]
+RewriteRule ^login/images/(.*)$ frontend/web/login/images/$1 [L]
+RewriteRule ^login/vendor/(.*)$ frontend/web/login/vendor/$1 [L]
+
 RewriteCond %{REQUEST_URI} !^/hospitalmanagement/(frontend|backend)/web/(assets|css)/ 
 RewriteCond %{REQUEST_URI} !index.php
 RewriteCond %{REQUEST_FILENAME} !-f [OR]
