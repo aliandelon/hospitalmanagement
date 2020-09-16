@@ -65,31 +65,77 @@ class UserRolesMappingController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+    // public function actionCreate()
+    // {
+    //     $model = new UserRolesMapping();
+    //     $tasks=RolesMst::find()->select('task')->distinct()->where(['status'=>1])->orderBy(['task' => SORT_ASC])->All();
+    //     if($model->load(Yii::$app->request->post())){
+    //         $count = 0;
+    //         $userId = $model->user_id;
+    //         $status = $model->status;
+    //         foreach (Yii::$app->request->post('role_id') as $key => $value) {
+    //             $model = new UserRolesMapping();
+    //             $model->user_id = $userId;
+    //             $model->status = $status;
+    //             $model->role_id = $value;
+    //             $model->save();
+    //             $count++;
+    //         }
+    //         if ($count) {
+    //             return $this->redirect(['index']);
+    //         }
+    //     } else {
+    //             return $this->render('create', [
+    //                 'model' => $model,'tasks'=>$tasks
+    //             ]);
+    //         }
+    // }
+
     public function actionCreate()
     {
         $model = new UserRolesMapping();
         $tasks=RolesMst::find()->select('task')->distinct()->where(['status'=>1])->orderBy(['task' => SORT_ASC])->All();
         if($model->load(Yii::$app->request->post())){
-            $count = 0;
-            $userId = $model->user_id;
-            $status = $model->status;
-            foreach (Yii::$app->request->post('role_id') as $key => $value) {
-                $model = new UserRolesMapping();
-                $model->user_id = $userId;
-                $model->status = $status;
-                $model->role_id = $value;
-                $model->save();
-                $count++;
-            }
-            if ($count) {
-                return $this->redirect(['index']);
-            }
+
+                for($i=0;$i<count($model['role_main_id']);$i++){
+                    for($j=0;$j<count($model['role_id'][$model['role_main_id'][$i]]);$j++){
+                        $model->user_id=$model['user_id'];
+                        $model->role_id = $model['role_id'][$j];
+                        $model->status =1;
+                        $model->save();
+                    }
+                  // echo $model['role_main_id'][$i];
+                  // echo '<br>';  
+                }
+            // }
+            // echo '<pre>';
+            //  print_r($model['role_main_id']);
+            // exit;
+            exit;
+            // $count = 0;
+            // $userId = $model->user_id;
+            // $status = $model->status;
+            // foreach (Yii::$app->request->post('role_id') as $key => $value) {
+            //     $model = new UserRolesMapping();
+            //     $model->user_id = $userId;
+            //     $model->status = $status;
+            //     $model->role_id = $value;
+            //     $model->save();
+            //     $count++;
+            // }
+            // if ($count) {
+            //     return $this->redirect(['index']);
+            // }
         } else {
                 return $this->render('create', [
                     'model' => $model,'tasks'=>$tasks
                 ]);
             }
     }
+
+
+
+
 
     /**
      * Updates an existing UserRolesMapping model.

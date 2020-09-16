@@ -27,7 +27,7 @@ use common\models\RolesMst;
           <div class="row">
 
             <?php $taskArr = [1 => 'Category', 2 => 'Investigations',3=>'Banners',4=>'New Requests',5=>'Active Users']; ?>
-            <?php foreach($tasks as $tsks){?>
+            <?php foreach($tasks as $tsks){ ?>
                 <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12" style="min-height: 200px; !important;">
                     <div class="i-checks ">
                         <label>
@@ -39,10 +39,11 @@ use common\models\RolesMst;
                     $subtasks=RolesMst::find()->where(['task'=>$tsks->task])->orderBy(['sort_order' => SORT_ASC])->All();
                     if(!empty($subtasks)){
                         foreach ($subtasks as $subtask) {
+                        $chName="UserRolesMapping[role_id][".$tsks->task."][]";
                     ?>
                       <div class="i-checks ">
                         <label>
-                            <input type="checkbox" name="UserRolesMapping[role_id][]" class="<?='checkboxall individual-check individual'.$tsks->task?>" value="<?=$subtask->id?>"> <i></i><?=($subtask->sub_task)?$subtask->sub_task:""?>
+                    <input type="checkbox" name=<?=$chName?> class="<?='checkboxall individual-check individual'.$tsks->task?>" value="<?=$subtask->id?>"> <i></i><?=($subtask->sub_task)?$subtask->sub_task:""?>
                         </label>
                     </div>
                     <?php
