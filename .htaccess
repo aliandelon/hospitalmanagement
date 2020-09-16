@@ -28,8 +28,10 @@ RewriteCond %{REQUEST_URI} ^/hospitalmanagement/(assets|css|js|images|video)
 RewriteRule ^assets/(.*)$ frontend/web/assets/$1 [L]
 RewriteRule ^css/(.*)$ frontend/web/css/$1 [L]
 RewriteRule ^js/(.*)$ frontend/web/js/$1 [L]
-RewriteRule ^images/(.*)$ frontend/web/images/$1 [L]
+RewriteRule ^img/(.*)$ frontend/web/img/$1 [L]
 RewriteRule ^video/(.*)$ frontend/web/video/$1 [L]
+RewriteRule ^fonts/(.*)$ frontend/web/fonts/$1 [L]
+
 
 RewriteRule ^login/css/(.*)$ frontend/web/login/css/$1 [L]
 RewriteRule ^login/js/(.*)$ frontend/web/login/js/$1 [L]
