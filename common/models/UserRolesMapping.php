@@ -11,12 +11,15 @@ use Yii;
  * @property integer $user_id
  * @property integer $role_id
  * @property integer $status
+ * @property integer $role_main_id
+ 
  */
 class UserRolesMapping extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
+    public $role_main_id;
     public static function tableName()
     {
         return 'user_roles_mapping';
@@ -29,7 +32,7 @@ class UserRolesMapping extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'role_id', 'status'], 'required'],
-            [['user_id', 'role_id', 'status'], 'integer'],
+            [['role_main_id','user_id', 'role_id', 'status'], 'integer'],
         ];
     }
 
