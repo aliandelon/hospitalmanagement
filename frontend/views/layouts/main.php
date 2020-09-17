@@ -10,6 +10,9 @@ use frontend\assets\AppAsset;
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
+<?php
+$selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
+?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
         <head>
@@ -102,7 +105,9 @@ AppAsset::register($this);
                         <li class="active">
                             <a href="index-2.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
-                        
+                         <li>
+                            <a href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update?id='.$selectHospitalId->id ?>"><i class="fa fa-cog"></i> <span>Settings</span></a>
+                        </li>
                         
                         
                         
