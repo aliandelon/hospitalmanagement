@@ -21,7 +21,7 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
                 <?= Html::csrfMetaTags() ?>
                 <title><?= Html::encode($this->title) ?></title>
                 <?php $this->head() ?>
-                <?php $pageArray = ['dashboard'];if (in_array(Yii::$app->controller->action->id , $pageArray)) {
+                <?php $actionArray = ['site'];$pageArray = ['index'];if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$app->controller->id , $actionArray)) {
 ?>
 <script type="text/javascript" src="<?php echo Yii::getAlias('@web') ?>/js/jquery-3.2.1.min.js"></script> 
 <script type="text/javascript" src="<?php echo Yii::getAlias('@web') ?>/js/chart.js"></script> <?php }?>
