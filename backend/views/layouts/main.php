@@ -49,16 +49,6 @@ DashboardAsset::register($this);
                                 'options' => ['class' => 'sidebar-menu treeview'],
                                 'items' => [
 
-                                    // roles start here
-                                    ['label' => '<span class="fa fa-users icon-wrap"></span>&nbsp;<span class="menulist">Tasks<i class="fa fa-angle-left pull-right"></i></span>', 
-                                    'url' => ['#'],
-                                        'template' => '<a href="{url}" >{label}</a>',
-                                        'items' => [ 
-
-                                    ['label' => '<span class="fa fa-sitemap" title="List Tasks"></span>&nbsp;<span class="menulist">List Tasks</span>', 'url' => ['/roles-mst/index']],
-                                    ['label' => '<span class="fa fa-sitemap" title="Create Tasks"></span>&nbsp;<span class="menulist">Create Tasks</span>', 'url' => ['/roles-mst/create']],
-                                    ],],
-
                                 // roles end here
                                      ['label' => '<span class="fa fa-child icon-wrap"></span>&nbsp;<span class="menulist">Admin<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
@@ -68,16 +58,6 @@ DashboardAsset::register($this);
                                     ['label' => '<span class="fa fa-sitemap" title="Create Admin Details"></span>&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
                                     ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
                                 ],],
-                                 // user roles start here
-                                    ['label' => '<span class="fa fa-user icon-wrap"></span>&nbsp;<span class="menulist">Assign Roles<i class="fa fa-angle-left pull-right"></i></span>', 
-                                    'url' => ['#'],
-                                        'template' => '<a href="{url}" >{label}</a>',
-                                        'items' => [ 
-
-                                    ['label' => '<span class="fa fa-sitemap" title="List Assigned Roles"></span>&nbsp;<span class="menulist">List Assigned Roles</span>', 'url' => ['/user-roles-mapping/index']],
-                                    ['label' => '<span class="fa fa-sitemap" title="Assign New Roles"></span>&nbsp;<span class="menulist">Assign New Roles</span>', 'url' => ['/user-roles-mapping/create']],
-                                ],],
-                                // user roles end
                                    
 
                                 ['label' => '<span class="fa fa-bars icon-wrap"></span>&nbsp;<span class="menulist">Category<i class="fa fa-angle-left pull-right"></i></span>', 
@@ -119,6 +99,16 @@ DashboardAsset::register($this);
                                     ['label' => '<span class="fa fa-pencil icon-wrap"></span>&nbsp;<span class="menulist">Super Admin</span>', 
                                     'url' => ['super-admin-details/update'],
                                     ],
+
+                                    // roles start here
+                                    ['label' => '<span class="fa fa-cogs icon-wrap"></span>&nbsp;<span class="menulist">Settings<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    'url' => ['#'],
+                                        'template' => '<a href="{url}" >{label}</a>',
+                                        'items' => [ 
+
+                                    ['label' => '<span class="fa fa-sitemap" title="List Tasks"></span>&nbsp;<span class="menulist">Tasks</span>', 'url' => ['/roles-mst/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Tasks"></span>&nbsp;<span class="menulist">Permissions</span>', 'url' => ['/user-roles-mapping/index']],
+                                    ],],
 
                                 ['label' => '<span class="fa fa-plus icon-wrap"></span>&nbsp;<span class="menulist">New Request</span>', 
                                     'url' => ['hospital-clinic-details/new-request-index'],
