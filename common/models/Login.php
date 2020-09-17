@@ -79,8 +79,13 @@ class Login  extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-
-        return static::findOne(['email' => $username]);
+        return static::find()
+        ->where([
+            'email' => $username,
+            'type' => [10,1],
+        ])
+        ->one();
+        // return static::find()->where(['email' => $username])->andWhere(['N', 'type', [10,1]])->one();
     }
 
     /**
