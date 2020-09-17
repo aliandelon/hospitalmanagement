@@ -50,14 +50,14 @@ DashboardAsset::register($this);
                                 'items' => [
 
                                 // roles end here
-                                     ['label' => '<span class="fa fa-child icon-wrap"></span>&nbsp;<span class="menulist">Admin<i class="fa fa-angle-left pull-right"></i></span>', 
-                                    'url' => ['#'],
-                                        'template' => '<a href="{url}" >{label}</a>',
-                                        'items' => [ 
+                                //      ['label' => '<span class="fa fa-child icon-wrap"></span>&nbsp;<span class="menulist">Admin<i class="fa fa-angle-left pull-right"></i></span>', 
+                                //     'url' => ['#'],
+                                //         'template' => '<a href="{url}" >{label}</a>',
+                                //         'items' => [ 
 
-                                    ['label' => '<span class="fa fa-sitemap" title="Create Admin Details"></span>&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
-                                    ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
-                                ],],
+                                //     ['label' => '<span class="fa fa-sitemap" title="Create Admin Details"></span>&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
+                                //     ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
+                                // ],],
                                    
 
                                 ['label' => '<span class="fa fa-bars icon-wrap"></span>&nbsp;<span class="menulist">Category<i class="fa fa-angle-left pull-right"></i></span>', 
@@ -107,11 +107,11 @@ DashboardAsset::register($this);
                                     ],
 
                                     // roles start here
-                                    ['label' => '<span class="fa fa-cogs icon-wrap"></span>&nbsp;<span class="menulist">Settings<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    ['label' => '<span class="fa fa-cogs icon-wrap"></span>&nbsp;<span class="menulist">Roles & Permissions<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
-
+                                    ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
                                     ['label' => '<span class="fa fa-sitemap" title="List Tasks"></span>&nbsp;<span class="menulist">Tasks</span>', 'url' => ['/roles-mst/index']],
                                     ['label' => '<span class="fa fa-sitemap" title="Create Tasks"></span>&nbsp;<span class="menulist">Permissions</span>', 'url' => ['/user-roles-mapping/index']],
                                     ],],
