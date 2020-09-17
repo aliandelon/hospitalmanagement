@@ -33,20 +33,20 @@ return [
                                 ],
         ],
         'user' => [
-            'identityClass' => 'frontend\models\Students',
+            'identityClass' => 'frontend\models\Login',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
-        'parent' => [
-            'class' => 'yii\web\User',
-            'identityClass' => 'frontend\models\parents',
-            'enableAutoLogin' => true,
-            'loginUrl' => 'site/parent-login',
-            'identityCookie' => [
-                'name' => '_parent',
-                'httpOnly' => true,
-            ]
-        ],
+        // 'parent' => [
+        //     'class' => 'yii\web\User',
+        //     'identityClass' => 'frontend\models\parents',
+        //     'enableAutoLogin' => true,
+        //     'loginUrl' => 'site/parent-login',
+        //     'identityCookie' => [
+        //         'name' => '_parent',
+        //         'httpOnly' => true,
+        //     ]
+        // ],
         'session' => [
 // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',

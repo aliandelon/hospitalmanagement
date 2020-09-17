@@ -12,8 +12,6 @@ class AppAsset extends AssetBundle {
         public $basePath = '@webroot';
         public $baseUrl = '@web';
         public $css = [
-
-           
             'https://fonts.googleapis.com/icon?family=Material+Icons',
             'css/bootstrap.min.css',
             'css/font-awesome.min.css',

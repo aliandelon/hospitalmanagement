@@ -28,20 +28,23 @@ $this->params['breadcrumbs'][] = $this->title;
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Enter username">
-						<input class="input100" type="text" name="LoginForm[username]" placeholder="Email">
+						 <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'class' => 'input100','placeholder' => 'Email'])->label(false); ?>
+						<!-- <input class="input100" type="text" name="LoginForm[username]" placeholder="Email"> -->
 						<span class="focus-input100" data-placeholder="&#xf207;"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" name="LoginForm[username]" placeholder="Password">
+						 <?= $form->field($model, 'password')->passwordInput(['class' => 'input100', 'placeholder' => 'password'])->label(false); ?>
+						<!-- <input class="input100" type="password" name="LoginForm[username]" placeholder="Password"> -->
 						<span class="focus-input100" data-placeholder="&#xf191;"></span>
 					</div>
 
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
+						<!-- <button class="login100-form-btn">
 							Login
-						</button>
+						</button> -->
+						<?= Html::submitButton('Login', ['class' => 'login100-form-btn', 'name' => 'login-button']) ?>
 					</div>
 
 					<!-- <div class="text-center p-t-50">
