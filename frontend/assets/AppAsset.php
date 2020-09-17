@@ -16,17 +16,22 @@ class AppAsset extends AssetBundle {
             'css/bootstrap.min.css',
             'css/font-awesome.min.css',
             'css/style.css',
+            //data live search for dropdown
+            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css'
         ];
         public $js = [
             // 'js/jquery-3.2.1.min.js',
-            'js/jquery-3.2.1.min.js',
+            //'js/jquery-3.2.1.min.js',
             'js/popper.min.js',
             'js/bootstrap.min.js',
             'js/jquery.slimscroll.js',
             'js/chart.bundle.js',
-            'js/chart.js',
+            //'js/chart.js',
             'js/app.js',
-           
+            //data live search for dropdown
+            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js'
         ];
         // public $video = [
         //     'video/images',
