@@ -99,6 +99,12 @@ DashboardAsset::register($this);
                                     ['label' => '<span class="fa fa-pencil icon-wrap"></span>&nbsp;<span class="menulist">Super Admin</span>', 
                                     'url' => ['super-admin-details/update'],
                                     ],
+                                    ['label' => '<span class="fa fa-user-md  icon-wrap"></span>&nbsp;<span class="menulist">Doctors</span>', 
+                                    'url' => ['doctors-details/'],
+                                    ],
+                                    ['label' => '<span class="fa fa-wheelchair icon-wrap"></span>&nbsp;<span class="menulist">Patients</span>', 
+                                    'url' => ['patient-details/'],
+                                    ],
 
                                     // roles start here
                                     ['label' => '<span class="fa fa-cogs icon-wrap"></span>&nbsp;<span class="menulist">Settings<i class="fa fa-angle-left pull-right"></i></span>', 
@@ -109,6 +115,8 @@ DashboardAsset::register($this);
                                     ['label' => '<span class="fa fa-sitemap" title="List Tasks"></span>&nbsp;<span class="menulist">Tasks</span>', 'url' => ['/roles-mst/index']],
                                     ['label' => '<span class="fa fa-sitemap" title="Create Tasks"></span>&nbsp;<span class="menulist">Permissions</span>', 'url' => ['/user-roles-mapping/index']],
                                     ],],
+                                    ['label' => '<span class="fa fa-envelope icon-wrap"></span>&nbsp;<span class="menulist">Feedback</span>', 
+                                    'url' => ['feedback/']],
 
                                 ['label' => '<span class="fa fa-plus icon-wrap"></span>&nbsp;<span class="menulist">New Request</span>', 
                                     'url' => ['hospital-clinic-details/new-request-index'],
