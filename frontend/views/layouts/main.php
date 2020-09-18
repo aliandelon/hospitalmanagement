@@ -111,6 +111,9 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
                         <li>
                             <a href="<?= Yii::$app->request->baseUrl . '/schedule/index' ?>"><i class="fa fa-calendar-check-o"></i> <span>Schedule</span></a>
                         </li>
+                        <li>
+                            <a href="<?= Yii::$app->request->baseUrl . '/site/holiday' ?>"><i class="fa fa-calendar"></i> <span>Holiday</span></a>
+                        </li>
                         
                         
                         
