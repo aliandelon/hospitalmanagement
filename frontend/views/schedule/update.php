@@ -11,11 +11,16 @@ $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' 
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="schedule-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+	<div class="row">
+	    <div class="col-lg-8 offset-lg-2">
+	    	<h4><?= Html::encode($this->title) ?></h4>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="col-lg-8 offset-lg-2">
+		    <?= $this->render('_form', [
+		        'model' => $model,
+		    ]) ?>
+		</div>
+	</div>
 </div>

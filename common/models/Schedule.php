@@ -72,4 +72,12 @@ class Schedule extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Investigations::class, ['id' => 'investigation_id']);
     }
+
+    public function checkScheduleExist($con, $model)
+    {
+        
+        $query = "SELECT count(*)cnt from  schedule where investigation_id='$model->investigation_id' and hospital_id = '$model->hospital_id' AND doctor_id = $model->doctor_id AND status =1;";
+        $result = $con->createCommand($query)->queryOne();
+        return $result['cnt'];
+    }
 }

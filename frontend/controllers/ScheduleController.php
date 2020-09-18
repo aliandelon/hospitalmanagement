@@ -77,36 +77,45 @@ class ScheduleController extends Controller
             $model2->duration = '30';
             $model2->details = '';
             $model2->status = 1;
-            if($model->save()){
-                $check = $model2->checkHospitalInvestigation($con, $model2);
-                if($check)
-                {
-                    $delete = $model->deleteHospitalInvestigation($con, $model2);
-                    if($model2->save()){
-                        $transaction->commit();
-                        return $this->redirect(['view', 'id' => $model->id]);
+            $checkResult = $model->checkScheduleExist($con, $model);
+            if($checkResult == 0){
+                if($model->save()){
+                    $check = $model2->checkHospitalInvestigation($con, $model2);
+                    if($check)
+                    {
+                        $delete = $model2->deleteHospitalInvestigation($con, $model2);
+                        if($model2->save()){
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        }else{
+                            $transaction->rollback();
+                            return $this->render('create', [
+                                'model' => $model,
+                            ]);
+                        }
                     }else{
-                        $transaction->rollback();
-                        return $this->render('create', [
-                            'model' => $model,
-                        ]);
+                        if($model2->save()){
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        }else{
+                            $transaction->rollback();
+                            return $this->render('create', [
+                                'model' => $model,'model2'=>$model2
+                            ]);
+                        }
                     }
                 }else{
-                    if($model2->save()){
-                        $transaction->commit();
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }else{
-                        $transaction->rollback();
-                        return $this->render('create', [
-                            'model' => $model,'model2'=>$model2
-                        ]);
-                    }
+                    $transaction->rollback();
+                    return $this->render('create', [
+                        'model' => $model,
+                    ]);   
                 }
             }else{
+                Yii::$app->session->setFlash('error', "Same Schedule Already Exist.");
                 $transaction->rollback();
                 return $this->render('create', [
                     'model' => $model,
-                ]);   
+                ]);  
             }
         } else {
             return $this->render('create', [
