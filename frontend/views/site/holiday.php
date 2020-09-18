@@ -50,17 +50,17 @@
                 <div class="modal-dialog">
                     <div class="modal-content modal-md">
                         <div class="modal-header">
-                            <h4 class="modal-title">Add Event</h4>
+                            <h4 class="modal-title">Add Holiday</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
                             <!-- <form> -->
                                 <div class="form-group">
-                                    <label>Event Name <span class="text-danger">*</span></label>
+                                    <label>Reason <span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" id="eventName">
                                 </div>
                                 <div class="form-group">
-                                    <label>Event Date <span class="text-danger">*</span></label>
+                                    <label>Date <span class="text-danger">*</span></label>
                                     <div class="cal-icon">
                                         <input class="form-control datetimepicker" type="text" id="eventDate">
                                     </div>
