@@ -166,7 +166,7 @@
         defaultEvents  = $.ajax({
             url : baseurl+"site/viewevent",
             type: "POST",
-            data : {"hosId":'3'},
+            data : {"hosId":''},
             dataType: "JSON",
             global: false,
                 async: false,
