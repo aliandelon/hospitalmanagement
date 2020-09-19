@@ -133,7 +133,8 @@ class SiteController extends Controller {
             $post = Yii::$app->request->post();
             $model = new HolidayList();
             $con = \Yii::$app->db;
-            $addEvents = $model->viewEvents($con, $post['hosId']);
+            $hospital_id = Yii::$app->user->identity->id;
+            $addEvents = $model->viewEvents($con, $hospital_id);
             return json_encode($addEvents);
         }
 
