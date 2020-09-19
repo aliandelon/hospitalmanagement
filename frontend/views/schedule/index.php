@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use common\models\Investigations;
 use common\models\DoctorsDetails;
+use common\models\Category;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
@@ -12,6 +13,11 @@ use yii\helpers\ArrayHelper;
 
 $this->title = 'Schedules';
 $this->params['breadcrumbs'][] = $this->title;
+?>
+<?php /*$this->registerCssFile("@web/css/themes/black-and-white.css", [
+    'depends' => [\yii\bootstrap\BootstrapAsset::className()],
+    'media' => 'print',
+], 'css-print-theme');*/
 ?>
 <div class="schedule-index">
     <div class="row">
@@ -42,6 +48,16 @@ $this->params['breadcrumbs'][] = $this->title;
                             'filterInputOptions' => ['class' => 'form-control', 'id' => 'category'],
                         ],
                         [
+                            'attribute' => 'category',
+                            'label' => 'Investigation Catgory',
+                            'value' => function($model){
+                                return $model->investigations->category->category_name;
+                            },
+                            'filter'=>ArrayHelper::map(Category::find()->asArray()->all(), 'id', 'category_name'),
+                            'filterInputOptions' => ['class' => 'form-control', 'id' => 'category'],
+                            'format'=>'raw',
+                        ],
+                        /*[
                             'attribute'=>'hospital_id',
                             'label' => 'Hospital',
                             'value' => function($model){
@@ -49,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             },
                             'filter'=>ArrayHelper::map(DoctorsDetails::find()->where('status = 1 AND  hospital_clinic_id = 2')->all(), 'id','name'),
                             'filterInputOptions' => ['class' => 'form-control', 'id' => 'category'],
-                        ],
+                        ],*/
                         [
                             'attribute'=>'doctor_id',
                             'label' => 'Doctor',
@@ -89,13 +105,43 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         // 'created_on',
 
-                        ['class' => 'yii\grid\ActionColumn',
-                                'header' => 'update',
-                                'template' => '{update}'],
-                        ['class' => 'yii\grid\ActionColumn',
-                            'header' => 'view',
-                            'template' => '{view}',
+                        // ['class' => 'yii\grid\ActionColumn',
+                        //     'header' => 'update',
+                        //     'template' => '{update}'],
+                        // ['class' => 'yii\grid\ActionColumn',
+                        //     'header' => 'view',
+                        //     'template' => '{view}',
+                        // ],
+                        [
+                          'class' => 'yii\grid\ActionColumn',
+                          'header' => 'Actions',
+                          'headerOptions' => ['style' => 'color:#337ab7'],
+                          'template' => '{view}',
+                          'buttons' => [
+                            'view' => function ($url, $model) {
+                               
+                                     return Html::a('View',"view?id=".$model->id, ['newrequest-view','id'=>$model->id], [
+                                                'title' => Yii::t('app', 'lead-view'),
+                                    ]);   
+                                 
+                                
+                            },
+
+                          ],
+                      ],
+                      [
+                          'class' => 'yii\grid\ActionColumn',
+                          'header' => 'Actions',
+                          'headerOptions' => ['style' => 'color:#337ab7'],
+                          'template' => '{update}',
+                          'buttons' => [
+                          'update' => function ($url, $model) {
+                                return Html::a('Update', ['newrequest-update','id'=>$model->id], [
+                                            'title' => Yii::t('app', 'lead-update'),
+                                ]);
+                            },
                         ],
+                      ]
                     ],
                 ]); ?>
             </div>

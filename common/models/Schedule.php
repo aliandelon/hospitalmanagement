@@ -19,6 +19,7 @@ use Yii;
 class Schedule extends \yii\db\ActiveRecord
 {
     public $amount; 
+    public $category; 
     /**
      * @inheritdoc
      */
@@ -35,7 +36,7 @@ class Schedule extends \yii\db\ActiveRecord
         return [
             [['investigation_id', 'hospital_id', 'doctor_id','amount'], 'required'],
             [['id', 'investigation_id', 'hospital_id', 'doctor_id', 'sunday_holiday', 'status'], 'integer'],
-            [['created_on','amount'], 'safe'],
+            [['created_on','amount','category'], 'safe'],
             //['amount', 'PriceValidator'],
             ['amount', 'match', 'pattern'=>'/^[¥£$€]?[ ]?[-]?[ ]?[0-9]*[.,]{0,1}[0-9]{0,2}[ ]?[¥£$€]?$/'],
 

@@ -19,7 +19,7 @@ class ScheduleSearch extends Schedule
     {
         return [
             [['id', 'investigation_id', 'hospital_id', 'doctor_id', 'sunday_holiday', 'status'], 'integer'],
-            [['created_on'], 'safe'],
+            [['created_on','category'], 'safe'],
         ];
     }
 
@@ -67,6 +67,11 @@ class ScheduleSearch extends Schedule
             'status' => $this->status,
             'created_on' => $this->created_on,
         ]);
+        if($this->category != '')
+        {
+            $query->joinWith('investigations');
+            $query->andFilterWhere(['mst_id' =>$this->category]);
+        }
 
         return $dataProvider;
     }

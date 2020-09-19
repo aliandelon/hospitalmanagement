@@ -19,6 +19,8 @@ class AppAsset extends AssetBundle {
             'css/fullcalendar.min.css',
             'css/select2.min.css',
             'css/bootstrap-datetimepicker.min.css',
+            // adding glyficons
+           // "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
 
 
             //data live search for dropdown

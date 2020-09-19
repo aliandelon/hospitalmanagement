@@ -33,13 +33,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => $model->investigations->investigation_name,          
             ],
             [                                                 
-                'label' => 'Hospital',
-                'value' => $model->hospital->name,          
+                'label' => 'Inveastigation Categoty',
+                'value' => $model->investigations->category->category_name,          
             ],
+            
             // [                                                 
-            //     'label' => 'Doctor',
-            //     'value' => $model->doctor->name,          
+            //     'label' => 'Hospital',
+            //     'value' => $model->hospital->name,          
             // ],
+            [                                                 
+                'label' => 'Doctor',
+                'value' => $model->doctor->name,          
+            ],
             [                                                  
                 'label' => 'sunday_holiday',
                 'value' => ($model->sunday_holiday == 1)?'Yes':'No'          
