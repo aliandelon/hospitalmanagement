@@ -23,6 +23,11 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
                 <?php $this->head() ?>
                 <?php $actionArray = ['site'];$pageArray = ['index'];if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$app->controller->id , $actionArray)) {
 ?>
+<script type="text/javascript">
+    var baseurl = "<?php print \yii\helpers\Url::base() . "/"; ?>";
+    var basepath = "<?php print \yii\helpers\Url::base(); ?>";
+    var curl = "<?php print Yii::$app->request->absoluteUrl; ?>";
+</script>
 <script type="text/javascript" src="<?php echo Yii::getAlias('@web') ?>/js/jquery-3.2.1.min.js"></script> 
 <script type="text/javascript" src="<?php echo Yii::getAlias('@web') ?>/js/chart.js"></script> <?php }?>
         </head>
@@ -101,7 +106,6 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
-                        <li class="menu-title">Main</li>
                         <li class="active">
                             <a href="index-2.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
