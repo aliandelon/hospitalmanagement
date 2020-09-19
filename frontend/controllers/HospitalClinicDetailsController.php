@@ -106,6 +106,7 @@ class HospitalClinicDetailsController extends Controller
                $model->status=3;
             }
             if($model->save()){
+              Yii::$app->session->setFlash('success', 'Successfully updated the details');
               return $this->redirect('update2?id='.$id);  
             }else{
                 print_r($model->getErrors());exit;

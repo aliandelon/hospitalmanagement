@@ -69,8 +69,8 @@ class ScheduleController extends Controller
         $con = \Yii::$app->db;
         $transaction = $con->beginTransaction();
         if ($model->load(Yii::$app->request->post())) {
-            //$model->hospital_id = Yii::$app->user->identity->id;
-            $model->hospital_id = 2;
+            $model->hospital_id = Yii::$app->user->identity->id;
+            // $model->hospital_id = 2;
             $model2->investigation_id = $model->investigation_id;
             $model2->hospital_clinic_id = $model->hospital_id;
             $model2->amount = $model->amount;

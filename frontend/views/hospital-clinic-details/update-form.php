@@ -26,8 +26,20 @@ use yii\widgets\ActiveForm;
 
 
 <div class="content" style="background-color: #fff">
+
                 <div class="row">
-                    <div class="col-lg-8 offset-lg-2">
+                    <div class="col-lg-8 offset-lg-2" style="margin-top: 16px;">
+                        <?php 
+                         // Yii::$app->session->setFlash('success', 'Successfully updated the details');
+                            if(Yii::$app->session->hasFlash('success')):?>
+                    <div class="alert alert-success" style="margin-top: 16px;">
+                      <?php echo Yii::$app->session->getFlash('success'); ?>
+                    </div>
+                    <!--<div class="info">-->
+                        <!--Yii::$app->session->getFlash('myMessage');-->
+                        
+                    <!--</div>-->
+                <?php endif; ?>
                         <h4 class="page-title">Edit Details</h4>
                     </div>
                 </div>

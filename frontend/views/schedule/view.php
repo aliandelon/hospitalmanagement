@@ -36,10 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Hospital',
                 'value' => $model->hospital->name,          
             ],
-            [                                                 
-                'label' => 'Doctor',
-                'value' => $model->doctor->name,          
-            ],
+            // [                                                 
+            //     'label' => 'Doctor',
+            //     'value' => $model->doctor->name,          
+            // ],
             [                                                  
                 'label' => 'sunday_holiday',
                 'value' => ($model->sunday_holiday == 1)?'Yes':'No'          

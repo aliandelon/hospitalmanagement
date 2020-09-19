@@ -14,6 +14,8 @@ use kartik\select2\Select2;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+
+
 <div class="schedule-form">
     <?php if (Yii::$app->session->hasFlash('error')): ?>
         <div class="alert alert-danger alert-dismissable">
@@ -41,7 +43,7 @@ use kartik\select2\Select2;
         <div class="col-md-6">
             <?php 
 
-            $details=DoctorsDetails::find()->where('status = 1 AND  hospital_clinic_id = 2')->all();
+            $details=DoctorsDetails::find()->where(["status"=>1,"hospital_clinic_id"=>Yii::$app->user->identity->id])->all();
 
             $listData=ArrayHelper::map($details,'id','name');
             echo $form->field($model, 'doctor_id')->dropDownList(

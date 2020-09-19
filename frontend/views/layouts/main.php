@@ -106,7 +106,7 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
                             <a href="index-2.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
                          <li>
-                            <a href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update?id='.$selectHospitalId->id ?>"><i class="fa fa-cog"></i> <span>Settings</span></a>
+                            <a href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update2?id='.$selectHospitalId->id ?>"><i class="fa fa-cog"></i> <span>Settings</span></a>
                         </li>
                         <li>
                             <a href="<?= Yii::$app->request->baseUrl . '/schedule/index' ?>"><i class="fa fa-calendar-check-o"></i> <span>Schedule</span></a>
