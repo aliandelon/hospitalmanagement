@@ -15,7 +15,7 @@
                             <span class="dash-widget-bg3"><i class="fa fa-user-md" aria-hidden="true"></i></span>
                             <div class="dash-widget-info text-right">
                                 <h3>72</h3>
-                                <span class="widget-title3">Attendance <i class="fa fa-check" aria-hidden="true"></i></span>
+                                <span class="widget-title3">Appointments <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
                     </div>
@@ -57,8 +57,8 @@
 									<h4>Toatal earnings In This Year</h4>
 									<div class="float-right">
 										<ul class="chat-user-total">
-											<li><i class="fa fa-circle current-users" aria-hidden="true"></i>ICU</li>
-											<li><i class="fa fa-circle old-users" aria-hidden="true"></i> OPD</li>
+											<!-- <li><i class="fa fa-circle current-users" aria-hidden="true"></i>ICU</li>
+											<li><i class="fa fa-circle old-users" aria-hidden="true"></i> OPD</li> -->
 										</ul>
 									</div>
 								</div>	
@@ -79,9 +79,9 @@
 										<thead class="d-none">
 											<tr>
 												<th>Patient Name</th>
+												<th>Investigation Name</th>
 												<th>Doctor Name</th>
 												<th>Timing</th>
-												<th class="text-right">Status</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -89,6 +89,10 @@
 												<td style="min-width: 200px;">
 													<a class="avatar" href="profile.html">B</a>
 													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
+												</td>
+												<td>
+													<h5 class="time-title p-0">Blood Test</h5>
+													<p>Investigation</p>
 												</td>                 
 												<td>
 													<h5 class="time-title p-0">Appointment With</h5>
@@ -96,50 +100,53 @@
 												</td>
 												<td>
 													<h5 class="time-title p-0">Timing</h5>
-													<p>7.00 PM</p>
-												</td>
-												<td class="text-right">
-													<a href="appointments.html" class="btn btn-outline-primary take-btn">Take up</a>
+													<p>7:00 PM - 7:30PM</p>
 												</td>
 											</tr>
 											<tr>
 												<td style="min-width: 200px;">
 													<a class="avatar" href="profile.html">B</a>
 													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>                 
+												</td>    
+												<td>
+													<h5 class="time-title p-0">Blood Test</h5>
+													<p>Investigation</p>
+												</td>                  
 												<td>
 													<h5 class="time-title p-0">Appointment With</h5>
 													<p>Dr. Cristina Groves</p>
 												</td>
 												<td>
 													<h5 class="time-title p-0">Timing</h5>
-													<p>7.00 PM</p>
-												</td>
-												<td class="text-right">
-													<a href="appointments.html" class="btn btn-outline-primary take-btn">Take up</a>
+													<p>7:00 PM - 7:30PM</p>
 												</td>
 											</tr>
 											<tr>
 												<td style="min-width: 200px;">
 													<a class="avatar" href="profile.html">B</a>
 													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>                 
+												</td>   
+												<td>
+													<h5 class="time-title p-0">Blood Test</h5>
+													<p>Investigation</p>
+												</td>                   
 												<td>
 													<h5 class="time-title p-0">Appointment With</h5>
 													<p>Dr. Cristina Groves</p>
 												</td>
 												<td>
 													<h5 class="time-title p-0">Timing</h5>
-													<p>7.00 PM</p>
-												</td>
-												<td class="text-right">
-													<a href="appointments.html" class="btn btn-outline-primary take-btn">Take up</a>
+													<p>7:00 PM - 7:30PM</p>
 												</td>
 											</tr>
 											<tr>
 												<td style="min-width: 200px;">
 													<a class="avatar" href="profile.html">B</a>
 													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
+												</td>     
+												<td>
+													<h5 class="time-title p-0">Blood Test</h5>
+													<p>Investigation</p>
 												</td>                 
 												<td>
 													<h5 class="time-title p-0">Appointment With</h5>
@@ -147,27 +154,25 @@
 												</td>
 												<td>
 													<h5 class="time-title p-0">Timing</h5>
-													<p>7.00 PM</p>
-												</td>
-												<td class="text-right">
-													<a href="appointments.html" class="btn btn-outline-primary take-btn">Take up</a>
+													<p>7:00 PM - 7:30PM</p>
 												</td>
 											</tr>
 											<tr>
 												<td style="min-width: 200px;">
 													<a class="avatar" href="profile.html">B</a>
 													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>                 
+												</td>  
+												<td>
+													<h5 class="time-title p-0">Blood Test</h5>
+													<p>Investigation</p>
+												</td>                    
 												<td>
 													<h5 class="time-title p-0">Appointment With</h5>
 													<p>Dr. Cristina Groves</p>
 												</td>
 												<td>
 													<h5 class="time-title p-0">Timing</h5>
-													<p>7.00 PM</p>
-												</td>
-												<td class="text-right">
-													<a href="appointments.html" class="btn btn-outline-primary take-btn">Take up</a>
+													<p>7:00 PM - 7:30PM</p>
 												</td>
 											</tr>
 										</tbody>
@@ -179,7 +184,7 @@
                     <div class="col-12 col-md-6 col-lg-4 col-xl-4">
                         <div class="card member-panel">
 							<div class="card-header bg-white">
-								<h4 class="card-title mb-0">Upcoming Holidays</h4>
+								<h4 class="card-title mb-0">Our Doctors</h4>
 							</div>
                             <div class="card-body">
                                 <ul class="contact-list">
@@ -189,8 +194,8 @@
                                                 <a href="profile.html" title="John Doe"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
                                             </div>
                                             <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">Republic Day</span>
-                                                <span class="contact-date">Jan 26</span>
+                                                <span class="contact-name text-ellipsis">Dr. John Baskar</span>
+                                                <span class="contact-date">Blood Test</span>
                                             </div>
                                         </div>
                                     </li>
@@ -200,8 +205,8 @@
                                                 <a href="profile.html" title="Richard Miles"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status offline"></span></a>
                                             </div>
                                             <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">Valentines Day</span>
-                                                <span class="contact-date">Feb 14</span>
+                                                <span class="contact-name text-ellipsis">Dr. Naveen Nandagopal</span>
+                                                <span class="contact-date">MRI Scan</span>
                                             </div>
                                         </div>
                                     </li>
@@ -211,8 +216,8 @@
                                                 <a href="profile.html" title="John Doe"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status away"></span></a>
                                             </div>
                                             <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">Vishu</span>
-                                                <span class="contact-date">Apr 14</span>
+                                                <span class="contact-name text-ellipsis">Dr. Jerry Varghese</span>
+                                                <span class="contact-date">CT Scan</span>
                                             </div>
                                         </div>
                                     </li>
@@ -222,8 +227,8 @@
                                                 <a href="profile.html" title="Richard Miles"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
                                             </div>
                                             <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">Good Friday</span>
-                                                <span class="contact-date">Apr 20</span>
+                                                <span class="contact-name text-ellipsis">Dr. Suthambiga</span>
+                                                <span class="contact-date">Pregnancy Test</span>
                                             </div>
                                         </div>
                                     </li>
@@ -233,8 +238,8 @@
                                                 <a href="profile.html" title="John Doe"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status offline"></span></a>
                                             </div>
                                             <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">May Day</span>
-                                                <span class="contact-date">May 1</span>
+                                                <span class="contact-name text-ellipsis">Dr. Moncy Mathai</span>
+                                                <span class="contact-date">Eye Test</span>
                                             </div>
                                         </div>
                                     </li>
@@ -244,15 +249,15 @@
                                                 <a href="profile.html" title="Richard Miles"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status away"></span></a>
                                             </div>
                                             <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">Sep 1</span>
-                                                <span class="contact-date">onam</span>
+                                                <span class="contact-name text-ellipsis">Dr. Sunil</span>
+                                                <span class="contact-date">ECG</span>
                                             </div>
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                             <div class="card-footer text-center bg-white">
-                                <a href="doctors.html" class="text-muted">View all Holidays</a>
+                                <a href="doctors.html" class="text-muted">View all Doctors</a>
                             </div>
                         </div>
                     </div>
@@ -274,7 +279,7 @@
 												</td>
 												<td>Johndoe21@gmail.com</td>
 												<td>+1-202-555-0125</td>
-												<td><button class="btn btn-primary btn-primary-one float-right">Fever</button></td>
+												<td><button class="btn btn-primary btn-primary-one float-right">MRI Scan</button></td>
 											</tr>
 											<tr>
 												<td>
@@ -283,7 +288,7 @@
 												</td>
 												<td>Richard123@yahoo.com</td>
 												<td>202-555-0127</td>
-												<td><button class="btn btn-primary btn-primary-two float-right">Cancer</button></td>
+												<td><button class="btn btn-primary btn-primary-two float-right">CT Scan</button></td>
 											</tr>
 											<tr>
 												<td>
@@ -292,7 +297,7 @@
 												</td>
 												<td>Richard123@yahoo.com</td>
 												<td>+1-202-555-0106</td>
-												<td><button class="btn btn-primary btn-primary-three float-right">Eye</button></td>
+												<td><button class="btn btn-primary btn-primary-three float-right">Eye Test</button></td>
 											</tr>
 											<tr>
 												<td>
@@ -301,7 +306,7 @@
 												</td>
 												<td>Richard123@yahoo.com</td>
 												<td>776-2323 89562015</td>
-												<td><button class="btn btn-primary btn-primary-four float-right">Fever</button></td>
+												<td><button class="btn btn-primary btn-primary-four float-right">Blood Test</button></td>
 											</tr>
 										</tbody>
 									</table>
@@ -311,10 +316,10 @@
 					</div>
 					<div class="col-12 col-md-6 col-lg-4 col-xl-4">
 						<div class="hospital-barchart">
-							<h4 class="card-title d-inline-block">Investigations</h4>
+							<h4 class="card-title d-inline-block">Today's Summary</h4>
 						</div>
 						<div class="bar-chart">
-							<div class="legend">
+							<!-- <div class="legend">
 								<div class="item">
 									<h4>Level1</h4>
 								</div>
@@ -328,44 +333,44 @@
 								<div class="item text-right">
 									<h4>Level4</h4>
 								</div>
-							</div>
+							</div> -->
 							<div class="chart clearfix">
 								<div class="item">
 									<div class="bar">
-										<span class="percent">16%</span>
-										<div class="item-progress" data-percent="16">
+										<span class="percent">200</span>
+										<div class="item-progress" data-percent="0">
 											<span class="title">MRI Scan</span>
 										</div>
 									</div>
 								</div>
 								<div class="item">
 									<div class="bar">
-										<span class="percent">71%</span>
-										<div class="item-progress" data-percent="71">
+										<span class="percent">7100</span>
+										<div class="item-progress" data-percent="0">
 											<span class="title">Blood Test</span>
 										</div>
 									</div>
 								</div>
 								<div class="item">
 									<div class="bar">
-										<span class="percent">82%</span>
-										<div class="item-progress" data-percent="82">
+										<span class="percent">820</span>
+										<div class="item-progress" data-percent="0">
 											<span class="title">Corona Test</span>
 										</div>
 									</div>
 								</div>
 								<div class="item">
 									<div class="bar">
-										<span class="percent">67%</span>
-										<div class="item-progress" data-percent="67">
+										<span class="percent">670</span>
+										<div class="item-progress" data-percent="0">
 											<span class="title">Urine Culturing</span>
 										</div>
 									</div>
 								</div>
 								<div class="item">
 									<div class="bar">
-										<span class="percent">30%</span>									
-										<div class="item-progress" data-percent="30">
+										<span class="percent">300</span>									
+										<div class="item-progress" data-percent="0">
 											<span class="title">Pregnancy Test</span>
 										</div>
 									</div>
