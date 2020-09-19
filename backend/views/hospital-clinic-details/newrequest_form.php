@@ -13,6 +13,10 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+     <?php
+        echo $form->field($model, 'type')->dropDownList(
+            ['1' => 'Hospital', '2' => 'Clinic'],['id'=>'type']
+    ); ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
     
@@ -22,7 +26,10 @@ use yii\widgets\ActiveForm;
             ['1' => 'Flat', '2' => 'Percentage']
     ); ?>
     <?= $form->field($model, 'commision')->textInput(['maxlength' => true]) ?>
-
+      <?php
+        echo $form->field($model, 'package_id')->dropDownList(
+            ['1' => 'Package 1', '2' => 'Package 2'],['id'=>'package']
+    ); ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-primary' : 'btn btn-primary']) ?>
     </div>

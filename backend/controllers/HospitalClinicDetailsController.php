@@ -109,8 +109,8 @@ class HospitalClinicDetailsController extends Controller
             $model2->type = 3;
             if($model2->save()){
                 $model->user_id = $model2->id;
-                $model->status = 2;
-                $model->created_by = (Yii::$app->user->identity->id == 1)?1:2;
+                $model->status = 4;
+                $model->created_by = Yii::$app->user->identity->id;
                 if($model->save())
                 {
                     return $this->redirect(['newrequest-view', 'id' => $model->id]);
@@ -196,5 +196,30 @@ class HospitalClinicDetailsController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionDetailsEnteredView($id)
+    {
+        return $this->render('details-entered-view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+ public function actionApproveDetails($id)
+    {
+        $model = HospitalClinicDetails::find()->where(['id' => $id])->one();
+        // echo '<pre>';
+        // print_r($model);exit;
+        $model->status=1;
+        $model->save(false);
+        Yii::$app->session->setFlash('success', 'The hospital '.$model->name.' has been succesfully verified and approved');
+        return $this->redirect(['new-request-index']);
+    }
+public function actionRejectDetails($id)
+    {
+        $model = HospitalClinicDetails::find()->where(['id' => $id])->one();
+        $model->status=2;
+        $model->save(false);
+        Yii::$app->session->setFlash('success', 'The hospital '.$model->name.' Rejected');
+        return $this->redirect(['new-request-index']);
     }
 }

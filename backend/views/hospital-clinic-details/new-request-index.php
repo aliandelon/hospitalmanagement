@@ -18,6 +18,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('New Request', ['new-request'], ['class' => 'btn btn-primary']) ?>
     </p>
+    <?php if(Yii::$app->session->hasFlash('success')):?>
+                    <div class="alert alert-success">
+                      <?php echo Yii::$app->session->getFlash('success'); ?>
+                    </div>
+                    <!--<div class="info">-->
+                        <!--Yii::$app->session->getFlash('myMessage');-->
+                        
+                    <!--</div>-->
+                <?php endif; ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -27,7 +36,21 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id',
             //'user_id',
             'name',
-            'type',
+           
+            [   
+                'attribute'=>'type',
+                'format'=>'raw',//raw,
+                'filter'=>['1'=>'Hospitals','2'=>'Clinics'],
+                'filterInputOptions' => ['class' => 'form-control', 'id' => 'type'],
+                'value'=>function($model){
+                    if($model->type=="1"){
+                     return Html::a('<span class="label label-success">Hospitals</span>');
+                     }else{
+                    return Html::a("<span class='label label-warning'>Clinics</span>");
+                     }    
+                     
+                }
+            ],
             'phone_number',
             'email:email',
             // 'have_diagnostic_center',
@@ -41,25 +64,27 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'area',
             // 'latitude',
             // 'longitude',
-            [                                                  
-                'label' => 'Status',
-                'value' => function($model)
-                {
-                    return $model->getStatusName($model->status);
-                    }        
-            ],
-            // 'package_id',
-            // 'created_by',
-            // 'commision_type',
-            // 'commision',
 
-            /*['class' => 'yii\grid\ActionColumn',
-                    'header' => 'update',
-                    'template' => '{update}'],
-            ['class' => 'yii\grid\ActionColumn',
-                'header' => 'view',
-                'template' => '{view}',
-            ],*/
+            [   
+                'attribute'=>'status',
+                'format'=>'raw',//raw,
+                'filter'=>['4'=>'Account Created','3'=>'Details Entered','2'=>'On Hold'],
+                'filterInputOptions' => ['class' => 'form-control', 'id' => 'leave_status'],
+                'value'=>function($model){
+                    if($model->status=="4"){
+                     return Html::a('<span class="label label-success">Account Created</span>');
+                     }else if($model->status=="3"){
+                    return Html::a("<span class='label label-warning'>Details Entered</span>");
+                     } else{
+                    return Html::a("<span class='label label-danger'>On Hold</span>");
+                     }    
+                     
+                }
+            ],
+
+
+
+          
 
             [
           'class' => 'yii\grid\ActionColumn',
@@ -68,15 +93,24 @@ $this->params['breadcrumbs'][] = $this->title;
           'template' => '{view}{update}',
           'buttons' => [
             'view' => function ($url, $model) {
-                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['newrequest-view','id'=>$model->id], [
-                            'title' => Yii::t('app', 'lead-view'),
-                ]);
+                if($model->status=='3' ||$model->status=='2'){
+                     return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',"details-entered-view?id=".$model->id, ['newrequest-view','id'=>$model->id], [
+                                'title' => Yii::t('app', 'lead-view'),
+                    ]);   
+                 }else{
+                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['newrequest-view','id'=>$model->id], [
+                                'title' => Yii::t('app', 'lead-view'),
+                    ]);  
+                 }
+                
             },
 
             'update' => function ($url, $model) {
-                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['newrequest-update','id'=>$model->id], [
-                            'title' => Yii::t('app', 'lead-update'),
-                ]);
+                if($model->status=='4'){
+                    return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['newrequest-update','id'=>$model->id], [
+                                'title' => Yii::t('app', 'lead-update'),
+                    ]);
+                 }
             },
 
           ],
