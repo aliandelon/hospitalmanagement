@@ -82,7 +82,8 @@ class HospitalClinicDetailsSearch extends HospitalClinicDetails
             ->andFilterWhere(['like', 'city', $this->city])
             ->andFilterWhere(['like', 'area', $this->area])
             ->andFilterWhere(['like', 'latitude', $this->latitude])
-            ->andFilterWhere(['like', 'longitude', $this->longitude]);
+            ->andFilterWhere(['like', 'longitude', $this->longitude])
+            ->andFilterWhere(['!=', 'status',1]);
 
         return $dataProvider;
     }

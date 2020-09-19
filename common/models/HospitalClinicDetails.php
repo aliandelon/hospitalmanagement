@@ -80,6 +80,14 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'name', 'email', 'status', 'created_by'], 'required'],
+
+            [['name','email','phone_number','pincode','address','street1', 'street2', 'latitude', 'longitude','city', 'area'], 'required','on' => 'updateFrontend'],
+
+
+
+
+
+
             [['user_id', 'type', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'pincode', 'package_id', 'created_by', 'status'], 'integer'],
             [['address'], 'string'],
             [['name', 'city', 'area'], 'string', 'max' => 150],
@@ -88,15 +96,22 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
             ['email', 'unique'],
             ['email', 'email'],
             [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'safe'],
+
             [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'required', 'when' => function($model) {
                 return ($model->have_diagnostic_center == '1' && $model->same_as_hospital_details_flag == 0);
-            }],
+            },'enableClientValidation' => false],
+
             [['name','email', 'password','commision','commision_type'], 'required','on' => 'newrequest'],
             [['password'],'safe'],
             [['commision'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
             ['commision', 'compare', 'compareValue' => 100, 'operator' => '<=','when' => function($model) {
                 return $model->commision_type == '2'; 
             }],
+
+
+
+
+            
         ];
     }
 
