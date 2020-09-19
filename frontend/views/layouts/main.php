@@ -32,13 +32,13 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
         <div class="header">
             <div class="header-left">
                 <a href="index-2.html" class="logo">
-                    <img src="<?= Yii::$app->request->baseUrl; ?>/img/logo.png" width="35" height="35" alt=""> <span>Preclinic</span>
+                    <img src="<?= Yii::$app->request->baseUrl; ?>/img/logo.png" width="35" height="35" alt=""> <span>Hospital Name</span>
                 </a>
             </div>
             <a id="toggle_btn" href="javascript:void(0);"><i class="fa fa-bars"></i></a>
             <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
             <ul class="nav user-menu float-right">
-                <li class="nav-item dropdown d-none d-sm-block">
+               <!--  <li class="nav-item dropdown d-none d-sm-block">
                     <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"><i class="fa fa-bell-o"></i> <span class="badge badge-pill bg-danger float-right">3</span></a>
                     <div class="dropdown-menu notifications">
                         <div class="topnav-dropdown-header">
@@ -70,7 +70,7 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
                 </li>
                 <li class="nav-item dropdown d-none d-sm-block">
                     <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><i class="fa fa-comment-o"></i> <span class="badge badge-pill bg-danger float-right">8</span></a>
-                </li>
+                </li> -->
                 <li class="nav-item dropdown has-arrow">
                     <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                         <span class="user-img">
