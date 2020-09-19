@@ -72,7 +72,6 @@ class SuperAdminDetailsController extends Controller
         $model2 = Login::find()
                 ->where(['type' => 1])
                 ->one();
-
         $model = $this->findModel($model2->id);
         $encryptedPassword = $model2->password;     
         $model2->auth_key = '123';
@@ -134,7 +133,7 @@ class SuperAdminDetailsController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = AdminDetails::findOne($id)) !== null) {
+        if (($model = AdminDetails::find()->where(['admin_id'=>$id])->one())) {
             return $model;
         }
 

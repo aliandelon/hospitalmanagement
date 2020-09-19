@@ -49,6 +49,6 @@ class Category extends \yii\db\ActiveRecord
 
     public function getUser()
     {
-        return $this->hasOne(AdminDetails::class, ['id' => 'created_by']);
+        return $this->hasOne(AdminDetails::class, ['admin_id' => 'created_by']);
     }
 }

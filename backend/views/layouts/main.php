@@ -92,8 +92,8 @@ DashboardAsset::register($this);
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="fa fa-sitemap" title="List Banners"></span>&nbsp;<span class="menulist">List Banners</span>', 'url' => ['/banners/create']],
-                                    ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/banners/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Banner"></span>&nbsp;<span class="menulist">Create Banner</span>', 'url' => ['/banners/create']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Banners Details"></span>&nbsp;<span class="menulist">List Banners</span>', 'url' => ['/banners/index']],
                                     ],],
 
                                     ['label' => '<span class="fa fa-pencil icon-wrap"></span>&nbsp;<span class="menulist">Super Admin</span>', 

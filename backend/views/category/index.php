@@ -51,7 +51,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'user.name',
-            
             ['class' => 'yii\grid\ActionColumn',
                 'header' => 'update',
                 'template' => '{update}'],
