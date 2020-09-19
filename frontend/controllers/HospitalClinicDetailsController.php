@@ -93,6 +93,36 @@ class HospitalClinicDetailsController extends Controller
         }
     }
 
+
+
+ public function actionUpdate2($id)
+    {
+        $model = $this->findModel($id);
+        $model->scenario = 'updateFrontend';
+        if ($model->load(Yii::$app->request->post())) {
+            $model->latitude='0';
+            $model->longitude='0';
+            if($model->status==4){
+               $model->status=3;
+            }
+            if($model->save()){
+              return $this->redirect('update2?id='.$id);  
+            }else{
+                print_r($model->getErrors());exit;
+            }
+            
+        }
+            return $this->render('update-form', [
+                'model' => $model,
+            ]);
+       
+    }
+
+
+
+
+
+
     /**
      * Deletes an existing HospitalClinicDetails model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

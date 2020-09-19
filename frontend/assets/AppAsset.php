@@ -27,7 +27,6 @@ class AppAsset extends AssetBundle {
         ];
         public $js = [
             // 'js/jquery-3.2.1.min.js',
-            'js/jquery-3.2.1.min.js',
             'js/popper.min.js',
             'js/bootstrap.min.js',
             'js/jquery.slimscroll.js',
@@ -48,7 +47,7 @@ class AppAsset extends AssetBundle {
         //     'video/vid.mp4'
         // ];
         public $depends = [
-            // 'yii\web\YiiAsset',
+            'yii\web\YiiAsset',
             // 'yii\bootstrap\BootstrapAsset',
         ];
 
