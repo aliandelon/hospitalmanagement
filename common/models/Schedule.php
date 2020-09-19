@@ -65,7 +65,7 @@ class Schedule extends \yii\db\ActiveRecord
 
     public function getHospital()
     {
-        return $this->hasOne(HospitalClinicDetails::class, ['id' => 'hospital_id']);
+        return $this->hasOne(HospitalClinicDetails::class, ['user_id' => 'hospital_id']);
     }
 
     public function getInvestigations()
