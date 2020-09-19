@@ -20,7 +20,7 @@ DashboardAsset::register($this);
                 <meta charset="<?= Yii::$app->charset ?>">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <?= Html::csrfMetaTags() ?>
-                <title><?= Html::encode($this->title) ?></title>
+                <title>InvestiGo</title>
 
                 <script type="text/javascript">
                         var baseurl = "<?php print \yii\helpers\Url::base(); ?>";
@@ -38,7 +38,7 @@ DashboardAsset::register($this);
                 <div class="left-sidebar-pro">
         <nav id="sidebar" class="">
             <div class="sidebar-header">
-                <a href="index.html"><img class="main-logo" src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png" alt="" /></a>
+                <a href="<?= Yii::$app->request->baseUrl; ?>"><img class="main-logo" src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png" alt="" /></a>
                 <strong><a href="index.html"><img src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logosn.png" alt="" style="margin-left: 22px;" /></a></strong>
             </div>
             <div class="left-custom-menu-adp-wrap comment-scrollbar">
@@ -49,16 +49,7 @@ DashboardAsset::register($this);
                                 'options' => ['class' => 'sidebar-menu treeview'],
                                 'items' => [
 
-                                // roles end here
-                                //      ['label' => '<span class="fa fa-child icon-wrap"></span>&nbsp;<span class="menulist">Admin<i class="fa fa-angle-left pull-right"></i></span>', 
-                                //     'url' => ['#'],
-                                //         'template' => '<a href="{url}" >{label}</a>',
-                                //         'items' => [ 
-
-                                //     ['label' => '<span class="fa fa-sitemap" title="Create Admin Details"></span>&nbsp;<span class="menulist">Create Admin Details</span>', 'url' => ['/admin-details/create']],
-                                //     ['label' => '<span class="fa fa-sitemap" title="List Admin Details"></span>&nbsp;<span class="menulist">List Admin Details</span>', 'url' => ['/admin-details/index']],
-                                // ],],
-                                   
+                               
 
                                 ['label' => '<span class="fa fa-bars icon-wrap"></span>&nbsp;<span class="menulist">Category<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
@@ -86,7 +77,26 @@ DashboardAsset::register($this);
                                     
                                 ],],    
 
-                                // roles start here
+                                 ['label' => '<span class="fa fa-plus icon-wrap"></span>&nbsp;<span class="menulist">New Request</span>', 
+                                    'url' => ['hospital-clinic-details/new-request-index'],
+                                    ],
+                                      ['label' => '<span class="fa fa-user-md  icon-wrap"></span>&nbsp;<span class="menulist">Verified Users</span>', 
+                                    'url' => ['hospital-clinic-details/verified-users-index'],
+                                    ],
+
+
+                                      ['label' => '<span class="fa fa-user-md  icon-wrap"></span>&nbsp;<span class="menulist">Doctors</span>', 
+                                    'url' => ['doctors-details/'],
+                                    ],
+                                    ['label' => '<span class="fa fa-wheelchair icon-wrap"></span>&nbsp;<span class="menulist">Patients</span>', 
+                                    'url' => ['patient-details/'],
+                                    ],
+
+                                  
+
+
+
+
                                     ['label' => '<span class="fa fa-picture-o icon-wrap"></span>&nbsp;<span class="menulist">Banners<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
@@ -99,12 +109,21 @@ DashboardAsset::register($this);
                                     ['label' => '<span class="fa fa-pencil icon-wrap"></span>&nbsp;<span class="menulist">Super Admin</span>', 
                                     'url' => ['super-admin-details/update'],
                                     ],
-                                    ['label' => '<span class="fa fa-user-md  icon-wrap"></span>&nbsp;<span class="menulist">Doctors</span>', 
-                                    'url' => ['doctors-details/'],
-                                    ],
-                                    ['label' => '<span class="fa fa-wheelchair icon-wrap"></span>&nbsp;<span class="menulist">Patients</span>', 
-                                    'url' => ['patient-details/'],
-                                    ],
+                                  
+                                       ['label' => '<span class="fa fa-medkit icon-wrap"></span>&nbsp;<span class="menulist">Packages<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    'url' => ['#'],
+                                        'template' => '<a href="{url}" >{label}</a>',
+                                        'items' => [ 
+
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Packages"></span>&nbsp;<span class="menulist">Create Packages</span>', 'url' => ['/packages/create']],
+                                    
+                                    ['label' => '<span class="fa fa-sitemap" title="List Packages"></span>&nbsp;<span class="menulist">List Packages</span> ', 'url' => ['/packages/index']],
+                                    
+                                ],], 
+
+
+
+
 
                                     // roles start here
                                     ['label' => '<span class="fa fa-cogs icon-wrap"></span>&nbsp;<span class="menulist">Roles & Permissions<i class="fa fa-angle-left pull-right"></i></span>', 
@@ -117,11 +136,7 @@ DashboardAsset::register($this);
                                     ],],
                                     ['label' => '<span class="fa fa-envelope icon-wrap"></span>&nbsp;<span class="menulist">Feedback</span>', 
                                     'url' => ['feedback/']],
-
-                                ['label' => '<span class="fa fa-plus icon-wrap"></span>&nbsp;<span class="menulist">New Request</span>', 
-                                    'url' => ['hospital-clinic-details/new-request-index'],
-                                    ]
-                                    
+  
                                 ],
                                 'submenuTemplate' => "\n<ul class='treeview-menu'>\n{items}\n</ul>\n",
                                 'encodeLabels' => false, //allows you to use html in labels

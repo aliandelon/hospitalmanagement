@@ -55,6 +55,20 @@ class HospitalClinicDetailsController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+ public function actionVerifiedUsersIndex()
+    {
+        $searchModel = new HospitalClinicDetailsSearch();
+        $dataProvider = $searchModel->search2(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+
+
 
     /**
      * Displays a single HospitalClinicDetails model.
