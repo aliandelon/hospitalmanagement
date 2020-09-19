@@ -64,7 +64,7 @@ return [
             'showScriptName' => false,
         ],
     ],
-    'as beforeRequest' =>
+    /*'as beforeRequest' =>
         [
         'class' => 'yii\filters\AccessControl',
         'rules' => [
@@ -77,6 +77,6 @@ return [
                 'roles' => ['@'],
             ],
         ],
-    ],
+    ],*/
     'params' => $params,
 ];
