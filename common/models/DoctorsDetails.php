@@ -73,4 +73,27 @@ class DoctorsDetails extends \yii\db\ActiveRecord
             'created_on' => 'Created On',
         ];
     }
+
+    public function viewDoctors($con, $hospital,$id='')
+    {
+         $query = "SELECT doc.id,doc.name as name,doc.profile_image as img,doc.qualifications,doc.registration_no,doc.phone,doc.gender,doc.email,doc.address,spec.name as spectial FROM doctors_details doc LEFT JOIN doctor_specialty_mst spec ON doc.specialty_id = spec.id WHERE doc.hospital_clinic_id = '$hospital'";
+         if($id){
+            $query .= " AND doc.id = $id";
+         }
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
+
+    public function upload($file, $id, $name) {
+
+       $targetFolder = \yii::$app->basePath . '/../uploads/doctors/';
+        if (!file_exists($targetFolder)) {
+            mkdir($targetFolder, 0777, true);
+        }
+        if ($file->saveAs($targetFolder . $name . '.' . $file->extension)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
