@@ -56,16 +56,12 @@
                         <div class="modal-body">
                             <!-- <form> -->
                                 <div class="form-group">
-                                    <label>Reason <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="eventName">
-                                </div>
-                                <div class="form-group">
                                     <label>Date <span class="text-danger">*</span></label>
                                     <div class="cal-icon">
                                         <input class="form-control datetimepicker" type="text" id="eventDate">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                 <div class="form-group">
                                     <label>Type<span class="text-danger">*</span></label>
                                     <select class="form-control" id="holidayFlag">
                                         <option value="1">Holiday</option>
@@ -79,6 +75,10 @@
                                            echo "<option value='".$value['id']."'>".$value['name']."</option>";
                                         }?>
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Reason <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="eventName">
                                 </div>
                                 <div class="m-t-20 text-center">
                                     <button class="btn btn-primary submit-btn">Create Event</button>
