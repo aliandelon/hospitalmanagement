@@ -163,3 +163,9 @@ use yii\widgets\DetailView;
                     </div>
                 </div> 
             </div> -->
+
+<style>
+    .profile-img-wrap img {
+        border-radius: 60px;
+    }
+</style>
