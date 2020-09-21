@@ -4,7 +4,7 @@
             <h4 class="page-title">Calendar</h4>
         </div>
         <div class="col-sm-4 col-8 text-right m-b-30">
-            <a href="#" class="btn btn-primary btn-rounded" data-toggle="modal" data-target="#add_event"><i class="fa fa-plus"></i> Add Event</a>
+            <a href="#" class="btn btn-primary btn-rounded" data-toggle="modal" data-target="#add_event"><i class="fa fa-plus"></i> Add Holiday</a>
         </div>
     </div>
     <div class="row">
@@ -55,33 +55,48 @@
                         </div>
                         <div class="modal-body">
                             <!-- <form> -->
-                                <div class="form-group">
-                                    <label>Date <span class="text-danger">*</span></label>
-                                    <div class="cal-icon">
-                                        <input class="form-control datetimepicker" type="text" id="eventDate">
-                                    </div>
-                                </div>
                                  <div class="form-group">
-                                    <label>Type<span class="text-danger">*</span></label>
+                                    <label>Entry Type<span class="text-danger">*</span></label>
                                     <select class="form-control" id="holidayFlag">
                                         <option value="1">Holiday</option>
                                         <option value="0">Others</option>
                                     </select>
                                 </div>
+                                <div class="form-group" id="appointDiv" style="display: none">
+                                    <label>Appointment Type<span class="text-danger">*</span></label>
+                                    <select class="form-control" id="appointType">
+                                        <option value="1">Doctors Appointment</option>
+                                        <option value="0">Investigation Appointment</option>
+                                    </select>
+                                </div>
                                 <div class="form-group" id="InvestigationDiv" style="display: none">
-                                    <label>Investigation List<span class="text-danger">*</span></label>
+                                    <label>Investigations List<span class="text-danger">*</span></label>
                                     <select class="form-control" id="Investigation">
                                         <?php foreach ($list as $key => $value) {
                                            echo "<option value='".$value['id']."'>".$value['name']."</option>";
                                         }?>
                                     </select>
                                 </div>
+                                <div class="form-group" id="DoctorDiv" style="display: none">
+                                    <label>Doctors List<span class="text-danger">*</span></label>
+                                    <select class="form-control" id="doctor" data-live-search="true">
+                                        <?php foreach ($doctors as $key => $value) {
+                                           echo "<option value='".$value['id']."'>".$value['name']."</option>";
+                                        }?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date <span class="text-danger">*</span></label>
+                                    <div class="cal-icon">
+                                        <input class="form-control datetimepicker" type="text" id="eventDate">
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label>Reason <span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" id="eventName">
                                 </div>
                                 <div class="m-t-20 text-center">
-                                    <button class="btn btn-primary submit-btn">Create Event</button>
+                                    <button class="btn btn-primary submit-btn">Create Holiday</button>
                                 </div>
                             <!-- </form> -->
                         </div>
@@ -95,18 +110,32 @@
 .fc-time{
     display:none;
 }
+div .bootstrap-select{
+    display:none;
+}
+
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" />
+
 <script type="text/javascript">
     var defaultEvents;
     var baseurl = "<?php print \yii\helpers\Url::base() . "/"; ?>";
     var basepath = "<?php print \yii\helpers\Url::base(); ?>";
     var curl = "<?php print Yii::$app->request->absoluteUrl; ?>";
 
+
 </script>
 <?php
 $this->registerJs("
-        $(document).ready(function(){          
-                
+        $(document).ready(function(){     
+        $('#doctor').selectpicker();
+                // $(function() {
+                 
+                // });
                 $('.submit-btn').on('click',function(e){
                         e.preventDefault();
                         var events = $('#eventName').val();
@@ -114,14 +143,16 @@ $this->registerJs("
                         var holidayFlag = $('#holidayFlag').val();
                         var invVal = $('#Investigation').val();
                         var investigation = (holidayFlag!=1) ? invVal : '0';    
+                        var appointType = $('#appointType').val();
+                        var doctor  = $('#doctor').val();
                         $.ajax({
                              url:baseurl+'site/event',
-                             data:{'name':events,'eDate':eventDate,'holidayFlag':holidayFlag,'investigation':investigation},
+                             data:{'name':events,'eDate':eventDate,'holidayFlag':holidayFlag,'investigation':investigation,'appointType': appointType,'doctor':doctor},
                              type:'POST',
                              success:function(data){
                                 // $('#accordion').html(data);
                                 // alert(data);
-                                window.location.href = '';
+                                // window.location.href = '';
                              },
                              error:function(){
                              }
@@ -133,7 +164,22 @@ $this->registerJs("
                 });
                 $('#holidayFlag').change(function(){
                     if($(this).val()!=1){
+                        $('#appointDiv').show();   
+                        $('#appointDiv').val(1); 
+                        $('#DoctorDiv').show();
+                    }else{
+                        $('#appointDiv').hide();
+                        $('#InvestigationDiv').hide();
+                        $('#DoctorDiv').hide();   
+                    }
+                });
+                $('#appointType').change(function(){
+                    if($(this).val()!=1){
                         $('#InvestigationDiv').show();   
+                        $('#DoctorDiv').hide();
+                    }else{
+                        $('#InvestigationDiv').hide();
+                        $('#DoctorDiv').show();   
                     }
                 });
         });
