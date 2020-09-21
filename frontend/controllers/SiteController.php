@@ -9,7 +9,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-
+use common\models\DoctorsDetails;
 use yii\web\Response;
 use frontend\models\LoginForm;
 use common\models\HolidayList;
@@ -98,10 +98,13 @@ class SiteController extends Controller {
 
         public function actionHoliday() {
             $model = new HolidayList();
+            $myModel = new DoctorsDetails();
             $con = \Yii::$app->db;
+            $hospital_id = Yii::$app->user->identity->id;
+            $doctors = $myModel->viewDoctors($con,$hospital_id);
             $addEvents = $model->viewInvestigations($con);
             return $this->render('holiday', [
-                                    'list' => $addEvents,
+                                    'list' => $addEvents,'doctors' => $doctors
                         ]);
         }
 
@@ -112,13 +115,27 @@ class SiteController extends Controller {
             if($post){
                 $hospital_id = Yii::$app->user->identity->id;
                 $model->holiday_flag = $post['holidayFlag'];
-                $model->investigation_id = $post['investigation'];
+                if($model->holiday_flag!=1){
+                    $model->appointment_type = $post['appointType'];
+                    if($model->appointment_type!=1){
+                        $model->investigation_id = $post['investigation'];
+                        $model->doctor_id = 0;
+                    }else{
+                        $model->doctor_id = $post['doctor'];
+                        $model->investigation_id = 0;
+                    }
+                }else{
+                    $model->appointment_type = 0;
+                    $model->doctor_id = 0;
+                    $model->investigation_id = 0;
+                }
                 $model->hospital_id = $hospital_id;
                 $model->reason = $post['name'];
                 $date = date_create($post['eDate']);
                 $source = str_replace('/', '-',$post['eDate']);
                 $date = new DateTime($source);
                 $model->holiday_date = $date->format('Y-m-d'); 
+                print_r($model);exit;
                 // $addEvents = $model->addEvents($con, $model);
                 if($model->save()){
                     return "Success";
