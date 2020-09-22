@@ -16,7 +16,8 @@ use dosamigos\ckeditor\CKEditor;
     <?= $form->field($model, 'package_name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
-
+    <?= $form->field($model, 'discount_rate')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, "featured_flag")->checkbox(['checked' => true,'value' => "0"]); ?>
 <?=
     $form->field($model, 'description')->widget(CKEditor::className(), [
         'options' => ['rows' => 6],
@@ -41,3 +42,5 @@ use dosamigos\ckeditor\CKEditor;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
