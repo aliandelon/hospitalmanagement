@@ -34,7 +34,7 @@ class Packages extends \yii\db\ActiveRecord
     {
         return [
             [['package_name', 'price', 'description', 'validity', 'sort_order', 'status'], 'required'],
-            [['price'], 'number'],
+            [['price','discount_rate'], 'number'],
             [['description'], 'string'],
             [['validity', 'created_on', 'updated_on'], 'safe'],
             [['sort_order', 'status','validity'], 'integer'],
@@ -51,6 +51,7 @@ class Packages extends \yii\db\ActiveRecord
             'id' => 'ID',
             'package_name' => 'Package Name',
             'price' => 'Price',
+            'discount_rate' =>'Discount Rate',
             'description' => 'Description',
             'validity' => 'Validity (in Days)',
             'sort_order' => 'Sort Order',
