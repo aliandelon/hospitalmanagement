@@ -28,29 +28,45 @@ use kartik\select2\Select2;
     <?= $form->errorSummary($model) ?>
     <div class="row">
         <div class="col-md-6">
-            <?php 
-                $Investigations = Investigations::find()->where('status = 1')->all();
-                $listData=ArrayHelper::map($Investigations,'id','investigation_name');
-                echo $form->field($model, 'investigation_id')->widget(Select2::classname(), [
-                    'data' => $listData,
-                    'options' => ['placeholder' => 'Select  ...'],
-                    'pluginOptions' => [
-                        'tags' => true
-                    ],
-                ]); 
-            ?>
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group field-schedule-type has-success">
+                <label class="control-label" for="type">Choose a Type:</label>
+                <select name="type" id="type" class="form-control">
+                  <option value="1">Investigation</option>
+                  <option value="2">Doctor Appoinment</option>
+                </select>
+            </div> 
         </div>
         <div class="col-md-6">
-            <?php 
+            <div id="invstigations">
+                <?php 
+                    $Investigations = Investigations::find()->where('status = 1')->all();
+                    $listData=ArrayHelper::map($Investigations,'id','investigation_name');
+                    echo $form->field($model, 'investigation_id')->widget(Select2::classname(), [
+                        'data' => $listData,
+                        'options' => ['placeholder' => 'Select  ...'],
+                        'pluginOptions' => [
+                            'tags' => true
+                        ],
+                    ]); 
+                ?>
+            </div>
+            <div id="doctor">
+                <?php 
 
-            $details=DoctorsDetails::find()->where(["status"=>1,"hospital_clinic_id"=>Yii::$app->user->identity->id])->all();
+                $details=DoctorsDetails::find()->where(["status"=>1,"hospital_clinic_id"=>Yii::$app->user->identity->id])->all();
 
-            $listData=ArrayHelper::map($details,'id','name');
-            echo $form->field($model, 'doctor_id')->dropDownList(
-                $listData,
-                ['prompt'=>'Select Doctor...']
-                )->label('Doctor');
-            ?>
+                $listData=ArrayHelper::map($details,'id','name');
+                echo $form->field($model, 'doctor_id')->dropDownList(
+                    $listData,
+                    ['prompt'=>'Select Doctor...','disabled' => true]
+                    )->label('Doctor');
+                ?>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -81,8 +97,15 @@ use kartik\select2\Select2;
 </div>
 <?php $this->registerJs("
     $(document).ready(function() {
-        //alert(123);
-        
+        $('select').on('change', function() {
+          var option = this.value;
+          if(option == 2)
+          {
+            $('#hospitaldetailflag').prop('checked', false);
+          }else{
+
+          }
+        });
     });
 ")
 ?>

@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // ],
             [                                                 
                 'label' => 'Doctor',
-                'value' => $model->doctor->name,          
+                'value' => ($model->doctor_id != '')?$model->doctor->name:'',          
             ],
             [                                                  
                 'label' => 'sunday_holiday',

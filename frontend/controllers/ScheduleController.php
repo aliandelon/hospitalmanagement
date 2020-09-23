@@ -3,13 +3,16 @@
 namespace frontend\controllers;
 
 use Yii;
+use DateTime;
 use common\models\Schedule;
 use common\models\ScheduleSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\HospitalInvestigationMapping;
-
+use common\models\HolidayList;
+use common\models\SlotDayMapping;
+use common\models\SlotDayTimeMapping;
 /**
  * ScheduleController implements the CRUD actions for Schedule model.
  */
@@ -28,6 +31,10 @@ class ScheduleController extends Controller
                 ],
             ],
         ];
+    }
+    public function beforeAction($action) {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
     }
 
     /**
@@ -62,12 +69,15 @@ class ScheduleController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($investigation = '',$amount = '')
     {
+        $model1 = new HolidayList();
+        $con = \Yii::$app->db;
+        $addEvents = $model1->viewInvestigations($con);
         $model = new Schedule();
         $model2 = new HospitalInvestigationMapping();
-        $con = \Yii::$app->db;
         $transaction = $con->beginTransaction();
+        $model->investigation_id = $investigation;
         if ($model->load(Yii::$app->request->post())) {
             $model->hospital_id = Yii::$app->user->identity->id;
             // $model->hospital_id = 2;
@@ -114,12 +124,12 @@ class ScheduleController extends Controller
                 Yii::$app->session->setFlash('error', "Same Schedule Already Exist.");
                 $transaction->rollback();
                 return $this->render('create', [
-                    'model' => $model,
+                    'model' => $model
                 ]);  
             }
         } else {
             return $this->render('create', [
-                'model' => $model,
+                'model' => $model,'list' => $addEvents,'amount'=>$amount,'investigation'=>$investigation
             ]);
         }
     }
@@ -187,4 +197,118 @@ class ScheduleController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public function actionSchedule() {
+            $post = Yii::$app->request->post();
+            $model = new Schedule();
+            $model2 = new SlotDayMapping();
+            $con = \Yii::$app->db;
+            $transaction = $con->beginTransaction();
+            $model3 = new HospitalInvestigationMapping();
+            $model4 = new SlotDayTimeMapping();
+            $model3->duration = '30';
+            $model3->details = '';
+            $model3->status = 1;
+            if($post){
+                $hospital_id = Yii::$app->user->identity->id;
+                $model->hospital_id = $hospital_id;
+                $model->investigation_id = $post['investigation'];
+                $date = date_create($post['eDate']);
+                $source = str_replace('/', '-',$post['eDate']);
+                $date = new DateTime($source);
+                $model2->day = $date->format('Y-m-d'); 
+                $model2->hospital_clinic_id = $model->hospital_id;
+                $model->amount = $post['amount'];
+                if($model->createSchedule($con, $model)){
+                    $model3->investigation_id = $model->investigation_id;
+                    $model3->hospital_clinic_id = $model->hospital_id;
+                    $model3->amount = $model->amount;
+                    if($model3->saveHospitalInvestigation($con,$model3)){
+                        $model2->investigation_id = $model->investigation_id;
+                        if($slotId = $model2->saveSlotDayMapping($con,$model2)){
+                            $slots = $post['slots'];
+                            $today = $model2->day;
+                            $commitflag = 1;
+                            foreach ($slots as $key => $slot) {
+                                $slotsArray = explode('-', $slot);
+                                $model4->slot_day_id = $slotId;
+                                $model4->hospital_clinic_id = $model->hospital_id;
+                                $model4->from_time = date('Y-m-d H:i:s',strtotime($today.' '.$slotsArray[0]));
+                                $model4->to_time = date('Y-m-d H:i:s',strtotime($today.' '.$slotsArray[1]));
+                                if($commitflag ==1 && $result = $model4->saveSlotTime($con, $model4))
+                                {
+                                    // $transaction->commit();
+                                    // return 'success';
+                                }else{
+                                    $commitflag = 0;
+                                    $transaction->rollback();
+                                }
+                                //print_r($model4->save());echo '<br>';
+                            }
+                            if($commitflag == 1)
+                            {
+                                $transaction->commit();
+                                return 'success';
+                            }else{
+                                $transaction->rollback();
+                                return 'failure';
+                            }
+                            
+                        }else{
+                            $transaction->rollback();
+                            return 'failure';
+                        }
+                    }else
+                    {
+                        $transaction->rollback();
+                        return 'failure';
+                    }
+                }else{
+                    $transaction->rollback();
+                    return 'failure';
+                }
+            }
+            
+        }
+
+        public function actionViewschedule() {
+            $post = Yii::$app->request->post();
+            $model = new Schedule();
+            $con = \Yii::$app->db;
+            $hospitalId = Yii::$app->user->identity->id;
+            $addSchedule = $model->viewSchedule($con, $hospitalId, $invesigationId=3);
+            echo json_encode($addSchedule);
+        }
+
+         public function actionGetInvestigationSchedule() {
+            $post = Yii::$app->request->post();
+            $model = new Schedule();
+            $con = \Yii::$app->db;
+            $hospitalId = Yii::$app->user->identity->id;
+            $getScheduleDetails = $model->getScheduleDetails($hospitalId, $post['option']);
+            return json_encode($getScheduleDetails);
+        }
+
+        public function actionDeleteSchedule()
+        {
+            $model = new Schedule();
+            $post = Yii::$app->request->post();
+            //$startDate = date('m/d/Y H:i:s', strtotime($post['start/']));
+            //new DateTime($post['start/']);
+            $endDate = $post['end/'];
+            //$model2->day = $date->format('Y-m-d'); 
+            $time = strtotime($endDate);
+            $time = $time - (30 * 60);
+            $startDate = date("Y-m-d H:i:s", $time);
+            $model->hospital_id = Yii::$app->user->identity->id;
+            $model->investigation_id = $post['investigation/'];
+            $investigation = $post['investigation/'];
+            $amount = $post['amount/'];
+            $deleteSchedule = $model->deleteSchedule($model, $startDate, $endDate);
+            if($deleteSchedule)
+            {
+                return $this->redirect(['create','investigation'=>$investigation,'amount'=>$amount]);
+            }
+        }
+
 }

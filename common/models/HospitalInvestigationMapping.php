@@ -75,4 +75,17 @@ class HospitalInvestigationMapping extends \yii\db\ActiveRecord
         $result = $con->createCommand($query)->execute();
         return $result;
     }
+    public function saveHospitalInvestigation($con,$model)
+    {
+        $query = "SELECT id from  hospital_investigation_mapping where investigation_id='$model->investigation_id' and hospital_clinic_id = '$model->hospital_clinic_id' AND status =1;";
+        $result = $con->createCommand($query)->queryOne();
+        if($result['id']){
+            return true;
+        }else{
+            $sql = "INSERT into hospital_investigation_mapping(investigation_id,hospital_clinic_id,amount,duration,status)VALUES('$model->investigation_id','$model->hospital_clinic_id','$model->amount','30','1');";
+            $result = $con->createCommand($sql)->execute();
+            return $result;
+        }
+
+    }
 }

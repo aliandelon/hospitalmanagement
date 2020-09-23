@@ -70,6 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute'=>'doctor_id',
                             'label' => 'Doctor',
                             'value' => function($model){
+                                if($model->doctor_id)
                                 return $model->doctor->name;
                             },
                             'filter'=>ArrayHelper::map(Investigations::find()->where('status = 1')->all(), 'id','investigation_name'),
@@ -136,7 +137,7 @@ $this->params['breadcrumbs'][] = $this->title;
                           'template' => '{update}',
                           'buttons' => [
                           'update' => function ($url, $model) {
-                                return Html::a('Update', ['newrequest-update','id'=>$model->id], [
+                                return Html::a('Update', ['create','investigation'=>$model->investigation_id], [
                                             'title' => Yii::t('app', 'lead-update'),
                                 ]);
                             },
