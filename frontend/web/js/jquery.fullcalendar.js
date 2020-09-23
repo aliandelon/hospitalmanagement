@@ -291,7 +291,7 @@ function($) {
             var amount = $('#schedule-amount').val();
             form.append("<div class='input-group m-b-20'>Do You wan to delete ?.<input type='hidden' value='"+amount+"' name=amount/><input type='hidden' value='"+investigation+"' name=investigation/><input type='hidden' value='"+calEvent.start._i+"' name=start/><input type='hidden' value='"+calEvent.end._i+"' name=end/></div><div class='col-md-12 text-right'><button onclick='DeleteSchedule()'>Delete</button></div>");
             $this.$modal.modal({
-                backdrop: 'static'
+                //backdrop: 'static'
             });
             $this.$modal.find('.delete-event').show().end().find('.save-event').hide().end().find('.modal-body').empty().prepend(form).end().find('.delete-event').unbind('click').click(function () {
                 $this.$calendarObj.fullCalendar('removeEvents', function (ev) {
@@ -307,7 +307,7 @@ function($) {
             });*/
     },
     /* on select */
-    CalendarApp1.prototype.onSelect = function (start, end, allDay) {
+    /*CalendarApp1.prototype.onSelect = function (start, end, allDay) {
         var $this = this;
             $this.$modal.modal({
                 backdrop: 'static'
@@ -348,7 +348,7 @@ function($) {
                 
             });
             $this.$calendarObj.fullCalendar('unselect');
-    },
+    },*/
     CalendarApp1.prototype.enableDrag = function() {
         //init events
         $(this.$event).each(function () {
