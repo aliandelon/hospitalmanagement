@@ -69,7 +69,7 @@ class ScheduleController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($investigation = '',$amount = '')
+    public function actionCreate($investigation = '',$amount = '',$type = '')
     {
         $model1 = new HolidayList();
         $con = \Yii::$app->db;
@@ -129,7 +129,7 @@ class ScheduleController extends Controller
             }
         } else {
             return $this->render('create', [
-                'model' => $model,'list' => $addEvents,'amount'=>$amount,'investigation'=>$investigation
+                'model' => $model,'list' => $addEvents,'amount'=>$amount,'investigation'=>$investigation,'type'=>$type
             ]);
         }
     }
@@ -276,8 +276,16 @@ class ScheduleController extends Controller
             $model = new Schedule();
             $con = \Yii::$app->db;
             $hospitalId = Yii::$app->user->identity->id;
-            $addSchedule = $model->viewSchedule($con, $hospitalId, $invesigationId=3);
-            echo json_encode($addSchedule);
+            $type = $post['type'];
+            $option = $post['option'];
+            if($type == 1)
+            {
+                $addSchedule = $model->viewSchedule($con, $hospitalId, $option);
+                echo json_encode($addSchedule);
+            }else{
+                $addSchedule = $model->viewDoctorSchedule($con, $hospitalId, $option);
+                echo json_encode($addSchedule);
+            }
         }
 
          public function actionGetInvestigationSchedule() {
@@ -304,11 +312,89 @@ class ScheduleController extends Controller
             $model->investigation_id = $post['investigation/'];
             $investigation = $post['investigation/'];
             $amount = $post['amount/'];
-            $deleteSchedule = $model->deleteSchedule($model, $startDate, $endDate);
+            $type = $post['type/'];
+            if($type == 1){
+                $deleteSchedule = $model->deleteSchedule($model, $startDate, $endDate);
+            }else{
+                $deleteSchedule = $model->deleteDoctorSchedule($model, $startDate, $endDate);
+            }
             if($deleteSchedule)
             {
-                return $this->redirect(['create','investigation'=>$investigation,'amount'=>$amount]);
+                return $this->redirect(['create','investigation'=>$investigation,'amount'=>$amount,'type'=>$type]);
             }
+        }
+        public function actionDoctorSchedule() {
+            $post = Yii::$app->request->post();
+            $model = new Schedule();
+            $model2 = new SlotDayMapping();
+            $con = \Yii::$app->db;
+            $transaction = $con->beginTransaction();
+           //$model3 = new HospitalInvestigationMapping();
+            $model4 = new SlotDayTimeMapping();
+            //$model3->duration = '30';
+           //$model3->details = '';
+            //$model3->status = 1;
+            if($post){
+                $hospital_id = Yii::$app->user->identity->id;
+                $model->hospital_id = $hospital_id;
+                $date = date_create($post['eDate']);
+                $source = str_replace('/', '-',$post['eDate']);
+                $date = new DateTime($source);
+                $model2->day = $date->format('Y-m-d'); 
+                $model2->hospital_clinic_id = $model->hospital_id;
+                $model->doctor_id = $post['doctor'];
+                if($model->createDoctorSchedule($con, $model)){
+                    //$model3->investigation_id = $model->investigation_id;
+                    //$model3->hospital_clinic_id = $model->hospital_id;
+                    //$model3->amount = $model->amount;
+                    //if($model3->saveHospitalInvestigation($con,$model3)){
+                        $model2->investigation_id = $model->investigation_id;
+                        $model2->doctor_id = $model->doctor_id;
+                        if($slotId = $model2->saveDoctorSlotDayMapping($con,$model2)){
+                            $slots = $post['slots'];
+                            $today = $model2->day;
+                            $commitflag = 1;
+                            foreach ($slots as $key => $slot) {
+                                $slotsArray = explode('-', $slot);
+                                $model4->slot_day_id = $slotId;
+                                $model4->doctor_id = $model->doctor_id;
+                                $model4->hospital_clinic_id = $model->hospital_id;
+                                $model4->from_time = date('Y-m-d H:i:s',strtotime($today.' '.$slotsArray[0]));
+                                $model4->to_time = date('Y-m-d H:i:s',strtotime($today.' '.$slotsArray[1]));
+                                if($commitflag ==1 && $result = $model4->saveDoctorSlotTime($con, $model4))
+                                {
+                                    // $transaction->commit();
+                                    // return 'success';
+                                }else{
+                                    $commitflag = 0;
+                                    $transaction->rollback();
+                                }
+                                //print_r($model4->save());echo '<br>';
+                            }
+                            if($commitflag == 1)
+                            {
+                                $transaction->commit();
+                                return 'success';
+                            }else{
+                                $transaction->rollback();
+                                return 'failure';
+                            }
+                            
+                        }else{
+                            $transaction->rollback();
+                            return 'failure';
+                        }
+                    // }else
+                    // {
+                    //     $transaction->rollback();
+                    //     return 'failure';
+                    // }
+                }else{
+                    $transaction->rollback();
+                    return 'failure';
+                }
+            }
+            
         }
 
 }

@@ -22,6 +22,29 @@ use kartik\select2\Select2;
     <?= $form->errorSummary($model) ?>
     <div class="row">
         <div class="col-md-6">
+            <div class="form-group field-schedule-type has-success">
+                <label class="control-label" for="type">Choose a Type:</label>
+                <select name="type" id="type" class="form-control">
+                  <option value="1">Investigation</option>
+                  <option value="2">Doctor Appoinment</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="doctor" style="display: none;">
+                <?php $details=DoctorsDetails::find()->where(["status"=>1,"hospital_clinic_id"=>Yii::$app->user->identity->id])->all();
+
+                $listData=ArrayHelper::map($details,'id','name');
+                echo $form->field($model, 'doctor_id')->dropDownList(
+                    $listData,
+                    ['prompt'=>'Select Doctor...']
+                    )->label('Doctor');
+                    ?>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6" id="investigation">
             <?php 
                 $Investigations = Investigations::find()->where('status = 1')->all();
                 $listData=ArrayHelper::map($Investigations,'id','investigation_name');
@@ -34,7 +57,7 @@ use kartik\select2\Select2;
                 ]); 
             ?>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" id="amount">
             <?= $form->field($model, 'amount')->textInput(['maxlength' => true]) ?>
             <span id="amounterror" style="color: red;display: none;">Please enter amount</span>
         </div>
@@ -206,7 +229,21 @@ use kartik\select2\Select2;
 $this->registerJs("
 $(document).ready(function(){          
         //$('#slot').multiselect();
+        $('#type').on('change',function(e){
+            var type = $('#type').val();
+            if(type == 1){
+                $('#doctor').css('display','none');
+                $('#amount').css('display','block');
+                $('#investigation').css('display','block');
+            }else{
+                $('#doctor').css('display','block');
+                $('#amount').css('display','none');
+                $('#investigation').css('display','none');
+            }
+        });
         $('.submit-btn').on('click',function(e){
+            var type = $('#type').val();
+            if(type == 1){
                 e.preventDefault();
                 var eventDate = $('#eventDate').val();
                 if(eventDate == '')
@@ -241,15 +278,42 @@ $(document).ready(function(){
                      success:function(data){
                         // $('#accordion').html(data);
                         // alert(data);
-                        //window.location.href = '';
+                        window.location.href = '';
                      },
                      error:function(){
                      }
-
-
                 });
-
-
+            }else{
+                e.preventDefault();
+                var eventDate = $('#eventDate').val();
+                if(eventDate == '')
+                {
+                    $('#dateerror').css('display','block');
+                    return false;
+                }else{
+                    $('#dateerror').css('display','none');
+                }
+                var doctor = $('#schedule-doctor_id').val();
+                var slots = $('#slot').val(); 
+                if(slots == '' || slots == null){
+                    $('#sloteerror').css('display','block');
+                    return false;
+                }else{
+                    $('#sloteerror').css('display','none');
+                }
+                $.ajax({
+                     url:baseurl+'schedule/doctor-schedule',
+                     data:{'eDate':eventDate,'slots':slots,'doctor':doctor},
+                     type:'POST',
+                     success:function(data){
+                        // $('#accordion').html(data);
+                        // alert(data);
+                        window.location.href = '';
+                     },
+                     error:function(){
+                     }
+                });
+            }
         });
         $('#schedule-investigation_id').on('change', function() {
             var option = this.value;
@@ -267,11 +331,22 @@ $(document).ready(function(){
                     {
                         $('#schedule-amount').val(null);
                     }
+                    $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
+                     $('#schedule_calendar').fullCalendar('removeEvents', item.id);
+                    });
                     $.CalendarApp1.init();
                 },
                 error:function(){
                 }
             });
+        });
+
+        $('#schedule-doctor_id').on('change', function() {
+            $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
+             $('#schedule_calendar').fullCalendar('removeEvents', item.id);
+            });
+            $.CalendarApp1.init();
+            $('#add_schedule_button').css('display','block');
         });
 
 });

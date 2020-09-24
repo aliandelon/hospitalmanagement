@@ -282,14 +282,18 @@ function($) {
     },
     /* on click on event */
     CalendarApp1.prototype.onEventClick =  function (calEvent, jsEvent, view) {
-        console.log(calEvent.start._i);
-        console.log(calEvent.end._i);
         var $this = this;
             var form = $("<form method='post' action='delete-schedule'></form>");
             form.append("<label>Delete</label>");
-            var investigation = $('#schedule-investigation_id').val();
-            var amount = $('#schedule-amount').val();
-            form.append("<div class='input-group m-b-20'>Do You wan to delete ?.<input type='hidden' value='"+amount+"' name=amount/><input type='hidden' value='"+investigation+"' name=investigation/><input type='hidden' value='"+calEvent.start._i+"' name=start/><input type='hidden' value='"+calEvent.end._i+"' name=end/></div><div class='col-md-12 text-right'><button onclick='DeleteSchedule()'>Delete</button></div>");
+            var type = $("#type").val();
+            var investigation = amount = '';
+            if(type == 1){
+                investigation = $('#schedule-investigation_id').val();
+                amount = $('#schedule-amount').val();
+            }else{
+                investigation = $('#schedule-doctor_id').val();
+            }
+            form.append("<div class='input-group m-b-20'>Do You wan to delete ?.<input type='hidden' value='"+type+"' name=type/><input type='hidden' value='"+amount+"' name=amount/><input type='hidden' value='"+investigation+"' name=investigation/><input type='hidden' value='"+calEvent.start._i+"' name=start/><input type='hidden' value='"+calEvent.end._i+"' name=end/></div><div class='col-md-12 text-right'><button onclick='DeleteSchedule()'>Delete</button></div>");
             $this.$modal.modal({
                 //backdrop: 'static'
             });
@@ -406,10 +410,17 @@ function($) {
         //     }];
 
         var $this = this;
+        var type = $("#type").val();
+        var option = '';
+        if(type == 1){
+            option = $('#schedule-investigation_id').val()
+        }else{
+            option = $('#schedule-doctor_id').val()
+        }
         defaultEvents  = $.ajax({
             url : baseurl+"schedule/viewschedule",
             type: "POST",
-            data : {"hosId":''},
+            data : {"hosId":'',"type":type,"option":option},
             dataType: "JSON",
             global: false,
                 async: false,
@@ -469,7 +480,3 @@ function($) {
     "use strict";
     //$.CalendarApp1.init()
 }(window.jQuery);
-
-$('#schduleDelete').on('click',function(){
-    alert(231);
-});

@@ -60,4 +60,18 @@ class SlotDayMapping extends \yii\db\ActiveRecord
             return $con->getLastInsertId();
         }
     }
+
+    public function saveDoctorSlotDayMapping($con,$model)
+    {
+        $check = "SELECT id  FROM slot_day_mapping WHERE doctor_id = '$model->doctor_id' AND hospital_clinic_id = '$model->hospital_clinic_id' AND day = '$model->day';";
+        $result = $con->createCommand($check)->queryOne();
+        if($result && isset($result['id']))
+        {
+            return $result['id'];
+        }else{
+            $query = "INSERT INTO slot_day_mapping(investigation_id,doctor_id,hospital_clinic_id,day)VALUES('$model->investigation_id','$model->doctor_id','$model->hospital_clinic_id','$model->day');";
+            $result = $con->createCommand($query)->execute();
+            return $con->getLastInsertId();
+        }
+    }
 }

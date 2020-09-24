@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-lg-12">
 		<div class="schedule-create">
 		    <?= $this->render('schedule_form', [
-		        'model' => $model,'list' => $list,'amount'=>$amount,'investigation'=>$investigation
+		        'model' => $model,'list' => $list,'amount'=>$amount,'investigation'=>$investigation,'type'=>$type
 		    ]) ?>
 
 		</div>
@@ -28,18 +28,34 @@ $this->params['breadcrumbs'][] = $this->title;
 <script>
 	var amount = '<?php echo $amount;?>';
 	var investigation = '<?php echo $investigation;?>';
+	var type = '<?php echo $type;?>';
 </script>
 <?php $this->registerJs("
 $(document).ready(function(){ 
-	if(amount !== '')
+	if(type == 1)
 	{
-		$('#schedule-amount').val(amount);
+		if(amount !== '')
+		{
+			$('#schedule-amount').val(amount);
+		}
+		$('#schedule-investigation_id').val(investigation);
+		if(investigation !== '')
+		{
+			$('#schedule-investigation_id').trigger('change');
+		}
+	}if(type == 2){
+		$('#type').val(2);
+		$('#type').trigger('change');
+		$('#schedule-doctor_id').val(investigation);
+		if(investigation !== '')
+		{
+			$('#schedule-doctor_id').trigger('change');
+		}
 	}
-	$('#schedule-investigation_id').val(investigation);
-	if(investigation !== '')
-	{
-		$('#schedule-investigation_id').trigger('change');
-	}
+	setTimeout(function(){ yourCurrentUrl = 'create';
+	window.history.pushState({}, '', yourCurrentUrl );}, 3000);
+
+	
 });
 ")
 ?>
