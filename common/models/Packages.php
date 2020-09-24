@@ -60,4 +60,10 @@ class Packages extends \yii\db\ActiveRecord
             'updated_on' => 'Updated On',
         ];
     }
+    public function viewPackages($con)
+    {
+         $query = "SELECT * FROM packages ORDER BY sort_order ASC";
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
 }
