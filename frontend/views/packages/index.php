@@ -9,90 +9,35 @@ use yii\grid\GridView;
 
 $this->title = 'Packages';
 $this->params['breadcrumbs'][] = $this->title;
+// print_r($packages);exit;
+$packageColor = ["magenta","blue","yellow"];
 ?>
 <div class="container">
     <div class="col-sm-8 col-4">
             <h4 class="page-title">Packages</h4>
         </div>
     <div class="row">
+        <?php foreach ($packages as $key => $value) {?>
         <div class="col-md-4 col-sm-6">
-            <div class="pricingTable">
+            <div class="pricingTable <?php echo $packageColor[$key]?>">
+                <?php if($value['featured_flag']){?>
                 <div class="ribbon">
                     <div class="label">Featured</div>
                 </div>
+                <?php } ?>
                 <div class="pricingTable-header">
-                    <h3 class="title">Standard</h3>
+                    <h3 class="title"><?php echo $value['package_name']?></h3>
                 </div>
                 <div class="pricing-content">
                     <div class="price-value">
-                        <span class="amount">$10</span>
+                        <span class="amount <?php echo (($value['price']/1000) >= 1) ? "k1000" : ""?> <?php echo ($value['discount_rate']!="0.00") ? 'lineThrough' : ''?>">₹ <?php echo (($value['price']/1000) >= 1) ? round(($value['price']/1000),1)."K" : $value['price']?></span>
+                         <span class="amount1 <?php echo (($value['discount_rate']/1000) >= 1) ? 'k1000' : ''?>"><?php echo ($value['discount_rate']!="0.00") ?  (($value['discount_rate']/1000) >= 1) ? "₹ ".round(($value['discount_rate']/1000),1)."K" : $value['discount_rate'] : "";?></span>
                     </div>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque necessitatibus placeat tempore.
-                    </p>
-                    <ul>
-                        <li>50GB Disk Space</li>
-                        <li>50 Email Accounts</li>
-                        <li>50GB Monthly Bandwidth</li>
-                        <li>50 Subdomains</li>
-                        <li>50 Domains</li>
-                    </ul>
+                    <?php echo $value['description']?>
                 </div>
                 <a href="#" class="pricingTable-signup">Order Now</a>
             </div>
         </div>
-        <div class="col-md-4 col-sm-6">
-            <div class="pricingTable yellow">
-                <div class="ribbon">
-                    <div class="label">Featured</div>
-                </div>
-                <div class="pricingTable-header">
-                    <h3 class="title">Business</h3>
-                </div>
-                <div class="pricing-content">
-                    <div class="price-value">
-                        <span class="amount">$20</span>
-                    </div>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque necessitatibus placeat tempore.
-                    </p>
-                    <ul>
-                        <li>60GB Disk Space</li>
-                        <li>60 Email Accounts</li>
-                        <li>60GB Monthly Bandwidth</li>
-                        <li>60 Subdomains</li>
-                        <li>60 Domains</li>
-                    </ul>
-                </div>
-                <a href="#" class="pricingTable-signup">Order Now</a>
-            </div>
-        </div>
-        <div class="col-md-4 col-sm-6">
-            
-            <div class="pricingTable green">
-                <div class="ribbon">
-                    <div class="label">Featured</div>
-                </div>
-                <div class="pricingTable-header">
-                    <h3 class="title">Premium</h3>
-                </div>
-                <div class="pricing-content">
-                    <div class="price-value">
-                        <span class="amount">$30</span>
-                    </div>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque necessitatibus placeat tempore.
-                    </p>
-                    <ul>
-                        <li>150GB Disk Space</li>
-                        <li>150 Email Accounts</li>
-                        <li>150GB Monthly Bandwidth</li>
-                        <li>150 Subdomains</li>
-                        <li>150 Domains</li>
-                    </ul>
-                </div>
-                <a href="#" class="pricingTable-signup">Order Now</a>
-            </div>
-        </div>
+        <?php } ?>
     </div>
 </div>
