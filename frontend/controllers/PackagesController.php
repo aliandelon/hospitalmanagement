@@ -35,13 +35,20 @@ class PackagesController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new PackagesSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        // $model = $this->findAllModel();
+        // $searchModel = new PackagesSearch();
+        // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        // return $this->render('index', [
+        //     'model' => $model,
+        //     'dataProvider' => $dataProvider,
+        // ]);
+            $model = new Packages();
+            $con = \Yii::$app->db;
+            $packages = $model->viewPackages($con);
+            return $this->render('index', [
+                                    'packages' => $packages
+                        ]);
     }
 
     /**
@@ -121,4 +128,5 @@ class PackagesController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }
