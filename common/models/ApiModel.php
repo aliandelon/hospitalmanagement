@@ -52,7 +52,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $idx = $datas['idx'];
         switch ($idx) {
             case 100:
-                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,profile_image,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[profile_image]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now())";
+                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now())";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
