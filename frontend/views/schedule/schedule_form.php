@@ -258,6 +258,10 @@ $(document).ready(function(){
                 $('#amount').css('display','none');
                 $('#investigation').css('display','none');
             }
+            $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
+             $('#schedule_calendar').fullCalendar('removeEvents', item.id);
+            });
+            $.CalendarApp1.init();
         });
         $('.submit-btn').on('click',function(e){
             var type = $('#type').val();

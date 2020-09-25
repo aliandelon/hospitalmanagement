@@ -52,17 +52,17 @@ class SlotDayTimeMapping extends \yii\db\ActiveRecord
     public function saveSlotTime($con, $model)
     {
         $check = "SELECT count(slot_day_id) cnt FROM slot_day_time_mapping WHERE 
-                slot_day_id = '$model->slot_day_id' AND hospital_clinic_id = '$model->hospital_clinic_id' AND from_time = '$model->from_time' AND to_time = '$model->to_time';";
+                slot_day_id = '$model->slot_day_id' AND hospital_clinic_id = '$model->hospital_clinic_id' AND investigation_id = '$model->investigation_id' AND from_time = '$model->from_time' AND to_time = '$model->to_time';";
         $count = $con->createCommand($check)->queryOne();
         if($count)
         {
             if($count['cnt'] > 0)
             {
                 $con->createCommand("DELETE FROM slot_day_time_mapping WHERE 
-                slot_day_id = '$model->slot_day_id' AND hospital_clinic_id = '$model->hospital_clinic_id' AND from_time = '$model->from_time' AND to_time = '$model->to_time';")->execute();
+                slot_day_id = '$model->slot_day_id' AND hospital_clinic_id = '$model->hospital_clinic_id' AND investigation_id = '$model->investigation_id' AND from_time = '$model->from_time' AND to_time = '$model->to_time';")->execute();
             }
         }
-        $sql= "INSERT INTO slot_day_time_mapping(slot_day_id,hospital_clinic_id,from_time,to_time)VALUES('$model->slot_day_id','$model->hospital_clinic_id','$model->from_time','$model->to_time');";
+        $sql= "INSERT INTO slot_day_time_mapping(slot_day_id,hospital_clinic_id,investigation_id,from_time,to_time)VALUES('$model->slot_day_id','$model->hospital_clinic_id','$model->investigation_id','$model->from_time','$model->to_time');";
         $result  = $con->createCommand($sql)->execute();
         return $result;
     }

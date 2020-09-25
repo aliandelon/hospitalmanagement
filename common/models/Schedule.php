@@ -89,7 +89,7 @@ class Schedule extends \yii\db\ActiveRecord
         daytime.to_time as end,
         'bg-success' as className 
             FROM slot_day_time_mapping daytime
-            JOIN slot_day_mapping day ON day.hospital_clinic_id = daytime.hospital_clinic_id
+            JOIN slot_day_mapping day ON day.hospital_clinic_id = daytime.hospital_clinic_id AND day.investigation_id = daytime.investigation_id
             WHERE daytime.hospital_clinic_id = '$hospital' AND 
             day.investigation_id = '$Investigation' AND daytime.doctor_id IS NULL";
         $result = $con->createCommand($query)->queryAll();

@@ -247,6 +247,7 @@ class ScheduleController extends Controller
                                     $slotsArray = explode('-', $slot);
                                     $model4->slot_day_id = $slotId;
                                     $model4->hospital_clinic_id = $model->hospital_id;
+                                    $model4->investigation_id = $model->investigation_id;
                                     $model4->from_time = date('Y-m-d H:i:s',strtotime($today.' '.$slotsArray[0]));
                                     $model4->to_time = date('Y-m-d H:i:s',strtotime($today.' '.$slotsArray[1]));
                                     if($commitflag ==1 && $result = $model4->saveSlotTime($con, $model4))
