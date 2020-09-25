@@ -258,10 +258,7 @@ $(document).ready(function(){
                 $('#amount').css('display','none');
                 $('#investigation').css('display','none');
             }
-            $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
-             $('#schedule_calendar').fullCalendar('removeEvents', item.id);
-            });
-            $.CalendarApp1.init();
+
         });
         $('.submit-btn').on('click',function(e){
             var type = $('#type').val();
@@ -390,7 +387,7 @@ $(document).ready(function(){
                      success:function(data){
                         // $('#accordion').html(data);
                         // alert(data);
-                        //window.location.href = '';
+                        window.location.href = '';
                      },
                      error:function(){
                      }
@@ -413,9 +410,10 @@ $(document).ready(function(){
                     {
                         $('#schedule-amount').val(null);
                     }
-                    $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
-                     $('#schedule_calendar').fullCalendar('removeEvents', item.id);
-                    });
+                    // $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
+                    //  $('#schedule_calendar').fullCalendar('removeEvents', item.id);
+                    // });
+                    $('#schedule_calendar').fullCalendar('destroy');
                     $.CalendarApp1.init();
                 },
                 error:function(){
@@ -424,9 +422,10 @@ $(document).ready(function(){
         });
 
         $('#schedule-doctor_id').on('change', function() {
-            $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
-             $('#schedule_calendar').fullCalendar('removeEvents', item.id);
-            });
+            // $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
+            //  $('#schedule_calendar').fullCalendar('removeEvents', item.id);
+            // });
+            $('#schedule_calendar').fullCalendar('destroy');
             $.CalendarApp1.init();
             $('#add_schedule_button').css('display','block');
         });
