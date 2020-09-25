@@ -42,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute'=>'investigation_id',
                             'label' => 'Investigation',
                             'value' => function($model){
+                                if($model->investigation_id)
                                 return $model->investigations->investigation_name;
                             },
                             'filter'=>ArrayHelper::map(Investigations::find()->where('status = 1')->all(), 'id','investigation_name'),
@@ -51,6 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'category',
                             'label' => 'Investigation Catgory',
                             'value' => function($model){
+                                if($model->investigation_id)
                                 return $model->investigations->category->category_name;
                             },
                             'filter'=>ArrayHelper::map(Category::find()->asArray()->all(), 'id', 'category_name'),

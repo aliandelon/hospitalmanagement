@@ -8,7 +8,10 @@ use common\models\Investigations;
 use common\models\DoctorsDetails;
 use kartik\select2\Select2;
 ?>
-
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <div class="content">
     <div class="schedule-form">
     <?php if (Yii::$app->session->hasFlash('error')): ?>
@@ -156,11 +159,19 @@ use kartik\select2\Select2;
                         <div class="modal-body">
                             <!-- <form> -->
                                 <div class="form-group">
-                                    <label>Date <span class="text-danger">*</span></label>
+                                    <label>From Date <span class="text-danger">*</span></label>
                                     <div class="cal-icon">
                                         <input class="form-control datetimepicker" type="text" id="eventDate">
                                     </div>
-                                    <span id="dateerror" style="color: red;display: none;">Please Select Date</span>
+                                    <span id="dateerror" style="color: red;display: none;">Please Select From Date</span>
+
+                                </div>
+                                <div class="form-group">
+                                    <label>To Date <span class="text-danger">*</span></label>
+                                    <div class="cal-icon">
+                                        <input class="form-control datetimepicker" type="text" id="eventDate2">
+                                    </div>
+                                    <span id="dateerror2" style="color: red;display: none;">Please Select To Date</span>
 
                                 </div>
                                 <div class="form-group">
@@ -196,6 +207,7 @@ use kartik\select2\Select2;
                                     <span id="sloteerror" style="color: red;display: none;">Please Select One Slot</span>
                                 </div>
                                 <div class="m-t-20 text-center">
+                                    <span id="commonerror" style="color: red;display: none;"></span>
                                     <button class="btn btn-primary submit-btn">Create Schedule</button>
                                 </div>
                             <!-- </form> -->
@@ -229,6 +241,12 @@ use kartik\select2\Select2;
 $this->registerJs("
 $(document).ready(function(){          
         //$('#slot').multiselect();
+        $('#eventDate').datetimepicker().on('dp.show', function () {
+                return $(this).data('DateTimePicker').minDate(new Date());
+        });
+        $('#eventDate2').datetimepicker().on('dp.show', function () {
+                return $(this).data('DateTimePicker').minDate(new Date());
+        });
         $('#type').on('change',function(e){
             var type = $('#type').val();
             if(type == 1){
@@ -246,12 +264,20 @@ $(document).ready(function(){
             if(type == 1){
                 e.preventDefault();
                 var eventDate = $('#eventDate').val();
+                var eventDate2 = $('#eventDate2').val();
                 if(eventDate == '')
                 {
                     $('#dateerror').css('display','block');
                     return false;
                 }else{
                     $('#dateerror').css('display','none');
+                }
+                if(eventDate2 == '')
+                {
+                    $('#dateerror2').css('display','block');
+                    return false;
+                }else{
+                    $('#dateerror2').css('display','none');
                 }
                 var amount = $('#schedule-amount').val();
                 var investigation = $('#schedule-investigation_id').val();
@@ -262,6 +288,28 @@ $(document).ready(function(){
                 }else{
                     $('#sloteerror').css('display','none');
                 }
+                var d1 = eventDate.split('/').reverse().join('-');
+                var d2 = eventDate2.split('/').reverse().join('-');
+                diffDays = date_diff_indays(d2, d1);
+                if(d1 > d2)
+                {
+                  $('#commonerror').css('display','block');
+                  document.getElementById('commonerror').innerHTML = 'To Date should be greater than or equals to from Date';
+                  return false;
+                }else{
+                    $('#commonerror').css('display','none');
+                }
+                var newdate = eventDate.split('/').reverse().join('-');
+                var newdate1 = eventDate2.split('/').reverse().join('-');
+                days = date_diff_indays(newdate, newdate1);
+                if(days > 7)
+                {
+                    document.getElementById('commonerror').innerHTML = 'From To Date Difference should not greater than 7 days';
+                    $('#commonerror').css('display','block');
+                    return false;
+                }else{
+                    $('#commonerror').css('display','none');
+                }           
                 if(amount == '')
                 {
                     $('#add_schedule_event').modal('hide')
@@ -270,10 +318,10 @@ $(document).ready(function(){
                 }else
                 {
                     $('#amounterror').css('display','none');
-                } 
+                }
                 $.ajax({
                      url:baseurl+'schedule/schedule',
-                     data:{'eDate':eventDate,'slots':slots,'investigation':investigation,'amount':amount},
+                     data:{'eDate':eventDate,'eDate2':eventDate2,'slots':slots,'investigation':investigation,'amount':amount},
                      type:'POST',
                      success:function(data){
                         // $('#accordion').html(data);
@@ -286,6 +334,14 @@ $(document).ready(function(){
             }else{
                 e.preventDefault();
                 var eventDate = $('#eventDate').val();
+                var eventDate2 = $('#eventDate2').val();
+                if(eventDate2 == '')
+                {
+                    $('#dateerror2').css('display','block');
+                    return false;
+                }else{
+                    $('#dateerror2').css('display','none');
+                }
                 if(eventDate == '')
                 {
                     $('#dateerror').css('display','block');
@@ -301,14 +357,36 @@ $(document).ready(function(){
                 }else{
                     $('#sloteerror').css('display','none');
                 }
+                var d1 = eventDate.split('/').reverse().join('-');
+                var d2 = eventDate2.split('/').reverse().join('-');
+                diffDays = date_diff_indays(d2, d1);
+                if(d1 > d2)
+                {
+                  $('#commonerror').css('display','block');
+                  document.getElementById('commonerror').innerHTML = 'To Date should be greater than or equals to from Date';
+                  return false;
+                }else{
+                    $('#commonerror').css('display','none');
+                }
+                var newdate = eventDate.split('/').reverse().join('-');
+                var newdate1 = eventDate2.split('/').reverse().join('-');
+                days = date_diff_indays(newdate, newdate1);
+                if(days > 7)
+                {
+                    document.getElementById('commonerror').innerHTML = 'From To Date Difference Should not greater than 7 days';
+                    $('#commonerror').css('display','block');
+                    return false;
+                }else{
+                    $('#commonerror').css('display','none');
+                } 
                 $.ajax({
                      url:baseurl+'schedule/doctor-schedule',
-                     data:{'eDate':eventDate,'slots':slots,'doctor':doctor},
+                     data:{'eDate':eventDate,'eDate2':eventDate2,'slots':slots,'doctor':doctor},
                      type:'POST',
                      success:function(data){
                         // $('#accordion').html(data);
                         // alert(data);
-                        window.location.href = '';
+                        //window.location.href = '';
                      },
                      error:function(){
                      }
@@ -348,6 +426,12 @@ $(document).ready(function(){
             $.CalendarApp1.init();
             $('#add_schedule_button').css('display','block');
         });
+        var date_diff_indays = function(date1,date2 ) {
+          dt1 = new Date(date1);
+          dt2 = new Date(date2);
+
+          return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
+          }
 
 });
 

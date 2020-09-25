@@ -213,53 +213,69 @@ class ScheduleController extends Controller
                 $hospital_id = Yii::$app->user->identity->id;
                 $model->hospital_id = $hospital_id;
                 $model->investigation_id = $post['investigation'];
-                $date = date_create($post['eDate']);
+                /*$date = date_create($post['eDate']);
                 $source = str_replace('/', '-',$post['eDate']);
                 $date = new DateTime($source);
-                $model2->day = $date->format('Y-m-d'); 
+                $model2->day = $date->format('Y-m-d'); */
                 $model2->hospital_clinic_id = $model->hospital_id;
                 $model->amount = $post['amount'];
                 if($model->createSchedule($con, $model)){
-                    $model3->investigation_id = $model->investigation_id;
-                    $model3->hospital_clinic_id = $model->hospital_id;
-                    $model3->amount = $model->amount;
-                    if($model3->saveHospitalInvestigation($con,$model3)){
-                        $model2->investigation_id = $model->investigation_id;
-                        if($slotId = $model2->saveSlotDayMapping($con,$model2)){
-                            $slots = $post['slots'];
-                            $today = $model2->day;
-                            $commitflag = 1;
-                            foreach ($slots as $key => $slot) {
-                                $slotsArray = explode('-', $slot);
-                                $model4->slot_day_id = $slotId;
-                                $model4->hospital_clinic_id = $model->hospital_id;
-                                $model4->from_time = date('Y-m-d H:i:s',strtotime($today.' '.$slotsArray[0]));
-                                $model4->to_time = date('Y-m-d H:i:s',strtotime($today.' '.$slotsArray[1]));
-                                if($commitflag ==1 && $result = $model4->saveSlotTime($con, $model4))
-                                {
-                                    // $transaction->commit();
-                                    // return 'success';
-                                }else{
-                                    $commitflag = 0;
-                                    $transaction->rollback();
+                    $start = $post['eDate'];
+                    $end = $post['eDate2'];
+                    $date = date_create($post['eDate']);
+                    $source = str_replace('/', '-',$post['eDate']);
+                    $date = new DateTime($source);
+                    $startDate = $date->format('d-m-Y');
+                    $date1 = date_create($post['eDate2']);
+                    $source1 = str_replace('/', '-',$post['eDate2']);
+                    $date1 = new DateTime($source1);
+                    $endDate = $date1->format('d-m-Y');
+                    //echo $startDate;echo '<br>';print_r($endDate);exit;
+                    while(strtotime($startDate) <= strtotime($endDate))
+                    {
+                        $model2->day = date('Y-m-d',strtotime($startDate)); 
+                        $model3->investigation_id = $model->investigation_id;
+                        $model3->hospital_clinic_id = $model->hospital_id;
+                        $model3->amount = $model->amount;
+                        if($model3->saveHospitalInvestigation($con,$model3)){
+                            $model2->investigation_id = $model->investigation_id;
+                            if($slotId = $model2->saveSlotDayMapping($con,$model2)){
+                                $slots = $post['slots'];
+                                $today = $model2->day;
+                                $commitflag = 1;
+                                foreach ($slots as $key => $slot) {
+                                    $slotsArray = explode('-', $slot);
+                                    $model4->slot_day_id = $slotId;
+                                    $model4->hospital_clinic_id = $model->hospital_id;
+                                    $model4->from_time = date('Y-m-d H:i:s',strtotime($today.' '.$slotsArray[0]));
+                                    $model4->to_time = date('Y-m-d H:i:s',strtotime($today.' '.$slotsArray[1]));
+                                    if($commitflag ==1 && $result = $model4->saveSlotTime($con, $model4))
+                                    {
+                                        // $transaction->commit();
+                                        // return 'success';
+                                    }else{
+                                        $commitflag = 0;
+                                        $transaction->rollback();
+                                    }
                                 }
-                                //print_r($model4->save());echo '<br>';
-                            }
-                            if($commitflag == 1)
-                            {
-                                $transaction->commit();
-                                return 'success';
                             }else{
                                 $transaction->rollback();
                                 return 'failure';
                             }
-                            
-                        }else{
+                        }else
+                        {
                             $transaction->rollback();
                             return 'failure';
                         }
-                    }else
+                        $startDate = new DateTime($startDate);
+                        $startDate = $startDate->modify('+1 day');
+                        $startDate = $startDate->format('Y-m-d');
+                    }
+                    if($commitflag == 1)
                     {
+                        $transaction->commit();
+                        return 'success';
+                    }else{
                         $transaction->rollback();
                         return 'failure';
                     }
@@ -337,10 +353,10 @@ class ScheduleController extends Controller
             if($post){
                 $hospital_id = Yii::$app->user->identity->id;
                 $model->hospital_id = $hospital_id;
-                $date = date_create($post['eDate']);
-                $source = str_replace('/', '-',$post['eDate']);
-                $date = new DateTime($source);
-                $model2->day = $date->format('Y-m-d'); 
+                // $date = date_create($post['eDate']);
+                // $source = str_replace('/', '-',$post['eDate']);
+                // $date = new DateTime($source);
+                // $model2->day = $date->format('Y-m-d'); 
                 $model2->hospital_clinic_id = $model->hospital_id;
                 $model->doctor_id = $post['doctor'];
                 if($model->createDoctorSchedule($con, $model)){
@@ -348,6 +364,20 @@ class ScheduleController extends Controller
                     //$model3->hospital_clinic_id = $model->hospital_id;
                     //$model3->amount = $model->amount;
                     //if($model3->saveHospitalInvestigation($con,$model3)){
+                        $start = $post['eDate'];
+                        $end = $post['eDate2'];
+                        $date = date_create($post['eDate']);
+                        $source = str_replace('/', '-',$post['eDate']);
+                        $date = new DateTime($source);
+                        $startDate = $date->format('d-m-Y');
+                        $date1 = date_create($post['eDate2']);
+                        $source1 = str_replace('/', '-',$post['eDate2']);
+                        $date1 = new DateTime($source1);
+                        $endDate = $date1->format('d-m-Y');
+                    while(strtotime($startDate) <= strtotime($endDate))
+                    {
+                    //echo $startDate;echo '<br>';print_r($endDate);exit;
+                        $model2->day = date('Y-m-d',strtotime($startDate)); 
                         $model2->investigation_id = $model->investigation_id;
                         $model2->doctor_id = $model->doctor_id;
                         if($slotId = $model2->saveDoctorSlotDayMapping($con,$model2)){
@@ -371,15 +401,6 @@ class ScheduleController extends Controller
                                 }
                                 //print_r($model4->save());echo '<br>';
                             }
-                            if($commitflag == 1)
-                            {
-                                $transaction->commit();
-                                return 'success';
-                            }else{
-                                $transaction->rollback();
-                                return 'failure';
-                            }
-                            
                         }else{
                             $transaction->rollback();
                             return 'failure';
@@ -389,6 +410,18 @@ class ScheduleController extends Controller
                     //     $transaction->rollback();
                     //     return 'failure';
                     // }
+                        $startDate = new DateTime($startDate);
+                        $startDate = $startDate->modify('+1 day');
+                        $startDate = $startDate->format('Y-m-d');
+                    }
+                    if($commitflag == 1)
+                    {
+                        $transaction->commit();
+                        return 'success';
+                    }else{
+                        $transaction->rollback();
+                        return 'failure';
+                    }
                 }else{
                     $transaction->rollback();
                     return 'failure';
