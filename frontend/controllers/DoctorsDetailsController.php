@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use common\models\DoctorsDetails;
 use common\models\DoctorsDetailsSearch;
+use common\models\HolidayList;
 use yii\web\UploadedFile;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -28,6 +29,38 @@ class DoctorsDetailsController extends Controller
                 ],
             ],
         ];
+    }
+
+     /**
+     * Lists all DoctorsDetails models.
+     * @return mixed
+     */
+    public function actionLeaveList()
+    {
+        $model = new HolidayList();
+        $con = \Yii::$app->db;
+        $hospital_id = Yii::$app->user->identity->id;
+        $doctors = $model->viewLeaveDoctors($con, $hospital_id);
+        return $this->render('leavelist', [
+            'doctorsList' => $doctors
+        ]);
+    }
+
+    /**
+     * Lists all DoctorsDetails models.
+     * @return mixed
+     */
+    public function actionLeaveListAjax()
+    {
+        $post = Yii::$app->request->post();
+        if($post){
+            $dates = $post['dates'];
+            print_r($dates);exit;
+        }
+        $model = new HolidayList();
+        $con = \Yii::$app->db;
+        $hospital_id = Yii::$app->user->identity->id;
+        $doctors = $model->viewLeaveDoctors($con, $hospital_id);
     }
 
     /**
