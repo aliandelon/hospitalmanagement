@@ -55,13 +55,34 @@ class DoctorsDetailsController extends Controller
         $post = Yii::$app->request->post();
         if($post){
             $dates = $post['dates'];
-            print_r($dates);exit;
+            $ftoDates=$this->correctDateFormat($dates);
+
         }
         $model = new HolidayList();
         $con = \Yii::$app->db;
         $hospital_id = Yii::$app->user->identity->id;
-        $doctors = $model->viewLeaveDoctors($con, $hospital_id);
+        $doctorsList = $model->viewLeaveDoctorsAjax($con, $hospital_id,$ftoDates['fromDate'],$ftoDates['toDate']);
+        if(!empty($doctorsList)){
+            $this->layout = FALSE;
+            return $this->renderAjax('_doctorLeaveAjax',['doctorsList'=>$doctorsList]);
+        }else{
+            echo 2;
+        }
+        
     }
+
+    protected function correctDateFormat($dates){
+       $ftoArray=explode("-",$dates);
+       $fdate=explode("/",trim($ftoArray[0]));
+       $dateArray['fromDate']=$fdate[2].'-'.$fdate[0].'-'.$fdate[1];
+
+       $tdate=explode("/",trim($ftoArray[1]));
+       $dateArray['toDate']=$tdate[2].'-'.$tdate[0].'-'.$tdate[1];
+
+        return $dateArray;
+    }
+
+
 
     /**
      * Lists all DoctorsDetails models.

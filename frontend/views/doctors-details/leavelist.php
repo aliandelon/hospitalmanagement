@@ -59,24 +59,32 @@ $this->params['breadcrumbs'][] = $this->title;
 <script type="text/javascript">$('input[name="dates"]').daterangepicker();</script>
 <script>
     var baseurl = '<?php print \yii\helpers\Url::base() . "/"; ?>';
-    
-    $(document).ready(function(){   
-        $(".applyBtn").html("View Doctors");
-        $(".applyBtn").change(function(){
-            var dates = $('input[name="dates"]').val();
+  </script>
+  <?php $this->registerJs("
+     $(document).ready(function () {
+
+        $('.applyBtn').html('View Doctors');
+        $('.applyBtn').click(function(){
+            var dates = $('input[name=\'dates\']').val();
             alert(dates);
             $.ajax({
                  url:baseurl+'doctors-details/leave-list-ajax',
                  data:{'dates':dates},
                  type:'POST',
                  success:function(data){
-                    // $('#accordion').html(data);
-                    // alert(data);
-                    // window.location.href = '';
+                        if(data==2)
+                        {
+                    
+                        }
+                        else{
+                         $('.doctor-grid').html('');
+                            $('.doctor-grid').append(data);
+                        
+                        }
                  },
                  error:function(){
                  }
             });
         });
-    });
-</script>
+      });
+") ?>

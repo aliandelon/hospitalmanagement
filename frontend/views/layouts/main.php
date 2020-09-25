@@ -109,18 +109,55 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
                         <li class="active">
                             <a href="index-2.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
-                         <li>
-                            <a href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update2?id='.$selectHospitalId->id ?>"><i class="fa fa-cog"></i> <span>Settings</span></a>
+                        
+                          <li class="submenu">
+                            <a href="#"><i class="fa fa-calendar"></i> <span> Appointments </span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="employees.html">Today's Appointments</a></li>
+                                <li><a href="leaves.html">All Appointments</a></li>
+                               
+                            </ul>
                         </li>
-                        <li>
+                         
+                        <!-- <li>
+                            <a href="doctors.html"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
+                        </li> -->
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-calendar"></i> <span> Doctors </span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="<?= Yii::$app->request->baseUrl . '/doctors-details/leave-list' ?>">Doctor's on Leave</a></li>
+                                <li><a href="<?= Yii::$app->request->baseUrl . '/doctors-details' ?>">Doctors List</a></li>
+                               
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-user"></i> <span> Patients </span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="employees.html">Patients</a></li>
+                                <li><a href="leaves.html">Reffered Patients</a></li>
+                               
+                            </ul>
+                        </li>
+                         <li>
                             <a href="<?= Yii::$app->request->baseUrl . '/schedule/index' ?>"><i class="fa fa-calendar-check-o"></i> <span>Schedule</span></a>
                         </li>
+                        
                         <li>
                             <a href="<?= Yii::$app->request->baseUrl . '/site/holiday' ?>"><i class="fa fa-calendar"></i> <span>Holiday</span></a>
                         </li>
-                        
-                        
-                        
+
+                         <li>
+                            <a href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update2?id='.$selectHospitalId->id ?>"><i class="fa fa-cog"></i> <span>Settings</span></a>
+                        </li>
+                       
+
+
+
+
+
+                        <li>
+                            <a href="salary-settings.html"><i class="fa fa-money"></i> <span>Payments</span></a>
+                        </li>
                     </ul>
                 </div>
             </div>
