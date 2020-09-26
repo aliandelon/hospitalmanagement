@@ -90,30 +90,18 @@ class ApiController extends Controller
         }
     }
 
-    public function actionGetUserdetails($data)
+    public function actionGetUserdetails($idx, $mobile)
     {
     	try
 	    {
             $response = [];
-            $key = '12345678901234567890123456789012';
-            $iv  = '1234567890123456';
-            $method = 'AES-128-CBC';
-            $decryptedData = openssl_decrypt(base64_decode(str_replace(' ', '+', $data)), $method, $key, OPENSSL_RAW_DATA, $iv);
-            $datas = explode('&', $decryptedData);
-            foreach ($datas as $value) {
-                $temp = explode('=', $value);
-                $inputData[$temp[0]] = $temp[1];
-            }
-            $idx = $inputData['idx'];
-            $mob = $inputData['mob'];
 			$model = new ApiModel();
-			$getUserDetails = $model->getUserDetails($idx, $mob);
+			$getUserDetails = $model->getUserDetails($idx, $mobile);
 			$this->setResponseFormat(1);
 	        if ( $getUserDetails )
 	        {
                 try {
-                    $output = json_encode($getUserDetails);
-                    $response = !empty($getUserDetails) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
+                    $response = $getUserDetails;
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
@@ -126,6 +114,54 @@ class ApiController extends Controller
 	    }
     }
 
+     public function actionVerifyMobile($idx, $mobile)
+    {
+        try
+        {
+            $response = [];
+            $model = new ApiModel();
+            $getUserDetails = $model->getVerifyMobile($idx, $mobile);
+            if ( $getUserDetails )
+            {
+                try {
+                    $response['status']  = "success";
+                    $response['otp'] = '1234';
+                    $response['content'] = $getUserDetails;
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return json_encode($response);
+                }
+                return json_encode($response);
+            }
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
+
+    public function actionVerifyOtp($idx, $otp, $userId)
+    {
+        try
+        {
+            $response = [];
+            $model = new ApiModel();
+            $getUserDetails = $model->getVerifyOtp($idx, $otp, $userId);
+            if ( $getUserDetails )
+            {
+                try {
+                    $response['content'] = $getUserDetails;
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return json_encode($response);
+                }
+                return json_encode($response);
+            }
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
+
     public function actionSetUserdetails()
     {  
         try
@@ -134,25 +170,25 @@ class ApiController extends Controller
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
             $rawData  = self::readData();
-            $key = '12345678901234567890123456789012';
+            /*$key = '12345678901234567890123456789012';
             $iv  = '1234567890123456';
             $method = 'AES-128-CBC';
-            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);
-            $inputData = json_decode($rawDataDecrypted,true);
+            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);*/
+            $inputData = $rawData;
             $setUserDetails = $model->setUserDetails($inputData);
             if ( $setUserDetails && $setUserDetails['status'] == 1)
             {
                 try {
-                    $output['UserId'] = $setUserDetails['content'];
-                    $output['status']  = "200";
-                    $output['message'] = "Success";
-                    $response = !empty($setUserDetails) ? base64_encode(openssl_encrypt(json_encode($output), $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
+                    $response['UserId'] = $setUserDetails['content'];
+                    $response['status']  = "200";
+                    $response['message'] = $setUserDetails['msg'];
+                    // $response = !empty($setUserDetails) ? base64_encode(openssl_encrypt(json_encode($output), $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return $response;
+                    return json_encode($response);
                 }
-                return $response;
+                return json_encode($response);
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
@@ -168,23 +204,24 @@ class ApiController extends Controller
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
             $rawData  = self::readData();
-            $key = '12345678901234567890123456789012';
+            /*$key = '12345678901234567890123456789012';
             $iv  = '1234567890123456';
             $method = 'AES-128-CBC';
             $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);
-            $inputData = json_decode($rawDataDecrypted,true);
+            $inputData = json_decode($rawDataDecrypted,true);*/
+            $inputData = $rawData;
             $getHospitalClinic = $model->getHospitalClinicDetails($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
             {
                 try {
-                    $output = json_encode($getHospitalClinic);
-                    $response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
+                    $response['content']  = $getHospitalClinic;
+                    /*$response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];*/
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return $response;
+                    return json_encode($response);
                 }
-                return $response;
+                return json_encode($response);
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
@@ -200,23 +237,24 @@ class ApiController extends Controller
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
             $rawData  = self::readData();
-            $key = '12345678901234567890123456789012';
+            /*$key = '12345678901234567890123456789012';
             $iv  = '1234567890123456';
             $method = 'AES-128-CBC';
-            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);
-            $inputData = json_decode($rawDataDecrypted,true);
+            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);*/
+            $inputData = $rawData;
             $getHospitalClinic = $model->getHospitalLabInvestigationDetails($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
             {
                 try {
-                    $output = json_encode($getHospitalClinic);
-                    $response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
+                    $response['status']  = "success";
+                    $response['content'] = $getHospitalClinic;
+                    // $response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return $response;
+                    return json_encode($response);
                 }
-                return $response;
+                return json_encode($response);
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
@@ -232,23 +270,24 @@ class ApiController extends Controller
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
             $rawData  = self::readData();
-            $key = '12345678901234567890123456789012';
+           /* $key = '12345678901234567890123456789012';
             $iv  = '1234567890123456';
             $method = 'AES-128-CBC';
-            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);
-            $inputData = json_decode($rawDataDecrypted,true);
+            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);*/
+            $inputData = $rawData;
             $getHospitalClinic = $model->getHospitalLabInvestigationSlotdetails($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
             {
                 try {
-                    $output = json_encode($getHospitalClinic);
-                    $response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
+                    $response['status']  = "success";
+                    $response['content'] = $getHospitalClinic;
+                    // $response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return $response;
+                    return json_encode($response);
                 }
-                return $response;
+                return json_encode($response);
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
@@ -264,23 +303,24 @@ class ApiController extends Controller
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
             $rawData  = self::readData();
-            $key = '12345678901234567890123456789012';
-            $iv  = '1234567890123456';
-            $method = 'AES-128-CBC';
-            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);
-            $inputData = json_decode($rawDataDecrypted,true);
+            // $key = '12345678901234567890123456789012';
+            // $iv  = '1234567890123456';
+            // $method = 'AES-128-CBC';
+            // $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);
+            $inputData = $rawData;
             $getHospitalClinic = $model->bookAppointments($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
             {
                 try {
-                    $output = json_encode($getHospitalClinic);
-                    $response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
+                    $response['status']  = "success";
+                    $response['message'] = $getHospitalClinic;
+                
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return $response;
+                    return json_encode($response);
                 }
-                return $response;
+                    return json_encode($response);
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {

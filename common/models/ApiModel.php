@@ -45,23 +45,109 @@ class ApiModel extends \yii\db\ActiveRecord
         }
     }
 
-    public function setUserDetails($datas) 
+    public function getVerifyMobile($idx, $mobile) 
     {
         $con = \Yii::$app->db;
         $response = [];
-        $idx = $datas['idx'];
         switch ($idx) {
             case 100:
-                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now())";
+                $query = "SELECT id as UserId
+                    from patient_details where phone='$mobile' and status =1;";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
                 return $response;
         }
         try { 
-            $result = $con->createCommand($query)->execute();
-            $id = Yii::$app->db->getLastInsertID();
-            $response = ["status" => 1, "content" => $id];
+            $result = $con->createCommand($query)->queryOne();
+            if($result && isset($result['UserId']))
+            {
+                $otpInsertion = "UPDATE patient_details SET otp = '1234' where phone='$mobile';";
+                $con->createCommand($otpInsertion)->execute();
+            }
+            $response = ["status" => 1, "content" => $result];
+            $con->close();
+            return $response;
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
+    public function getVerifyOtp($idx, $otp, $userId) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        switch ($idx) {
+            case 100:
+                $query = "SELECT id as UserId
+                    from patient_details where otp='$otp' and id ='$userId';";
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $result = $con->createCommand($query)->queryOne();
+            if($result && isset($result['UserId']))
+            {
+                if(!empty($result['UserId']))
+                {
+                    $content = "success";
+                    $UserId = $result['UserId'];
+                }else{
+                    $content = "failure";
+                    $UserId = '';
+                }
+            }
+            $response = ["status" => 1, "content" => $content,"UserId"=>$UserId];
+            $con->close();
+            return $response;
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
+    public function setUserDetails($datas) 
+    {   
+        $con = \Yii::$app->db;
+        $response = [];
+        $idx = $datas['idx'];
+        switch ($idx) {
+            case 100:
+
+                $check = "SELECT count(id) as cnt from patient_details where id = '$datas[id]';";
+                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now())";
+                $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on)VALUES('$datas[id]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now())ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on);";
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $checkResult = $con->createCommand($check)->queryOne();
+            if($checkResult)
+            {
+                if($checkResult['cnt'] > 0)
+                {
+                    $result = $con->createCommand($duplicateInsert)->execute();
+                    $id = $datas['id'];
+                    $msg = "Profile Updatd";
+                }else{
+                    $result = $con->createCommand($query)->execute();
+                    $id = $con->getLastInsertId();
+                    $msg = "Profile Creted";
+                }
+            }else{
+                    $result = $con->createCommand($query)->execute();
+                    $id = $con->getLastInsertId();
+                    $msg = "Profile Creted";
+                }
+            
+            $response = ["status" => 1, "content" => $id,"msg"=>$msg];
             $con->close();
             return $response;
         } catch (yii\db\Exception $e) {
