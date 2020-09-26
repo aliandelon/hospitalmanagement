@@ -50,7 +50,9 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
             <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
             <ul class="nav user-menu float-right">
                 <li class="nav-item dropdown d-none d-sm-block">
+                    <span style="color: #fff;font-weight:1000">Publish</span>
                     <label class="switch">
+
                         <input type="checkbox" name="publish" id="publish" <?php echo $publishFlag?>>
                         <span class="slider round"></span>
                     </label>
