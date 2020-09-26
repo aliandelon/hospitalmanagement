@@ -3,8 +3,8 @@
         <div class="col-sm-8 col-4">
             <h4 class="page-title">Calendar</h4>
         </div>
-        <div class="col-sm-4 col-8 text-right m-b-30">
-            <a href="#" class="btn btn-primary btn-rounded" data-toggle="modal" data-target="#add_event"><i class="fa fa-plus"></i> Add Holiday</a>
+        <div class="col-sm-4 col-8 text-right m-b-30" id="addBtn">
+            <a href="#" class="btn btn-primary btn-rounded" onclick="$('#add_event').toggleClass('show')"><i class="fa fa-plus"></i> Add Holiday</a>
         </div>
     </div>
     <div class="row">
@@ -46,18 +46,19 @@
                     </div>
                 </div>
             </div> -->
-            <div id="add_event" class="modal fade" role="dialog">
+            <div id="add_event" class="modal in " role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content modal-md">
                         <div class="modal-header">
                             <h4 class="modal-title">Add Holiday</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <button type="button" class="close" id="close" onclick="$('#add_event').toggleClass('show')">&times;</button>
                         </div>
                         <div class="modal-body">
                             <!-- <form> -->
                                  <div class="form-group">
                                     <label>Entry Type<span class="text-danger">*</span></label>
                                     <select class="form-control" id="holidayFlag">
+                                        <option value="">Select Holiday Type</option>
                                         <option value="1">Holiday</option>
                                         <option value="0">Others</option>
                                     </select>
@@ -65,6 +66,7 @@
                                 <div class="form-group" id="appointDiv" style="display: none">
                                     <label>Appointment Type<span class="text-danger">*</span></label>
                                     <select class="form-control" id="appointType">
+                                        <option value="">Select Appointment Type</option>
                                         <option value="1">Doctors Appointment</option>
                                         <option value="0">Investigation Appointment</option>
                                     </select>
@@ -72,6 +74,7 @@
                                 <div class="form-group" id="InvestigationDiv" style="display: none">
                                     <label>Investigations List<span class="text-danger">*</span></label>
                                     <select class="form-control" id="Investigation" data-live-search="true">
+                                        <option value="">Select Investigation</option>
                                         <?php foreach ($list as $key => $value) {
                                            echo "<option value='".$value['id']."'>".$value['name']."</option>";
                                         }?>
@@ -80,6 +83,7 @@
                                 <div class="form-group" id="DoctorDiv" style="display: none">
                                     <label>Doctors List<span class="text-danger">*</span></label>
                                     <select class="form-control" id="doctor" data-live-search="true">
+                                        <option value="">Select Doctors</option>
                                         <?php foreach ($doctors as $key => $value) {
                                            echo "<option value='".$value['id']."'>".$value['name']."</option>";
                                         }?>
@@ -139,6 +143,14 @@ $this->registerJs("
                 // $(function() {
                  
                 // });
+                $('#addBtn').click(function(){
+                        $('#eventName').val('');
+                        $('#eventDate').val('');
+                        $('#holidayFlag').val('');
+                        $('#Investigation').val('');  
+                        $('#appointType').val('');
+                        $('#doctor').val('');
+                });
                 $('.submit-btn').on('click',function(e){
                         e.preventDefault();
                         var events = $('#eventName').val();
@@ -155,7 +167,8 @@ $this->registerJs("
                              success:function(data){
                                 // $('#accordion').html(data);
                                 // alert(data);
-                                // window.location.href = '';
+                                window.location.href = '';
+                                $('#add_event').toggleClass('show')
                              },
                              error:function(){
                              }
