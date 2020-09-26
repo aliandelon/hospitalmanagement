@@ -10,9 +10,10 @@ use yii\grid\GridView;
 $this->title = 'Packages';
 $this->params['breadcrumbs'][] = $this->title;
 // print_r($packages);exit;
-$packageColor = ["magenta","blue","yellow"];
+$packageColor = ["magenta","green","yellow","blue"];
 ?>
-<div class="container">
+<script>var baseurl = "<?php print \yii\helpers\Url::base() . "/"; ?>";</script>
+<div class="container" style="background-color: #fff;padding: 50px 20px">
     <div class="col-sm-8 col-4">
             <h4 class="page-title">Packages</h4>
         </div>
@@ -31,7 +32,7 @@ $packageColor = ["magenta","blue","yellow"];
                 <div class="pricing-content">
                     <div class="price-value">
                         <span class="amount <?php echo (($value['price']/1000) >= 1) ? "k1000" : ""?> <?php echo ($value['discount_rate']!="0.00") ? 'lineThrough' : ''?>">₹ <?php echo (($value['price']/1000) >= 1) ? round(($value['price']/1000),1)."K" : $value['price']?></span>
-                         <span class="amount1 <?php echo (($value['discount_rate']/1000) >= 1) ? 'k1000' : ''?>"><?php echo ($value['discount_rate']!="0.00") ?  (($value['discount_rate']/1000) >= 1) ? "₹ ".round(($value['discount_rate']/1000),1)."K" : $value['discount_rate'] : "";?></span>
+                         <span class="amount1 <?php echo (($value['discount_rate']/1000) >= 1) ? 'k1000' : ''?>"><?php echo ($value['discount_rate']!="0.00") ?  (($value['discount_rate']/1000) >= 1) ? "₹ ".round(($value['discount_rate']/1000),1)."K" : "₹ ".$value['discount_rate'] : "";?></span>
                     </div>
                     <?php echo $value['description']?>
                 </div>
