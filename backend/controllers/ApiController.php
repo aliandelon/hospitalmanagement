@@ -255,4 +255,36 @@ class ApiController extends Controller
             return $e;
         }
     }
+
+    public function actionBookAppointment()
+    {  
+        try
+        {
+            $response = [];
+            ini_set('memory_limit', '-1');
+            $model = new ApiModel();
+            $rawData  = self::readData();
+            $key = '12345678901234567890123456789012';
+            $iv  = '1234567890123456';
+            $method = 'AES-128-CBC';
+            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);
+            $inputData = json_decode($rawDataDecrypted,true);
+            $getHospitalClinic = $model->bookAppointments($inputData);
+            if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
+            {
+                try {
+                    $output = json_encode($getHospitalClinic);
+                    $response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return $response;
+                }
+                return $response;
+            }
+            $this->setResponseFormat(1);
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
 }

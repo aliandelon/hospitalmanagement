@@ -239,7 +239,6 @@ class ApiModel extends \yii\db\ActiveRecord
                 $type = $datas['type'];
                 $id = $datas['id'];
                 $investigations = $datas['investigations'];
-                $invArray = explode(',', $investigations);
                 if(empty($investigations)){
                     return 'empty invstigations';
                 }
@@ -250,17 +249,10 @@ class ApiModel extends \yii\db\ActiveRecord
                 }else{
                     $typeVal = 2;
                 }
-                $date = $datas['date'];
                 $investigationsResponse = [];
-                // $query = "SELECT
-                //                 hp.name as hospitalName,
-                //                 hp.phone_number as phone,
-                //                 hp.city 
-                //             FROM
-                //                 hospital_clinic_details hp
-                //             WHERE hp.status = 1 AND hp.type = '$typeVal' AND hp.user_id = '$id';";
-                foreach ($invArray as $key => $inv) {
-                    $investigations = "SELECT DISTINCT
+                foreach ($investigations as $key => $inv) {
+                    $invQuery = "SELECT DISTINCT
+                                slot.id as slotId,
                                 CONCAT(DATE_FORMAT(slot.from_time, '%H:%i %p'),'-',DATE_FORMAT(slot.to_time, '%H:%i %p'))as slot
                                 
                             FROM slot_day_time_mapping slot
@@ -268,10 +260,10 @@ class ApiModel extends \yii\db\ActiveRecord
                                 hospital_clinic_details hp ON hp.user_id = slot.hospital_clinic_id 
                             JOIN slot_day_mapping day ON day.hospital_clinic_id = slot.hospital_clinic_id  AND slot.investigation_id = day.investigation_id AND slot.slot_day_id = day.id
                             LEFT JOIN appointments ap ON ap.investigation_id = slot.investigation_id AND ap.hospital_clinic_id = slot.hospital_clinic_id AND slot.id = ap.slot_day_time_mapping_id
-                            WHERE ap.slot_day_time_mapping_id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$inv' AND day.day ='$date' ORDER BY from_time asc;";
-                         
-                    $result = $con->createCommand($investigations)->queryAll();
-                    $investigationsResponse[$inv] = $result;
+                            WHERE ap.slot_day_time_mapping_id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$inv[investigation]' AND day.day ='$inv[date]' ORDER BY from_time asc;";
+
+                    $result = $con->createCommand($invQuery)->queryAll();
+                    $investigationsResponse[$inv['investigation']] = $result;
                 }
                 
                 break;
@@ -284,6 +276,74 @@ class ApiModel extends \yii\db\ActiveRecord
             $con->close();
             return $response;
         } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
+    public function bookAppointments($datas) 
+    {
+        try { 
+            $con = \Yii::$app->db;
+            $response = [];
+            $idx = $datas['idx'];
+            switch ($idx) {
+                case 100:
+                    $transaction = $con->beginTransaction();
+                    $type = $datas['type'];
+                    $id = $datas['id'];
+                    $appointments = $datas['appointments'];
+                    if(empty($appointments)){
+                        return 'empty appointments';
+                    }
+                    $typeVal = 1;
+                    if($type == 'Hospital')
+                    {
+                        $typeVal = 1;
+                    }else{
+                        $typeVal = 2;
+                    }
+                    foreach ($appointments as $key => $appointment) {
+                        //print_r($appointment);exit;
+                        $appointmentQury = "INSERT INTO appointments(patient_id,doctor_id,investigation_id, slot_day_time_mapping_id,hospital_clinic_id,app_date,app_time,appointment_type)VALUES('$datas[paitientId]','$appointment[doctorId]','$appointment[invstigation]','$appointment[slotId]','$id','$appointment[date]','$appointment[time]','$appointment[appointmentType]');";
+                        $result = $con->createCommand($appointmentQury)->execute();
+                        if($result)
+                        {
+                            if($appointment['appointmentType'] == 'other')
+                            {
+                                if(empty($appointment['detDatas']))
+                                {
+                                    $transaction->rollback();
+                                    return "empty other patient details";
+                                }else{
+                                    $det = $appointment['detDatas'];
+                                    $mstId = $con->getLastInsertId();
+                                    $detInsert = "INSERT INTO appoinment_det(mst_id,first_name,last_name,age,gender)VALUES('$mstId','$det[firstName]','$det[lastName]','$det[age]','$det[gender]')";
+                                    $resultDet = $con->createCommand($detInsert)->execute();
+                                    if($resultDet)
+                                    {
+                                        $transaction->commit();
+                                        $return = 'success';
+                                    }
+                                }
+                            }
+                        }else{
+                            $transaction->rollback();
+                            $return ="Error in appointment bookings";
+                        }
+                    }
+                    
+                    break;
+                default :
+                    $response = ["status" => 2, "content" => ""];
+                    return $response;
+            }
+            $response = ["status" => 1, "content" => $return];
+            $con->close();
+            return $response;
+        } catch (yii\db\Exception $e) {
+            $transaction->rollback();
             $response = ["status" => 0, "content" => $e];
             $con->close();
             return $response;
