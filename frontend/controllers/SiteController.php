@@ -28,11 +28,11 @@ class SiteController extends Controller {
                         'class' => AccessControl::className(),
                         'rules' => [
                             [
-                                'actions' => ['login','holiday','event','error',"viewevent","viewinvestigations"],
+                                'actions' => ['login','holiday','event','error',"viewevent","viewinvestigations","publish"],
                                 'allow' => true,
                             ],
                             [
-                                'actions' => ['logout', 'index','event',"viewevent","viewinvestigations"],
+                                'actions' => ['logout', 'index','event',"viewevent","viewinvestigations","publish"],
                                 'allow' => true,
                                 'roles' => ['@'],
                             ],
@@ -162,6 +162,20 @@ class SiteController extends Controller {
                 return $this->goHome();
         }   
 
+        public function actionPublish() {
+            $post = Yii::$app->request->post();
+            $model = new HolidayList();
+            $hospital_id = Yii::$app->user->identity->id;
+            if($post['publishFlag']==1){
+                $publish = $model->publish($hospital_id);
+                $publish = $publish[0]['flag'];
+            }else{
+                $publish = 0;
+            }
+            $published = $model->published($publish,$hospital_id);
+            return $publish;
+            // return json_encode($addEvents);
+        }
        
 
 }
