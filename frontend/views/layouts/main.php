@@ -12,6 +12,9 @@ AppAsset::register($this);
 <?php $this->beginPage() ?>
 <?php
 $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
+$publishData=common\models\HolidayList::publish(Yii::$app->user->identity->id);
+$publishData = $publishData[0]['flag'];
+$publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? 'checked' : '';
 ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -23,6 +26,9 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
                 <?php $this->head() ?>
                 <?php $actionArray = ['site'];$pageArray = ['index'];if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$app->controller->id , $actionArray)) {
 ?>
+<style>
+
+</style>
 <script type="text/javascript">
     var baseurl = "<?php print \yii\helpers\Url::base() . "/"; ?>";
     var basepath = "<?php print \yii\helpers\Url::base(); ?>";
@@ -43,6 +49,14 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
             <a id="toggle_btn" href="javascript:void(0);"><i class="fa fa-bars"></i></a>
             <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
             <ul class="nav user-menu float-right">
+                <li class="nav-item dropdown d-none d-sm-block">
+                    <label class="switch">
+                        <input type="checkbox" name="publish" id="publish" <?php echo $publishFlag?>>
+                        <span class="slider round"></span>
+                    </label>
+                    <input type="hidden" id="hospId" value="<?php echo Yii::$app->user->identity->id?>">
+                    <!-- <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><i class="fa fa-comment-o"></i> <span class="badge badge-pill bg-danger float-right">8</span></a> -->
+                </li> 
                <!--  <li class="nav-item dropdown d-none d-sm-block">
                     <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"><i class="fa fa-bell-o"></i> <span class="badge badge-pill bg-danger float-right">3</span></a>
                     <div class="dropdown-menu notifications">
@@ -214,4 +228,30 @@ $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=
 </body>
 </html>
 <?php $this->endPage(); ?>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    $("#publish").change(function(){
+        var hospId = $("#hospId").val();
+        var flag = ($("#publish"). is(":checked") != false) ? 1 : 0
+        $.ajax({
+             url:baseurl+'site/publish',
+             data:{'hospital':hospId,'publishFlag':flag},
+             type:'POST',
+             success:function(data){
+                if(data!=0){
+                    swal("Success!", "You Details are Published successfully!", "success");
+                    $("#publish").prop('checked', true);
+                }else{
+                    if(flag!=0){
+                        swal("Sorry!", "You must add some Doctors and Investigation details!", "error");
+                    }else{
+                        swal("Success!", "You Details are Unpublished!", "success");
+                    }
+                    $("#publish").prop('checked', false);
+                }
+             },
+             error:function(){
+             }
+        });
+    });
+</script>
