@@ -27,7 +27,9 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
                 <?php $actionArray = ['site'];$pageArray = ['index'];if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$app->controller->id , $actionArray)) {
 ?>
 <style>
-
+.header-left{
+    background-color: #fff !important;
+}
 </style>
 <script type="text/javascript">
     var baseurl = "<?php print \yii\helpers\Url::base() . "/"; ?>";
@@ -37,16 +39,21 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
 <script type="text/javascript" src="<?php echo Yii::getAlias('@web') ?>/js/jquery-3.2.1.min.js"></script> 
 <script type="text/javascript" src="<?php echo Yii::getAlias('@web') ?>/js/chart.js"></script> <?php }?>
         </head>
+        <style>
+
+        </style>
         <body>
                 <?php $this->beginBody(); ?>
                  <div class="main-wrapper">
         <div class="header">
             <div class="header-left">
+                <!-- <a href="<?= Yii::$app->request->baseUrl; ?>"><img class="main-logo" src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png" alt="" /></a>
+                <strong><a href="<?= Yii::$app->request->baseUrl; ?>"><img src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logosn.png" alt="" style="margin-left: 22px;" /></a></strong> -->
                 <a href="index-2.html" class="logo">
-                    <img src="<?= Yii::$app->request->baseUrl; ?>/img/logo.png" width="35" height="35" alt=""> <span>Hospital Name</span>
+                    <img src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logosn.png" id="small" alt="" style="height: 94%;display:none" /> <img class="main-logo" src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png" style="width: 55%;display:block" id="big" alt="" />
                 </a>
             </div>
-            <a id="toggle_btn" href="javascript:void(0);"><i class="fa fa-bars"></i></a>
+            <a id="toggle_btn" href="javascript:void(0);" onclick="($('#big').css('display')!='none') ? $('#big').css('display','none') : $('#big').css('display','block');($('#small').css('display')!='none') ? $('#small').css('display','none') : $('#small').css('display','block')"><i class="fa fa-bars"></i></a><span class='welcome'><?php echo ($selectHospitalId->name) ? 'Welcome '.$selectHospitalId->name : '';?></span>
             <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
             <ul class="nav user-menu float-right">
                 <li class="nav-item dropdown d-none d-sm-block">
