@@ -87,4 +87,18 @@ class HolidayList extends \yii\db\ActiveRecord
         return $result;
     }
 
+    public function publish($hospital)
+    {
+         $con = \Yii::$app->db;
+         $query = "SELECT IF((hos > 0 AND doc > 0),'1','0') as flag FROM (SELECT IF(COUNT(hos.id) > 0, '1', '0') as hos,(SELECT IF(COUNT(doc.id) > 0, '1', '0') as doc FROM doctors_details doc WHERE doc.hospital_clinic_id = '$hospital') as doc FROM hospital_investigation_mapping hos WHERE hos.hospital_clinic_id = '$hospital')AS result";
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
+    public function published($flag,$hospital)
+    {
+        $con = \Yii::$app->db;
+        $query = "UPDATE hospital_clinic_details SET publish_flag= '$flag' WHERE user_id = '$hospital'";
+        $result = $con->createCommand($query)->execute();
+        return $result;
+    }
 }
