@@ -163,4 +163,131 @@ class ApiModel extends \yii\db\ActiveRecord
             return $response;
         }
     }
+
+    public function getHospitalLabInvestigationDetails($datas) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        $idx = $datas['idx'];
+        switch ($idx) {
+            case 100:
+                $type = $datas['type'];
+                $id = $datas['id'];
+                if ($type == 'Hospital')
+                {
+                    $query = "SELECT
+                                hp.name as hospitalName,
+                                hp.phone_number as phone,
+                                hp.city 
+                            FROM
+                                hospital_clinic_details hp
+                            WHERE hp.status = 1 AND hp.type = 1 AND hp.user_id = '$id';";
+                    $investigations = "SELECT
+                                hpmapping.investigation_id as invId,
+                                inv.investigation_name as invName,
+                                hpmapping.amount
+                            FROM
+                                hospital_clinic_details hp
+                            JOIN hospital_investigation_mapping hpmapping
+                                ON hpmapping.hospital_clinic_id = hp.user_id
+                            JOIN investigations inv ON inv.id = hpmapping.investigation_id
+                            WHERE hp.status = 1 AND hp.type = 1 AND hp.user_id = '$id'";
+                }else{
+                    $query = "SELECT
+                                hp.name as labName,
+                                hp.phone_number as phone,
+                                hp.city  
+                            FROM
+                                hospital_clinic_details hp
+                            WHERE hp.status = 1 AND hp.type = 2 AND hp.user_id = '$id';";
+                    $investigations = "SELECT
+                                hpmapping.investigation_id as invId,
+                                inv.investigation_name as invName,
+                                hpmapping.amount
+                            FROM
+                                hospital_clinic_details hp
+                            JOIN hospital_investigation_mapping hpmapping
+                                ON hpmapping.hospital_clinic_id = hp.user_id
+                            JOIN investigations inv ON inv.id = hpmapping.investigation_id
+                            WHERE hp.status = 1 AND hp.type = 2 AND hp.user_id = '$id'";
+                } 
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $result = $con->createCommand($query)->queryAll();
+            $invResult = $con->createCommand($investigations)->queryAll();
+            $response = ["status" => 1, "hospital" => $result,"investigations"=>$invResult];
+            $con->close();
+            return $response;
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
+    public function getHospitalLabInvestigationSlotdetails($datas) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        $idx = $datas['idx'];
+        switch ($idx) {
+            case 100:
+                $type = $datas['type'];
+                $id = $datas['id'];
+                $investigations = $datas['investigations'];
+                $invArray = explode(',', $investigations);
+                if(empty($investigations)){
+                    return 'empty invstigations';
+                }
+                $typeVal = 1;
+                if($type == 'Hospital')
+                {
+                    $typeVal = 1;
+                }else{
+                    $typeVal = 2;
+                }
+                $date = $datas['date'];
+                $investigationsResponse = [];
+                // $query = "SELECT
+                //                 hp.name as hospitalName,
+                //                 hp.phone_number as phone,
+                //                 hp.city 
+                //             FROM
+                //                 hospital_clinic_details hp
+                //             WHERE hp.status = 1 AND hp.type = '$typeVal' AND hp.user_id = '$id';";
+                foreach ($invArray as $key => $inv) {
+                    $investigations = "SELECT DISTINCT
+                                CONCAT(DATE_FORMAT(slot.from_time, '%H:%i %p'),'-',DATE_FORMAT(slot.to_time, '%H:%i %p'))as slot
+                                
+                            FROM slot_day_time_mapping slot
+                            JOIN 
+                                hospital_clinic_details hp ON hp.user_id = slot.hospital_clinic_id 
+                            JOIN slot_day_mapping day ON day.hospital_clinic_id = slot.hospital_clinic_id  AND slot.investigation_id = day.investigation_id AND slot.slot_day_id = day.id
+                            LEFT JOIN appointments ap ON ap.investigation_id = slot.investigation_id AND ap.hospital_clinic_id = slot.hospital_clinic_id AND slot.id = ap.slot_day_time_mapping_id
+                            WHERE ap.slot_day_time_mapping_id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$inv' AND day.day ='$date' ORDER BY from_time asc;";
+                         
+                    $result = $con->createCommand($investigations)->queryAll();
+                    $investigationsResponse[$inv] = $result;
+                }
+                
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $response = ["status" => 1, "result" => $investigationsResponse];
+            $con->close();
+            return $response;
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
 }
