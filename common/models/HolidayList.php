@@ -54,7 +54,7 @@ class HolidayList extends \yii\db\ActiveRecord
 
     public function addEvents($con, $model)
     {
-         $query = "INSERT INTO holiday_list (investigation_id, hospital_id, holiday_flag,reason, holiday_date) VALUES ('$model->investigation_id', '$model->hospital_id',$model->holiday_flag, '$model->reason', '$model->holiday_date');";
+         $query = "INSERT INTO holiday_list (investigation_id, hospital_id, holiday_flag,reason, holiday_date) VALUES ('$model->investigation_id', '$model->hospital_id',$model->holiday_flag, '$model->reason', '$model->holiday_date') ON DUPLICATE KEY UPDATE investigation_id = VALUES(investigation_id), hospital_id = VALUES(hospital_id), holiday_flag = VALUES(holiday_flag), reason = VALUES(reason), holiday_date = VALUES(holiday_date), created_on = VALUES(created_on)";
         $result = $con->createCommand($query)->execute();
         return $result;
     }
