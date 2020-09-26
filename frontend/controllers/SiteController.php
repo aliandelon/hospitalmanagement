@@ -135,7 +135,6 @@ class SiteController extends Controller {
                 $source = str_replace('/', '-',$post['eDate']);
                 $date = new DateTime($source);
                 $model->holiday_date = $date->format('Y-m-d'); 
-                print_r($model);exit;
                 // $addEvents = $model->addEvents($con, $model);
                 if($model->save()){
                     return "Success";
