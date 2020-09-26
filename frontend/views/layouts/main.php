@@ -40,7 +40,9 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
 <script type="text/javascript" src="<?php echo Yii::getAlias('@web') ?>/js/chart.js"></script> <?php }?>
         </head>
         <style>
-
+            .header-left {
+                background-color: #fff !important;
+            }
         </style>
         <body>
                 <?php $this->beginBody(); ?>
