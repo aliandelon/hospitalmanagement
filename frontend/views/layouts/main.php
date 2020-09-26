@@ -55,9 +55,10 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
                     <img src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logosn.png" id="small" alt="" style="height: 94%;display:none" /> <img class="main-logo" src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png" style="width: 55%;display:block" id="big" alt="" />
                 </a>
             </div>
-            <a id="toggle_btn" href="javascript:void(0);" onclick="($('#big').css('display')!='none') ? $('#big').css('display','none') : $('#big').css('display','block');($('#small').css('display')!='none') ? $('#small').css('display','none') : $('#small').css('display','block')"><i class="fa fa-bars"></i></a><span class='welcome'><?php echo ($selectHospitalId->name) ? 'Welcome '.$selectHospitalId->name : '';?></span>
+            <a id="toggle_btn" href="javascript:void(0);" onclick="($('#big').css('display')!='none') ? $('#big').css('display','none') : $('#big').css('display','block');($('#small').css('display')!='none') ? $('#small').css('display','none') : $('#small').css('display','block')"><i class="fa fa-bars"></i></a>
             <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
             <ul class="nav user-menu float-right">
+                <li><span class='welcome'><?php echo ($selectHospitalId->name) ? 'Welcome '.$selectHospitalId->name.'&nbsp;&nbsp;|&nbsp;&nbsp;' : '';?></span></li>
                 <li class="nav-item dropdown d-none d-sm-block">
                     <span style="color: #fff;font-weight:1000">Publish</span>
                     <label class="switch">
