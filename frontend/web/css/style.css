@@ -4984,3 +4984,9 @@ input:checked + .slider:before {
 }
 
 /*---------------- checkbox switch css---------------------*/
+.welcome{
+	line-height: 50px;
+	color: #fff;
+	font-size: 20px;
+	font-weight: 500;
+}
