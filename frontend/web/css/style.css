@@ -4951,13 +4951,17 @@ blockquote p {
   width: 18px;
   left: 2px;
   bottom: 1px;
-  background-color: #55ce63;
+  background-color: #f00;
   -webkit-transition: .4s;
   transition: .4s;
 }
 
 input:checked + .slider {
   background-color: #fff;
+}
+
+input:checked + .slider:before {
+  background-color: #55ce63;
 }
 
 input:focus + .slider {
