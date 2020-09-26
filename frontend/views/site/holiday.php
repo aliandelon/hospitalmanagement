@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="form-group" id="InvestigationDiv" style="display: none">
                                     <label>Investigations List<span class="text-danger">*</span></label>
-                                    <select class="form-control" id="Investigation">
+                                    <select class="form-control" id="Investigation" data-live-search="true">
                                         <?php foreach ($list as $key => $value) {
                                            echo "<option value='".$value['id']."'>".$value['name']."</option>";
                                         }?>
@@ -115,11 +115,13 @@ div .bootstrap-select{
 }
 
 </style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" />
+<head>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+  </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
 
 <script type="text/javascript">
     var defaultEvents;
@@ -132,7 +134,8 @@ div .bootstrap-select{
 <?php
 $this->registerJs("
         $(document).ready(function(){     
-        $('#doctor').selectpicker();
+        // $('#Investigation').selectpicker();
+        // $('#doctor').selectpicker();
                 // $(function() {
                  
                 // });
