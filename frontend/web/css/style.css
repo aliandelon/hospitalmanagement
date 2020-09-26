@@ -4922,8 +4922,8 @@ blockquote p {
   position: relative;
   display: inline-block;
   margin-top: 20px;
-  width: 50px;
-  height: 14px;
+  width: 45px;
+  height: 20px;
 }
 
 .switch input { 
@@ -4937,9 +4937,9 @@ blockquote p {
   cursor: pointer;
   top: 0;
   left: 0;
-  right: 0;
+  right: -2px;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #fff;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -4947,21 +4947,21 @@ blockquote p {
 .slider:before {
   position: absolute;
   content: "";
-  height: 12px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
   left: 2px;
   bottom: 1px;
-  background-color: white;
+  background-color: #55ce63;
   -webkit-transition: .4s;
   transition: .4s;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #fff;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px #fff;
 }
 
 input:checked + .slider:before {
