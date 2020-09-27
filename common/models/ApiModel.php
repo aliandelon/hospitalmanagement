@@ -98,12 +98,16 @@ class ApiModel extends \yii\db\ActiveRecord
                 {
                     $content = "success";
                     $UserId = $result['UserId'];
+                    $response = ["status" => 1, "content" => $content,"UserId"=>$UserId];
                 }else{
                     $content = "failure";
                     $UserId = '';
+                    $response = ["status" => 2, "content" => $content,"UserId"=>$UserId];
                 }
+            }else{
+                $response = ["status" => 2, "content" => "failure","UserId"=>"$userId"];
             }
-            $response = ["status" => 1, "content" => $content,"UserId"=>$UserId];
+            
             $con->close();
             return $response;
         } catch (yii\db\Exception $e) {
