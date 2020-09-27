@@ -4,6 +4,7 @@
 
 use yii\helpers\Html;
 use frontend\assets\AppAsset;
+use common\models\HolidayList;
 
 //use common\widgets\Alert;
 
@@ -12,7 +13,8 @@ AppAsset::register($this);
 <?php $this->beginPage() ?>
 <?php
 $selectHospitalId=common\models\HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
-$publishData=common\models\HolidayList::publish(Yii::$app->user->identity->id);
+$layoutModel = new HolidayList();
+$publishData= $layoutModel->publish(Yii::$app->user->identity->id);
 $publishData = $publishData[0]['flag'];
 $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? 'checked' : '';
 ?>
