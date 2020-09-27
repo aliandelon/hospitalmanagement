@@ -79,7 +79,7 @@ class SiteController extends Controller {
 
 
             public function actionLogin() {
-                $this->layout = 'loginNew';
+                $this->layout = 'loginNew2';
                 if (!Yii::$app->user->isGuest) {
                         return $this->goHome();
                 }
@@ -88,7 +88,7 @@ class SiteController extends Controller {
                    
                     return $this->goBack();
                 } else {
-                        return $this->render('login', [
+                        return $this->render('login-latest', [
                                     'model' => $model,
                         ]);
                 }
