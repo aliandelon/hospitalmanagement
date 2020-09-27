@@ -156,4 +156,8 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
             return 'Verified';
         }
     }
+
+    public function getPackageDetails() {
+        return $this->hasOne(Packages::className(), ['id' => 'package_id']);
+    }
 }

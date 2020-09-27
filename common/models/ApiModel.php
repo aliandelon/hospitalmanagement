@@ -64,6 +64,8 @@ class ApiModel extends \yii\db\ActiveRecord
             {
                 $otpInsertion = "UPDATE patient_details SET otp = '1234' where phone='$mobile';";
                 $con->createCommand($otpInsertion)->execute();
+            }else{
+                $result['UserId']="0";
             }
             $response = ["status" => 1, "content" => $result];
             $con->close();
