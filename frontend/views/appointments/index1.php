@@ -22,10 +22,10 @@ $get = !empty(Yii::$app->request->get()) ? Yii::$app->request->get() : array('ty
         <input type="radio" name="appointmentType" <?php echo ($get['type']!=0) ? "checked" : "";?> onclick="window.location.href='?type=1'"> Doctors Appoinments
         <input type="radio" name="appointmentType" <?php echo ($get['type']!=1) ? "checked" : "";?> onclick="window.location.href='?type=0'"> Investigations Appoinments
     </p>
-    <?php
-    
+    <?php 
+   // print_r($dataProvider2);exit;
     GridView::widget([
-        'dataProvider' => $dataProvider,
+        'dataProvider' => $dataProvider2,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -43,7 +43,21 @@ $get = !empty(Yii::$app->request->get()) ? Yii::$app->request->get() : array('ty
                         return "";
                     }
             }],
-            
+            ['attribute'=>'doctor_id',
+            'label' => 'Doctor',
+            'filter'=>false,
+            'visible' => ($get['type'] != 0) ? true : false,
+            'value' => function($model){
+                 $tata = common\models\DoctorsDetails::findOne($model->doctor_id);
+                 if(!empty($tata)){
+                    return $tata->name;
+                }else{
+                    return "";
+                }
+                 
+               
+            }
+            ],  
             ['attribute'=>'investigation_id',
             'label' => 'Investigation',
             'visible' => ($get['type'] != 1) ? true : false,
@@ -74,20 +88,20 @@ $get = !empty(Yii::$app->request->get()) ? Yii::$app->request->get() : array('ty
                
             }
             ],
-            // ['attribute'=>'hospital_clinic_id',
-            // 'label' => 'Hospital',
-            // 'filter'=>false,
-            // 'value' => function($model){
-            //      $data = common\models\HospitalClinicDetails::find()->where(['user_id'=>$model->hospital_clinic_id])->one();
-            //      return $data->name;
+            ['attribute'=>'hospital_clinic_id',
+            'label' => 'Hospital',
+            'filter'=>false,
+            'value' => function($model){
+                 $data = common\models\HospitalClinicDetails::find()->where(['user_id'=>$model->hospital_clinic_id])->one();
+                 return $data->name;
                
-            // }
-            // ],
+            }
+            ],
             // 'app_date',
             // 'app_time',
             // 'appointment_type',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
-    ]])?>
+    ]) ?>
 </div>
