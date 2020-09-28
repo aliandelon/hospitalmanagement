@@ -36,12 +36,25 @@ class AppointmentsController extends Controller
     public function actionIndex()
     {
         $searchModel = new AppointmentsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if(isset($_GET['type']) && $_GET['type']==1){
+            $dataProvider2 = $searchModel->search2(Yii::$app->request->queryParams); 
+        }else{
+            $dataProvider = $searchModel->search1(Yii::$app->request->queryParams);
+        }
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        if(isset($_GET['type']) && $_GET['type']==1){
+
+            return $this->render('index1', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider2,
+            ]);
+         }else{
+
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);  
+         }
     }
 
     /**
