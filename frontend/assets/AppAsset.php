@@ -20,6 +20,8 @@ class AppAsset extends AssetBundle {
             'css/select2.min.css',
             'css/bootstrap-datetimepicker.min.css',
             'css/package.css',
+            '//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css',
+            '//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css',
             //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css',
             // adding glyficons
            // "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
@@ -35,7 +37,7 @@ class AppAsset extends AssetBundle {
             'js/bootstrap.min.js',
             'js/jquery.slimscroll.js',
             'js/chart.bundle.js',
-            'js/select2.min.js',
+            // 'js/select2.min.js',
             'js/moment.min.js',
             // 'js/jquery-ui.min.html',
             'js/fullcalendar.min.js',
@@ -43,6 +45,9 @@ class AppAsset extends AssetBundle {
             'js/bootstrap-datetimepicker.min.js',
             'js/app.js',
             //data live search for dropdown
+            // 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js',
+            // 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js',
+            '//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js',
             'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
             //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js',
             //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js'
