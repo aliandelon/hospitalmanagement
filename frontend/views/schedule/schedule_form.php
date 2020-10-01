@@ -6,7 +6,7 @@ use common\models\Category;
 use yii\helpers\ArrayHelper;
 use common\models\Investigations;
 use common\models\DoctorsDetails;
-use kartik\select2\Select2;
+// use kartik\select2\Select2;
 ?>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -40,26 +40,31 @@ use kartik\select2\Select2;
                 $listData=ArrayHelper::map($details,'id','name');
                 echo $form->field($model, 'doctor_id')->dropDownList(
                     $listData,
-                    ['prompt'=>'Select Doctor...']
+                    ['prompt'=>'Select Doctor...','data-live-search'=>'true']
                     )->label('Doctor');
                     ?>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6" id="investigation">
+            <div  id="investigation">
             <?php 
                 $Investigations = Investigations::find()->where('status = 1')->all();
                 $listData=ArrayHelper::map($Investigations,'id','investigation_name');
-                echo $form->field($model, 'investigation_id')->widget(Select2::classname(), [
-                    'data' => $listData,
-                    'options' => ['placeholder' => 'Select  ...'],
-                    'pluginOptions' => [
-                        'tags' => true
-                    ],
-                ]); 
+                // echo $form->field($model, 'investigation_id')->widget(Select2::classname(), [
+                //     'data' => $listData,
+                //     'options' => ['placeholder' => 'Select  ...'],
+                //     'pluginOptions' => [
+                //         'tags' => true
+                //     ],
+                // ]); 
+                echo $form->field($model, 'investigation_id')->dropDownList(
+                    $listData,
+                    ['prompt'=>'Select Investigation...','data-live-search'=>'true']
+                    )->label('Investigation');
             ?>
         </div>
+        </div>
+    </div>
+    <div class="row">
+        
         <div class="col-md-6" id="amount">
             <?= $form->field($model, 'amount')->textInput(['maxlength' => true]) ?>
             <span id="amounterror" style="color: red;display: none;">Please enter amount</span>
@@ -149,7 +154,7 @@ use kartik\select2\Select2;
                     </div>
                 </div>
             </div>
-            <div id="add_schedule_event" class="modal fade" role="dialog">
+            <div id="add_schedule_event" class="modal" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content modal-lg">
                         <div class="modal-header">
@@ -230,6 +235,7 @@ use kartik\select2\Select2;
     margin-top: 15%;
 }
 </style>
+
 <script type="text/javascript">
     var defaultEvents;
     var baseurl = "<?php print \yii\helpers\Url::base() . "/"; ?>";
@@ -240,6 +246,8 @@ use kartik\select2\Select2;
 <?php
 $this->registerJs("
 $(document).ready(function(){          
+        $('#schedule-investigation_id').selectpicker();
+        $('#schedule-doctor_id').selectpicker();
         //$('#slot').multiselect();
         $('#eventDate').datetimepicker().on('dp.show', function () {
                 return $(this).data('DateTimePicker').minDate(new Date());
@@ -396,6 +404,7 @@ $(document).ready(function(){
         });
         $('#schedule-investigation_id').on('change', function() {
             var option = this.value;
+            alert(option);
             $('#add_schedule_button').css('display','block');
             $.ajax({
                 url:baseurl+'schedule/get-investigation-schedule',
