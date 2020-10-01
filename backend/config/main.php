@@ -63,6 +63,16 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
         ],
+        // 'jwt' => [
+        //     'class' => \sizeg\jwt\Jwt::class,
+        //     'key' => 'secret',
+        //     'jwtValidationData' => backend\components\JwtValidationData::class,
+        // ],
+        'jwt' => [
+          'class' => \sizeg\jwt\Jwt::class,
+          'key'   => 'secret',
+        ],
+
     ],
     /*'as beforeRequest' =>
         [

@@ -1,6 +1,8 @@
 <?php
 
 namespace backend\controllers;
+use yii\filters\auth\HttpBearerAuth;
+
 
 use Yii;
 use common\models\ApiModel;
@@ -8,12 +10,41 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use sizeg\jwt\Jwt;
+use sizeg\jwt\JwtHttpBearerAuth;
 
 /**
  * ApiController For Api creaetion.
  */
-class ApiController extends Controller
+class ApiController extends \yii\rest\Controller
 {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            //'class' => JwtHttpBearerAuth::class,
+            'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
+            'optional' => [
+                'verify-mobile',
+            ],
+        ];
+
+        return $behaviors;
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        foreach (self::$users as $user) {
+            if ($user['id'] === (string) $token->getClaim('uid')) {
+                return new static($user);
+            }
+        }
+        return null;
+    }
+
     public function beforeAction($action) {
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
@@ -69,6 +100,16 @@ class ApiController extends Controller
         
         return $response;
     }
+
+    /**
+         * @return \yii\web\Response
+         */
+        // public function actionData()
+        // {
+        //     return $this->asJson([
+        //         'success' => true,
+        //     ]);
+        // }
     
     public static function setResponseFormat($format){
         try{
@@ -123,6 +164,19 @@ class ApiController extends Controller
             $getUserDetails = $model->getVerifyMobile($idx, $mobile);
             if ( $getUserDetails )
             {
+                $jwt = Yii::$app->jwt;
+                $signer = $jwt->getSigner('HS256');
+                $key = $jwt->getKey();
+                $time = time();
+                $token = $jwt->getBuilder()
+                ->issuedBy('http://example.com')
+                ->permittedFor('http://example.org')
+                ->identifiedBy('4f1g23a12aa', true)
+                ->issuedAt($time)
+                ->expiresAt($time + 3600)
+                ->withClaim('uid', $getUserDetails['content']['UserId'])
+                ->getToken($signer, $key);
+                $getUserDetails['content']['token'] = (string)$token;
                 try {
                     $response['status']  = "success";
                     $response['otp'] = '1234';
@@ -130,9 +184,9 @@ class ApiController extends Controller
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return json_encode($response);
+                    return $response;
                 }
-                return json_encode($response);
+                return $response;
             }
         }catch (yii\base\ErrorException $e) {
             return $e;
@@ -153,9 +207,9 @@ class ApiController extends Controller
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return json_encode($response);
+                    return $response;
                 }
-                return json_encode($response);
+                return $response;
             }
         }catch (yii\base\ErrorException $e) {
             return $e;
@@ -186,11 +240,11 @@ class ApiController extends Controller
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return json_encode($response);
+                    return $response;
                 }
-                return json_encode($response);
+                return $response;
             }
-            $this->setResponseFormat(1);
+            //$this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
             return $e;
         }
@@ -219,9 +273,9 @@ class ApiController extends Controller
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return json_encode($response);
+                    return $response;
                 }
-                return json_encode($response);
+                return $response;
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
@@ -252,9 +306,9 @@ class ApiController extends Controller
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return json_encode($response);
+                    return $response;
                 }
-                return json_encode($response);
+                return $response;
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
@@ -285,9 +339,9 @@ class ApiController extends Controller
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return json_encode($response);
+                    return $response;
                 }
-                return json_encode($response);
+                return $response;
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
@@ -318,13 +372,33 @@ class ApiController extends Controller
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
-                    return json_encode($response);
+                    return $response;
                 }
-                    return json_encode($response);
+                    return $response;
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
             return $e;
         }
+    }
+
+    public function actionTest()
+    { 
+            $time = time();
+            $token = Yii::$app->jwt->getBuilder()
+            ->issuedBy('http://investigohealth.com/admin') // Configures the issuer (iss claim)
+            ->permittedFor('http://investigohealth.com/admin') // Configures the audience (aud claim)
+            ->identifiedBy('4f1g23a12aa', true) // Configures the id (jti claim), replicating as a header item
+            ->issuedAt($time) // Configures the time that the token was issue (iat claim)
+            ->canOnlyBeUsedAfter($time + 60) // Configures the time that the token can be used (nbf claim)
+            ->expiresAt($time +     3600) // Configures the expiration time of the token (exp claim)
+            ->withClaim('uid', 14) // Configures a new claim, called "uid"
+            ->getToken(); // Retrieves the generated token
+            $token->getHeaders(); // Retrieves the token headers
+            $token->getClaims(); // Retrieves the token claims
+            //echo $token->getHeader('jti'); // will print "4f1g23a12aa"
+            //echo $token->getClaim('iss'); // will print "http://example.com"
+            //  echo $token->getClaim('uid'); // will print "1"
+            echo $token;
     }
 }

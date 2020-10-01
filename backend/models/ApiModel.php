@@ -20,6 +20,19 @@ use yii\db\Query;
  */
 class ApiModel extends \yii\db\ActiveRecord
 {
+    use \damirka\JWT\UserTrait;
+
+    // Override this method
+    protected static function getSecretKey()
+    {
+        return 'someSecretKey';
+    }
+
+    // And this one if you wish
+    protected static function getHeaderToken()
+    {
+        return [];
+    }
     public function getUserDetails($idx, $mobile) 
     {
         $con = \Yii::$app->db;
