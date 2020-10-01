@@ -447,6 +447,7 @@ function($) {
                 center: 'title',
                 right: 'agendaWeek'
             },
+            dayOfMonthFormat: 'ddd  DD-MM',
             events: defaultEvents,
             editable: true,
             droppable: true, // this allows things to be dropped onto the calendar !!!
