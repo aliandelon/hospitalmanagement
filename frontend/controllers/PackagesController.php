@@ -45,9 +45,11 @@ class PackagesController extends Controller
         // ]);
             $model = new Packages();
             $con = \Yii::$app->db;
+            $api_key='rzp_test_QXEhrosnKHyZqA';
             $packages = $model->viewPackages($con);
             return $this->render('index', [
-                                    'packages' => $packages
+                                    'packages' => $packages,
+                                    'apikey' => $api_key
                         ]);
     }
 
