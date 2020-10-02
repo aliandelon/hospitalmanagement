@@ -41,14 +41,15 @@ $address = ($selectHospitalId['address']) ? $selectHospitalId['address'] : "";
                     </div>
                     <?php echo $value['description']?>
                 </div>
-                <button  class="pricingTable-signup" onclick="test('<?php echo $apikey?>','<?php echo ($value['discount_rate']) ? round($value['discount_rate']) : $value['price']?>','<?php echo $name?>','<?php echo $value['package_name']?>','','<?=$email?>','<?=$phone?>','<?=$address?>')">Order Now</button>
+                <button  class="pricingTable-signup" onclick="test('<?php echo $apikey?>','<?php echo ($value['discount_rate']) ? round($value['discount_rate'] * 100) : ($value['price']*100)?>','<?php echo $name?>','<?php echo $value['package_name']?>','','<?=$email?>','<?=$phone?>','<?=$address?>')">Order Now</button>
             </div>
         </div>
         <?php } ?>
     </div>
 </div>
+ <button type="button" class="btn btn-info btn-lg" id="modalBtn" data-toggle="modal" data-target="#myModal" style="display: none">Tset</button>
 <!-- Modal -->
-  <div class="modal" id="myModal" role="dialog" style="display: none">
+  <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
     
       <!-- Modal content-->
@@ -93,7 +94,7 @@ function test(apiKey,amount,name,description,images,email,mobile,address){
     "image": images,
     "handler": function (response){
         if(response)
-       $('.modal').show()
+       $('#modalBtn').click()
     },
     "prefill": {
         "name": name,
