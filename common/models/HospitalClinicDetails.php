@@ -38,6 +38,8 @@ use Yii;
  * @property string $lab_area
  * @property string $lab_latitude
  * @property string $lab_longitude
+ * @property string $state
+ * @property string $hospital_clinic_image
  */
 class HospitalClinicDetails extends \yii\db\ActiveRecord
 {
@@ -65,6 +67,10 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
 
     public $password;
 
+    public $state;
+
+    public $hospital_clinic_image;
+
     /**
      * @inheritdoc
      */
@@ -81,7 +87,7 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
         return [
             [['user_id', 'name', 'email', 'status', 'created_by'], 'required'],
 
-            [['name','email','phone_number','pincode','address','street1', 'street2', 'latitude', 'longitude','city', 'area'], 'required','on' => 'updateFrontend'],
+            [['name','email','phone_number','pincode','address','street1', 'street2', 'latitude', 'longitude','city', 'area','state','hospital_clinic_image'], 'required','on' => 'updateFrontend'],
 
 
 
@@ -91,10 +97,11 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
             [['user_id', 'type', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'pincode', 'package_id', 'created_by', 'status'], 'integer'],
             [['address'], 'string'],
             [['name', 'city', 'area'], 'string', 'max' => 150],
-            [['phone_number'], 'string', 'max' => 20],
+            [['phone_number'], 'string', 'min'=>10,'max' => 10],
             [['email', 'street1', 'street2', 'latitude', 'longitude'], 'string', 'max' => 250],
             ['email', 'unique'],
-            ['email', 'email'],
+            ['email', 'email', 'message' => 'Please enter valid email address.'],
+
             [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'safe'],
 
             [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'required', 'when' => function($model) {
@@ -141,6 +148,8 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
             'package_id' => 'Package ID',
             'created_by' => 'Created By',
             'status' => 'Status',
+            'state'=>'State',
+            'hospital_clinic_image'=>'Image'
         ];
     }
 
