@@ -32,7 +32,7 @@ class SiteController extends Controller {
                                 'allow' => true,
                             ],
                             [
-                                'actions' => ['logout', 'index','event',"viewevent","viewinvestigations","publish"],
+                                'actions' => ['logout', 'index','event',"viewevent","viewinvestigations","publish","payment"],
                                 'allow' => true,
                                 'roles' => ['@'],
                             ],
@@ -176,5 +176,8 @@ class SiteController extends Controller {
             // return json_encode($addEvents);
         }
        
-
+        public function actionPayment() {
+            $api_key='rzp_test_QXEhrosnKHyZqA';
+            return $this->render('payment', ['apikey' => $api_key]);
+        }
 }

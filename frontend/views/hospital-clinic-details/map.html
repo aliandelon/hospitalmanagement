@@ -1,23 +1,21 @@
-<?php
+<!DOCTYPE html>
+<html>
+    <head>
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-
-/* @var $this yii\web\View */
-/* @var $model common\models\HospitalClinicDetails */
-/* @var $form yii\widgets\ActiveForm */
-?>
-<style>
+        <title>Techhawa Google Map API</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <style>
         #myMap {
            height: 350px;
            width: 680px;
         }
-</style>
- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE&v=3.exp&sensor=false">
+        </style>
+        
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3QbM1ofMaOUCkgNVCR8l1GkVsy4MM2cM&v=3.exp&sensor=false">
         </script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-
-<script type="text/javascript"> 
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script type="text/javascript"> 
             var map;
             var marker;
             // 10.09174117142734
@@ -76,64 +74,19 @@ use yii\widgets\ActiveForm;
             
             }
             
-            // google.maps.event.addDomListener(window, 'load', initialize);
+            google.maps.event.addDomListener(window, 'load', initialize);
         </script>  
-<div class="hospital-clinic-details-form">
-
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'user_id')->textInput() ?>
-
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'type')->textInput() ?>
-
-    <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'have_diagnostic_center')->textInput() ?>
-
-    <?= $form->field($model, 'master_hospital_id')->textInput() ?>
-
-    <?= $form->field($model, 'same_as_hospital_details_flag')->textInput() ?>
-
-    <?= $form->field($model, 'address')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'pincode')->textInput() ?>
-
-    <?= $form->field($model, 'street1')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'street2')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'city')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'area')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'latitude')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'longitude')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'status')->textInput() ?>
-
-    <?= $form->field($model, 'package_id')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'commision')->textInput() ?>
-  <div id="myMap"></div><br/>
-        <div>
+    </head>
+    <body>
+             
+        <div id="myMap"></div><br/>
+        <!-- <div>
             <input id="address"  type="text" style="width:600px;"/>
             <br/>
             <input type="text" id="latitude" placeholder="Latitude"/>
             <input type="text" id="longitude" placeholder="Longitude"/>
 
             <input type="button" name="load" id="loadMap" onclick="initialize()" value="loade">
-        </div>
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
-</div>
+        </div> -->
+    </body>
+</html>

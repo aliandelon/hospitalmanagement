@@ -20,8 +20,7 @@ class AppAsset extends AssetBundle {
             'css/select2.min.css',
             'css/bootstrap-datetimepicker.min.css',
             'css/package.css',
-            '//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css',
-            '//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css',
+            
             //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css',
             // adding glyficons
            // "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"

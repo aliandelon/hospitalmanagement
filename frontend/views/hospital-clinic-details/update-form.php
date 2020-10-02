@@ -15,12 +15,12 @@ use yii\widgets\ActiveForm;
 </style>
   <?php
                                 if($model->have_diagnostic_center == '1' && $model->same_as_hospital_details_flag == 0){
-                                    $displayVal="display: block;width:100%";
+                                    $displayVal="display: block;";
                                     $checkeddisplayFlag="false";
 
 
                                 }else{
-                                    $displayVal="display: none;width:100%";
+                                    $displayVal="display: none;";
                                     $checkeddisplayFlag="true";
                                 }?>
 
@@ -61,117 +61,138 @@ use yii\widgets\ActiveForm;
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
-									<div class="form-group">
-								<?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
-									</div>
-								</div>
-                                  <div class="col-sm-6">
-									<div class="form-group gender-select">
-									<?php echo $form->field($model, 'have_diagnostic_center')->checkbox(['id' => 'clinicflag']);
-    								?>
-									</div>
+                                    <div class="form-group">
+                                <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                                    </div>
                                 </div>
-                <div class="col-sm-6">
-                <?php echo $form->field($model, 'same_as_hospital_details_flag')->checkbox(['disabled'=>$checkeddisplayFlag,'checked' => $checkeddisplayFlag,'id' => 'hospitaldetailflag']);
-    			?>
-                </div>
+                                  
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <?= $form->field($model, 'address')->textarea(['rows' => 6]) ?>
                                     </div>
                                 </div>
-								<div class="col-sm-12">
+                                <div class="col-sm-12">
                                     <div class="form-group">
                                         <?= $form->field($model, 'pincode')->textInput() ?>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-6 col-md-6 col-lg-3">
-									<div class="form-group">
-									 <?= $form->field($model, 'street1')->textInput() ?>
-									</div>
-								</div>
+                                    <div class="form-group">
+                                     <?= $form->field($model, 'street1')->textInput() ?>
+                                    </div>
+                                </div>
 
 
 
 
 
-								 <div class="col-sm-6 col-md-6 col-lg-3">
-									<div class="form-group">
-									 <?= $form->field($model, 'street2')->textInput() ?>
-									</div>
-								</div>
-								 <div class="col-sm-6 col-md-6 col-lg-3">
-									<div class="form-group">
-									 <?= $form->field($model, 'city')->textInput() ?>
-									</div>
-								</div>
-								 <div class="col-sm-6 col-md-6 col-lg-3">
-									<div class="form-group">
-									 <?= $form->field($model, 'area')->textInput() ?>
-									</div>
-								</div>
+                                 <div class="col-sm-6 col-md-6 col-lg-3">
+                                    <div class="form-group">
+                                     <?= $form->field($model, 'street2')->textInput() ?>
+                                    </div>
+                                </div>
+                                 <div class="col-sm-6 col-md-6 col-lg-3">
+                                    <div class="form-group">
+                                     <?= $form->field($model, 'city')->textInput() ?>
+                                    </div>
+                                </div>
+                                 <div class="col-sm-6 col-md-6 col-lg-3">
+                                    <div class="form-group">
+                                     <?= $form->field($model, 'area')->textInput() ?>
+                                    </div>
+                                </div>
 
 
 
 
-								<div class="addional-details" style="<?=$displayVal?>">
-									<div class="col-md-6">
-										<div class="form-group">
-										 <?= $form->field($model, 'lab_name')->textInput() ?>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-										 <?= $form->field($model, 'lab_phone_number')->textInput() ?>
-										</div>
-									</div>
-									<div class="col-sm-12">
-										<div class="form-group">
-										 <?= $form->field($model, 'lab_email')->textInput() ?>
-										</div>
-									</div>
+                               
+
+
+                            <?php include 'map.html';?>
+                              <br>
+                                <br>
+                                  <br>
+                             <div class="col-sm-6" style="margin-top: 40px;">
+                                    <div class="form-group gender-select">
+                                    <?php echo $form->field($model, 'have_diagnostic_center')->checkbox(['id' => 'clinicflag']);
+                                    ?>
+                                    </div>
+                                </div>
+                <div class="col-sm-6" style="margin-top: 40px;">
+                <?php echo $form->field($model, 'same_as_hospital_details_flag')->checkbox(['disabled'=>$checkeddisplayFlag,'checked' => $checkeddisplayFlag,'id' => 'hospitaldetailflag']);
+                ?>
+                </div>  
+               </div>
+
+
+
+ <div class="row">
+                 <div class="addional-details col-md-12" style="<?=$displayVal?>">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                         <?= $form->field($model, 'lab_name')->textInput() ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                         <?= $form->field($model, 'lab_phone_number')->textInput() ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                         <?= $form->field($model, 'lab_email')->textInput() ?>
+                                        </div>
+                                    </div>
 
 
 
 
 
-									<div class="col-sm-12">
-										<div class="form-group">
-										 <?= $form->field($model, 'lab_address')->textInput() ?>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-										 <?= $form->field($model, 'lab_pincode')->textInput() ?>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-										 <?= $form->field($model, 'lab_street1')->textInput() ?>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-										 <?= $form->field($model, 'lab_street2')->textInput() ?>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-										 <?= $form->field($model, 'lab_city')->textInput() ?>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-										 <?= $form->field($model, 'lab_area')->textInput() ?>
-										</div>
-									</div>
-									
- 								</div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                         <?= $form->field($model, 'lab_address')->textInput() ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                         <?= $form->field($model, 'lab_pincode')->textInput() ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                         <?= $form->field($model, 'lab_street1')->textInput() ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                         <?= $form->field($model, 'lab_street2')->textInput() ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                         <?= $form->field($model, 'lab_city')->textInput() ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                         <?= $form->field($model, 'lab_area')->textInput() ?>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+
+ </div>
 
 
 
-                                
+
+
+
+               
+
+
+
                             <div class="m-t-20 text-center">
                                 <button class="btn btn-primary submit-btn">Edit Details</button>
                             </div>
@@ -181,7 +202,7 @@ use yii\widgets\ActiveForm;
             </div>
             <?php $this->registerJs("
     $(document).ready(function() {
-    	
+        
         $('body').on('click', '#clinicflag', function() {
             if($('#clinicflag').prop('checked') == true){
                 $('#hospitaldetailflag').attr('disabled', false);
