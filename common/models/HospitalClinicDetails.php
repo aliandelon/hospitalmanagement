@@ -67,9 +67,7 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
 
     public $password;
 
-    public $state;
-
-    public $hospital_clinic_image;
+    
 
     /**
      * @inheritdoc
@@ -89,20 +87,20 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
 
             [['name','email','phone_number','pincode','address','street1', 'street2', 'latitude', 'longitude','city', 'area','state','hospital_clinic_image'], 'required','on' => 'updateFrontend'],
 
+[['phone_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
 
 
 
 
-
-            [['user_id', 'type', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'pincode', 'package_id', 'created_by', 'status'], 'integer'],
+            [['user_id', 'type', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'package_id', 'created_by', 'status'], 'integer'],
             [['address'], 'string'],
             [['name', 'city', 'area'], 'string', 'max' => 150],
-            [['phone_number'], 'string', 'min'=>10,'max' => 10],
+            [['phone_number'], 'string', 'min'=>10,'max' => 10,'message' => 'Please enter valid email address.'],
             [['email', 'street1', 'street2', 'latitude', 'longitude'], 'string', 'max' => 250],
             ['email', 'unique'],
             ['email', 'email', 'message' => 'Please enter valid email address.'],
 
-            [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'safe'],
+            [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude','hospital_clinic_image','state'],'safe'],
 
             [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'required', 'when' => function($model) {
                 return ($model->have_diagnostic_center == '1' && $model->same_as_hospital_details_flag == 0);
@@ -110,6 +108,9 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
 
             [['name','email', 'password','commision','commision_type'], 'required','on' => 'newrequest'],
             [['password'],'safe'],
+
+            [['pincode'], 'string', 'min'=>6,'max' => 6],
+            [['pincode'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
             [['commision'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
             ['commision', 'compare', 'compareValue' => 100, 'operator' => '<=','when' => function($model) {
                 return $model->commision_type == '2'; 
@@ -136,7 +137,7 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
             'email' => 'Email',
             'have_diagnostic_center' => 'Have Diagnostic Center',
             'master_hospital_id' => 'Master Hospital ID',
-            'same_as_hospital_details_flag' => 'Same As Hospital Details Flag',
+            'same_as_hospital_details_flag' => 'Same As Hospital Address',
             'address' => 'Address',
             'pincode' => 'Pincode',
             'street1' => 'Street1',
@@ -168,5 +169,20 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
 
     public function getPackageDetails() {
         return $this->hasOne(Packages::className(), ['id' => 'package_id']);
+    }
+
+    public function upload($file, $id, $name) {
+
+       $targetFolder = \yii::$app->basePath . '/../uploads/hospitalClinicImage/' . $id . '/';
+        if (!file_exists($targetFolder)) {
+            mkdir($targetFolder, 0777, true);
+            chmod($targetFolder,0777);
+        }
+        if ($file->saveAs($targetFolder . $id . '.' . $file->extension)) {
+            chmod($targetFolder . $id . '.' . $file->extension,0777);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
