@@ -8,7 +8,7 @@ use common\models\HospitalClinicDetailsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\web\UploadedFile;
 /**
  * HospitalClinicDetailsController implements the CRUD actions for HospitalClinicDetails model.
  */
@@ -97,20 +97,60 @@ class HospitalClinicDetailsController extends Controller
 
  public function actionUpdate2($id)
     {
+        $permission=HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
+            if(!empty($permission)){
+                if($permission->status=="4"){
+                  $this->layout = 'notApproveLayout';
+                 
+                }else if($permission->status=="3"){
+                  $this->layout = 'notApproveLayout';
+                }else if($permission->status=="2"){
+                  $this->layout = 'notApproveLayout';  
+                }
+            }
         $model = $this->findModel($id);
         $model->scenario = 'updateFrontend';
+        $images = $model->hospital_clinic_image;
         if ($model->load(Yii::$app->request->post())) {
+            // echo '<pre>';
+            // print_r(Yii::$app->request->post());exit;
+            $file = UploadedFile::getInstance($model, 'hospital_clinic_image');
+            $model->state=$_POST['HospitalClinicDetails']['state'];
             $model->latitude='0';
             $model->longitude='0';
             if($model->status==4){
                $model->status=3;
             }
+
+            if($file!="") {
+                
+                   $model->hospital_clinic_image = $file->extension;     
+                }else{
+                    echo "reach2";exit;
+                    $model->hospital_clinic_image = $images;
+                }
             if($model->save()){
-              Yii::$app->session->setFlash('success', 'Successfully updated the details');
-              return $this->redirect('update2?id='.$id);  
-            }else{
-                print_r($model->getErrors());exit;
-            }
+
+                if ($file) {
+                    $model->upload($file, $model->id, "hospitalClinicImage".$model->id);
+                    }
+
+              if(!empty($permission)){
+                if($permission->status=="4"){
+                return $this->redirect(Yii::$app->request->baseUrl.'/packages/index');
+                }else if($permission->status=="3"){
+                return $this->redirect(Yii::$app->request->baseUrl.'/packages/index');
+                }else if($permission->status=="2"){
+                  
+                }else if($permission->status=="1"){
+                Yii::$app->session->setFlash('success', 'Successfully updated the details');
+                return $this->redirect('update2?id='.$id);  
+                }
+            }       
+
+
+              
+                }else{print_r($model->getErrors());exit;}
             
         }
             return $this->render('update-form', [

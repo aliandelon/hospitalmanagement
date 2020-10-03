@@ -13,7 +13,7 @@ use common\models\DoctorsDetails;
 use yii\web\Response;
 use frontend\models\LoginForm;
 use common\models\HolidayList;
-
+use common\models\HospitalClinicDetails;
 /**
  * Site controller
  */
@@ -74,7 +74,20 @@ class SiteController extends Controller {
          */
         public function actionIndex() {
             $params = [];
-            return $this->render('index',['params'=>$params]);
+            $permission=HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
+            if(!empty($permission)){
+                if($permission->status=="4"){
+                  return $this->redirect(['hospital-clinic-details/update2?id='.$permission->id]);
+                 
+                }else if($permission->status=="3"){
+
+                }else if($permission->status=="2"){
+
+                }else if($permission->status=="1"){
+                  return $this->render('index',['params'=>$params]);
+                }
+            }
+            
         }
 
 
@@ -178,6 +191,7 @@ class SiteController extends Controller {
        
         public function actionPayment() {
             $api_key='rzp_test_QXEhrosnKHyZqA';
+
             return $this->render('payment', ['apikey' => $api_key]);
         }
 }

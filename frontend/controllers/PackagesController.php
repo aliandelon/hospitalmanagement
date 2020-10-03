@@ -8,7 +8,7 @@ use common\models\PackagesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use common\models\HospitalClinicDetails;
 /**
  * PackagesController implements the CRUD actions for Packages model.
  */
@@ -35,14 +35,17 @@ class PackagesController extends Controller
      */
     public function actionIndex()
     {
-        // $model = $this->findAllModel();
-        // $searchModel = new PackagesSearch();
-        // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        // return $this->render('index', [
-        //     'model' => $model,
-        //     'dataProvider' => $dataProvider,
-        // ]);
+         $permission=HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
+            if(!empty($permission)){
+                if($permission->status=="4"){
+                  $this->layout = 'notApproveLayout';
+                 
+                }else if($permission->status=="3"){
+                  $this->layout = 'notApproveLayout';
+                }else if($permission->status=="2"){
+                  $this->layout = 'notApproveLayout';  
+                }
+            }
             $model = new Packages();
             $con = \Yii::$app->db;
             $api_key='rzp_test_QXEhrosnKHyZqA';
