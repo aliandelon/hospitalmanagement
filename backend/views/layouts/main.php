@@ -110,14 +110,14 @@ DashboardAsset::register($this);
                                     'url' => ['super-admin-details/update'],
                                     ],
                                   
-                                       ['label' => '<span class="fa fa-medkit icon-wrap"></span>&nbsp;<span class="menulist">Packages<i class="fa fa-angle-left pull-right"></i></span>', 
+                                       ['label' => '<span class="fa fa-medkit icon-wrap"></span>&nbsp;<span class="menulist">Subscription<i class="fa fa-angle-left pull-right"></i></span>', 
                                     'url' => ['#'],
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="fa fa-sitemap" title="Create Packages"></span>&nbsp;<span class="menulist">Create Packages</span>', 'url' => ['/packages/create']],
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Subscription"></span>&nbsp;<span class="menulist">Create Subscription</span>', 'url' => ['/packages/create']],
                                     
-                                    ['label' => '<span class="fa fa-sitemap" title="List Packages"></span>&nbsp;<span class="menulist">List Packages</span> ', 'url' => ['/packages/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="List Subscription"></span>&nbsp;<span class="menulist">List Subscription</span> ', 'url' => ['/packages/index']],
                                     
                                 ],], 
 
