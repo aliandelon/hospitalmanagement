@@ -26,7 +26,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $response = [];
         switch ($idx) {
             case 100:
-                $query = "SELECT id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,phone as mobileno,profile_image
+                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,city,area,phone as mobileno,profile_image
                     from patient_details where phone='$mobile' and status =1;";
                 break;
             default :
@@ -35,7 +35,7 @@ class ApiModel extends \yii\db\ActiveRecord
         }
         try { 
             $result = $con->createCommand($query)->queryOne();
-            $response = ["status" => 1, "content" => $result];
+            $response = ["status" => 1, "userData" => $result];
             $con->close();
             return $response;
         } catch (yii\db\Exception $e) {
@@ -125,9 +125,8 @@ class ApiModel extends \yii\db\ActiveRecord
         switch ($idx) {
             case 100:
 
-                $check = "SELECT count(id) as cnt from patient_details where id = '$datas[id]';";
-                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now())";
-                $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on)VALUES('$datas[id]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now())ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on);";
+                $check = "SELECT count(id) as cnt from patient_details where id = '$datas[userId]';";
+                $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[userId]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'$datas[profile_image]')ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on),profile_image=values(profile_image);";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
@@ -140,20 +139,23 @@ class ApiModel extends \yii\db\ActiveRecord
                 if($checkResult['cnt'] > 0)
                 {
                     $result = $con->createCommand($duplicateInsert)->execute();
-                    $id = $datas['id'];
-                    $msg = "Profile Updatd";
+                    $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,profile_image
+                    from patient_details where id = '$datas[userId]' AND phone='$datas[mobileno]' and status =1;";
+                    $userResult = $con->createCommand($userQuery)->queryOne();
+                    $msg = "Profile Updated";
+                    $status = 1;
                 }else{
-                    $result = $con->createCommand($query)->execute();
-                    $id = $con->getLastInsertId();
-                    $msg = "Profile Creted";
+                    $userResult = [];
+                    $msg = "Profile Not Found";
+                    $status = 2;
                 }
             }else{
-                    $result = $con->createCommand($query)->execute();
-                    $id = $con->getLastInsertId();
-                    $msg = "Profile Creted";
+                    $userResult = [];
+                    $msg = "Profile Not Found";
+                    $status = 2;
                 }
             
-            $response = ["status" => 1, "content" => $id,"msg"=>$msg];
+            $response = ["status" => $status, "content" => $userResult,"msg"=>$msg];
             $con->close();
             return $response;
         } catch (yii\db\Exception $e) {
@@ -449,8 +451,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $idx = $datas['idx'];
         switch ($idx) {
             case 100:
-
-                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now())";
+                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'$datas[profile_image]')";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
@@ -462,8 +463,11 @@ class ApiModel extends \yii\db\ActiveRecord
                 $id = $con->getLastInsertId();
                 $otpInsertion = "UPDATE patient_details SET otp = '1234' where id='$id';";
                     $con->createCommand($otpInsertion)->execute();
-                $msg = "Profile Creted";
-                $response = ["status" => 1, "content" => $id,"msg"=>$msg];
+                $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,profile_image
+                    from patient_details where id = '$id' AND phone='$datas[mobileno]' and status =1;";
+                $userResult = $con->createCommand($userQuery)->queryOne();
+                $msg = "Profile Created";
+                $response = ["status" => 1, "content" => $userResult,"msg"=>$msg];
             }else{
                 $response = ["status" => 0, "content" => '',"msg"=>"failure"];
             }

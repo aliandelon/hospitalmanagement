@@ -139,17 +139,23 @@ class ApiController extends \yii\rest\Controller
 			$model = new ApiModel();
 			$getUserDetails = $model->getUserDetails($idx, $mobile);
 			$this->setResponseFormat(1);
-	        if ( $getUserDetails )
+	        if ( $getUserDetails && !empty($getUserDetails['userData']))
 	        {
                 try {
-                    $response = $getUserDetails;
+                    $response['status']  = 1;
+                    $response['message'] = 'User details get success';
+                    $response['content'] = $getUserDetails;
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
                     return $response;
                 }
-	        	return $response;
-	        }
+	        }else{
+                $response['status']  = 2;
+                $response['message'] = 'User details get failure';
+                $response['content'] = $getUserDetails;
+            }
+            return $response;
 	    }catch (yii\base\ErrorException $e) {
 	        return $e;
 	    }
@@ -167,7 +173,7 @@ class ApiController extends \yii\rest\Controller
                 try {
                     $response['status']  = "success";
                     $response['otp'] = '1234';
-                    $response['content'] = $getUserDetails['content'];
+                    $response['content'] = $getUserDetails;
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
@@ -189,25 +195,34 @@ class ApiController extends \yii\rest\Controller
             $getUserDetails = $model->getVerifyOtp($idx, $otp, $userId);
             if ( $getUserDetails )
             {
-                try {
+                if($getUserDetails['status'] == 1)
+                {
+                    try {
+                        $response['status']  = "success";
+                        $response['content'] = $getUserDetails;
+                        $jwt = Yii::$app->jwt;
+                        $signer = $jwt->getSigner('HS256');
+                        $key = $jwt->getKey();
+                        $time = time();
+                        $token = $jwt->getBuilder()
+                        ->issuedBy('http://investigohealth.com/admin')
+                        ->permittedFor('http://investigohealth.com/admin')
+                        ->identifiedBy('4f1g23a12aa', true)
+                        ->issuedAt($time)
+                        ->expiresAt($time + 3600)
+                        ->withClaim('uid', $userId)
+                        ->getToken($signer, $key);
+                        $response['content']['isInitialProfileDone'] = 'Yes';
+                        $response['content']['token'] = (string)$token;
+                    }catch (yii\base\ErrorException $e) {
+                        $response['status']  = "error";
+                        $response['message'] = $e->getMessage();
+                        return $response;
+                    }
+                }else{
+                    $response['status']  = "failure";
+                    $response['content']['isInitialProfileDone'] = 'No';
                     $response['content'] = $getUserDetails;
-                    $jwt = Yii::$app->jwt;
-                    $signer = $jwt->getSigner('HS256');
-                    $key = $jwt->getKey();
-                    $time = time();
-                    $token = $jwt->getBuilder()
-                    ->issuedBy('http://investigohealth.com/admin')
-                    ->permittedFor('http://investigohealth.com/admin')
-                    ->identifiedBy('4f1g23a12aa', true)
-                    ->issuedAt($time)
-                    ->expiresAt($time + 3600)
-                    ->withClaim('uid', $userId)
-                    ->getToken($signer, $key);
-                    $response['token'] = (string)$token;
-                }catch (yii\base\ErrorException $e) {
-                    $response['status']  = "error";
-                    $response['message'] = $e->getMessage();
-                    return $response;
                 }
                 return $response;
             }
@@ -229,12 +244,13 @@ class ApiController extends \yii\rest\Controller
             if ( $setUserDetails && $setUserDetails['status'] == 1)
             {
                 try {
-                    $response['UserId'] = $setUserDetails['content'];
-                    $response['status']  = "200";
-                    $response['message'] = $setUserDetails['msg'];
+                    $response['content'] = $setUserDetails['content'];
+                    $response['status']  = "success";
+                    $response['message'] = "user detail updated successfully";
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
+                    $response['content'] = [];
                     return $response;
                 }
                 return $response;
@@ -391,13 +407,13 @@ class ApiController extends \yii\rest\Controller
             if ( $setUserDetails && $setUserDetails['status'] == 1)
             {
                 try {
-                    $response['UserId'] = $setUserDetails['content'];
-                    $response['status']  = "200";
-                    $response['message'] = $setUserDetails['msg'];
+                    $response['content'] = $setUserDetails;
+                    $response['status']  = "success";
+                    $response['message'] = "User details updated successfully";
                     $response['otp'] = '1234';
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
-                    $response['message'] = $e->getMessage();
+                    $response['message'] = 'failue in user detrails updation';
                     return $response;
                 }
                 return $response;
