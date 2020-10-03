@@ -2,12 +2,12 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use kartik\file\FileInput;
 /* @var $this yii\web\View */
 /* @var $model common\models\HospitalClinicDetails */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
 <style type="text/css">
     .help-block{
         color:red !important;
@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
                                 }?>
 
 
-<div class="content" style="background-color: #fff">
+<div class="content" style="padding-top: 25px;background-color: #fff;padding-bottom: 25px;">
 
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2" style="margin-top: 16px;">
@@ -45,7 +45,16 @@ use yii\widgets\ActiveForm;
                 </div>
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                         <?php $form = ActiveForm::begin(); ?>
+                      <?php
+    $form = ActiveForm::begin(
+                    ['options' => ['enctype' => 'multipart/form-data']], [
+                'fieldConfig' => [
+                    'options' => [
+                        'tag' => false,
+                    ],
+                ],
+    ]);
+    ?>
                          <?php //echo $form->errorSummary($model); ?>
                             <div class="row">
                                 <div class="col-sm-6">
@@ -65,19 +74,52 @@ use yii\widgets\ActiveForm;
                                 <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
                                     </div>
                                 </div>
+                                  <div class="col-sm-12">
+                                    <div class="form-group"> 
                                   
+                                
+                                   <?=
+                            $form->field($model, 'hospital_clinic_image')->widget(FileInput::classname(), [
+                                  'pluginOptions' => ['previewFileType' => 'any',
+                                 'allowedFileExtensions' => ['jpg', 'png', 'bmp'],
+                                 'maxFileSize' => 300,
+                                    // 'options' => ['accept' => 'pdf/*'],
+                                    'mainClass' => 'other-class',
+                                    'browseLabel' => 'Select image',
+                                     'showUpload' => false,
+                                    ],
+                            ])->label(false);
+                            ?>
+                                
+                                 </div>
+                                </div>
+                                  <div class="row">
+                                    <div class="col-sm-12">
+                                        <?php
+                                        if ($model->hospital_clinic_image != "") {
+                                            echo '<div class="col-md-2" style="background-color:#ccc;margin-right:5px"><img width="125" style="border: 2px solid #d2d2d2;margin-right:.5em;" src="' . Yii::$app->request->baseUrl . '/uploads/hospitalClinicImage/'. $model->id.'/'.$model->id.'.'.$model->hospital_clinic_image.'" /></div>';
+                                            ?>
+                                            <br>
+                                            <br>
+                                        <?php } ?>
+                                    </div>
+                                </div> 
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <?= $form->field($model, 'address')->textarea(['rows' => 6]) ?>
                                     </div>
                                 </div>
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <?= $form->field($model, 'pincode')->textInput() ?>
                                     </div>
                                 </div>
-
-                                <div class="col-sm-6 col-md-6 col-lg-3">
+                                 <div class="col-md-6">
+                                    <div class="form-group">
+                                     <?= $form->field($model, 'area')->textInput() ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                      <?= $form->field($model, 'street1')->textInput() ?>
                                     </div>
@@ -87,21 +129,23 @@ use yii\widgets\ActiveForm;
 
 
 
-                                 <div class="col-sm-6 col-md-6 col-lg-3">
+                                 <div class="col-md-6">
                                     <div class="form-group">
                                      <?= $form->field($model, 'street2')->textInput() ?>
                                     </div>
                                 </div>
-                                 <div class="col-sm-6 col-md-6 col-lg-3">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                     <?= $form->field($model, 'state')->textInput() ?>
+                                    </div>
+                                </div>
+                                 <div class="col-md-6">
                                     <div class="form-group">
                                      <?= $form->field($model, 'city')->textInput() ?>
                                     </div>
                                 </div>
-                                 <div class="col-sm-6 col-md-6 col-lg-3">
-                                    <div class="form-group">
-                                     <?= $form->field($model, 'area')->textInput() ?>
-                                    </div>
-                                </div>
+                                
 
 
 
