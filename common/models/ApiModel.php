@@ -26,7 +26,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $response = [];
         switch ($idx) {
             case 100:
-                $query = "SELECT id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'MALE' WHEN gender = 1 THEN ' FEMALE' ELSE 'OTHERS' END as gender,state,city,district,city,area,phone as mobileno,profile_image
+                $query = "SELECT id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,phone as mobileno,profile_image
                     from patient_details where phone='$mobile' and status =1;";
                 break;
             default :
@@ -436,6 +436,40 @@ class ApiModel extends \yii\db\ActiveRecord
             return $response;
         } catch (yii\db\Exception $e) {
             $transaction->rollback();
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
+    public function registerUserDetails($datas) 
+    {   
+        $con = \Yii::$app->db;
+        $response = [];
+        $idx = $datas['idx'];
+        switch ($idx) {
+            case 100:
+
+                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now())";
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $result = $con->createCommand($query)->execute();
+            if($result){
+                $id = $con->getLastInsertId();
+                $otpInsertion = "UPDATE patient_details SET otp = '1234' where id='$id';";
+                    $con->createCommand($otpInsertion)->execute();
+                $msg = "Profile Creted";
+                $response = ["status" => 1, "content" => $id,"msg"=>$msg];
+            }else{
+                $response = ["status" => 0, "content" => '',"msg"=>"failure"];
+            }
+            $con->close();
+            return $response;
+        } catch (yii\db\Exception $e) {
             $response = ["status" => 0, "content" => $e];
             $con->close();
             return $response;

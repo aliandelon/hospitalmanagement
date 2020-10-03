@@ -28,7 +28,7 @@ class ApiController extends \yii\rest\Controller
             //'class' => JwtHttpBearerAuth::class,
             'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
             'optional' => [
-                'verify-mobile',
+                'verify-mobile','register-user','verify-otp'
             ],
         ];
 
@@ -164,23 +164,10 @@ class ApiController extends \yii\rest\Controller
             $getUserDetails = $model->getVerifyMobile($idx, $mobile);
             if ( $getUserDetails )
             {
-                $jwt = Yii::$app->jwt;
-                $signer = $jwt->getSigner('HS256');
-                $key = $jwt->getKey();
-                $time = time();
-                $token = $jwt->getBuilder()
-                ->issuedBy('http://example.com')
-                ->permittedFor('http://example.org')
-                ->identifiedBy('4f1g23a12aa', true)
-                ->issuedAt($time)
-                ->expiresAt($time + 3600)
-                ->withClaim('uid', $getUserDetails['content']['UserId'])
-                ->getToken($signer, $key);
-                $getUserDetails['content']['token'] = (string)$token;
                 try {
                     $response['status']  = "success";
                     $response['otp'] = '1234';
-                    $response['content'] = $getUserDetails;
+                    $response['content'] = $getUserDetails['content'];
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
@@ -204,6 +191,19 @@ class ApiController extends \yii\rest\Controller
             {
                 try {
                     $response['content'] = $getUserDetails;
+                    $jwt = Yii::$app->jwt;
+                    $signer = $jwt->getSigner('HS256');
+                    $key = $jwt->getKey();
+                    $time = time();
+                    $token = $jwt->getBuilder()
+                    ->issuedBy('http://investigohealth.com/admin')
+                    ->permittedFor('http://investigohealth.com/admin')
+                    ->identifiedBy('4f1g23a12aa', true)
+                    ->issuedAt($time)
+                    ->expiresAt($time + 3600)
+                    ->withClaim('uid', $userId)
+                    ->getToken($signer, $key);
+                    $response['token'] = (string)$token;
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
@@ -224,10 +224,6 @@ class ApiController extends \yii\rest\Controller
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
             $rawData  = self::readData();
-            /*$key = '12345678901234567890123456789012';
-            $iv  = '1234567890123456';
-            $method = 'AES-128-CBC';
-            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);*/
             $inputData = $rawData;
             $setUserDetails = $model->setUserDetails($inputData);
             if ( $setUserDetails && $setUserDetails['status'] == 1)
@@ -236,7 +232,6 @@ class ApiController extends \yii\rest\Controller
                     $response['UserId'] = $setUserDetails['content'];
                     $response['status']  = "200";
                     $response['message'] = $setUserDetails['msg'];
-                    // $response = !empty($setUserDetails) ? base64_encode(openssl_encrypt(json_encode($output), $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
@@ -258,18 +253,12 @@ class ApiController extends \yii\rest\Controller
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
             $rawData  = self::readData();
-            /*$key = '12345678901234567890123456789012';
-            $iv  = '1234567890123456';
-            $method = 'AES-128-CBC';
-            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);
-            $inputData = json_decode($rawDataDecrypted,true);*/
             $inputData = $rawData;
             $getHospitalClinic = $model->getHospitalClinicDetails($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
             {
                 try {
                     $response['content']  = $getHospitalClinic;
-                    /*$response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];*/
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
@@ -291,10 +280,6 @@ class ApiController extends \yii\rest\Controller
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
             $rawData  = self::readData();
-            /*$key = '12345678901234567890123456789012';
-            $iv  = '1234567890123456';
-            $method = 'AES-128-CBC';
-            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);*/
             $inputData = $rawData;
             $getHospitalClinic = $model->getHospitalLabInvestigationDetails($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
@@ -302,7 +287,6 @@ class ApiController extends \yii\rest\Controller
                 try {
                     $response['status']  = "success";
                     $response['content'] = $getHospitalClinic;
-                    // $response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
@@ -324,10 +308,6 @@ class ApiController extends \yii\rest\Controller
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
             $rawData  = self::readData();
-           /* $key = '12345678901234567890123456789012';
-            $iv  = '1234567890123456';
-            $method = 'AES-128-CBC';
-            $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);*/
             $inputData = $rawData;
             $getHospitalClinic = $model->getHospitalLabInvestigationSlotdetails($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
@@ -335,7 +315,6 @@ class ApiController extends \yii\rest\Controller
                 try {
                     $response['status']  = "success";
                     $response['content'] = $getHospitalClinic;
-                    // $response = !empty($getHospitalClinic) ? base64_encode(openssl_encrypt($output, $method , $key, OPENSSL_RAW_DATA, $iv)) : [];
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = $e->getMessage();
@@ -357,10 +336,6 @@ class ApiController extends \yii\rest\Controller
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
             $rawData  = self::readData();
-            // $key = '12345678901234567890123456789012';
-            // $iv  = '1234567890123456';
-            // $method = 'AES-128-CBC';
-            // $rawDataDecrypted = openssl_decrypt(base64_decode(str_replace(' ', '+', $rawData['data'])), $method, $key, OPENSSL_RAW_DATA, $iv);
             $inputData = $rawData;
             $getHospitalClinic = $model->bookAppointments($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
@@ -400,5 +375,39 @@ class ApiController extends \yii\rest\Controller
             //echo $token->getClaim('iss'); // will print "http://example.com"
             //  echo $token->getClaim('uid'); // will print "1"
             echo $token;
+    }
+
+    public function actionRegisterUser()
+    {  
+        try
+        {
+            $response = [];
+            ini_set('memory_limit', '-1');
+            $model = new ApiModel();
+            $rawData  = self::readData();
+            $inputData = $rawData;
+            $token = '';
+            $setUserDetails = $model->registerUserDetails($inputData);
+            if ( $setUserDetails && $setUserDetails['status'] == 1)
+            {
+                try {
+                    $response['UserId'] = $setUserDetails['content'];
+                    $response['status']  = "200";
+                    $response['message'] = $setUserDetails['msg'];
+                    $response['otp'] = '1234';
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return $response;
+                }
+                return $response;
+            }else{
+                $response['status']  = "error";
+                $response['message'] = "failure in registering";
+            }
+            //$this->setResponseFormat(1);
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
     }
 }
