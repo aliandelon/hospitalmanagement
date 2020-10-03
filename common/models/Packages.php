@@ -62,7 +62,7 @@ class Packages extends \yii\db\ActiveRecord
     }
     public function viewPackages($con)
     {
-         $query = "SELECT * FROM packages ORDER BY sort_order ASC";
+         $query = "SELECT * FROM packages WHERE status='1' ORDER BY sort_order ASC LIMIT 3";
         $result = $con->createCommand($query)->queryAll();
         return $result;
     }
