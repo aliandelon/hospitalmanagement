@@ -411,7 +411,6 @@ $(document).ready(function(){
         });
         $('#schedule-investigation_id').on('change', function() {
             var option = this.value;
-            alert(option);
             $('#add_schedule_button').css('display','block');
             $.ajax({
                 url:baseurl+'schedule/get-investigation-schedule',

@@ -95,7 +95,7 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
             [['user_id', 'type', 'have_diagnostic_center', 'master_hospital_id', 'same_as_hospital_details_flag', 'package_id', 'created_by', 'status'], 'integer'],
             [['address'], 'string'],
             [['name', 'city', 'area'], 'string', 'max' => 150],
-            [['phone_number'], 'string', 'min'=>10,'max' => 10,'message' => 'Please enter valid email address.'],
+            [['phone_number'], 'string', 'min'=>10,'max' => 10,'message' => 'Please enter valid Phone Number.'],
             [['email', 'street1', 'street2', 'latitude', 'longitude'], 'string', 'max' => 250],
             ['email', 'unique'],
             ['email', 'email', 'message' => 'Please enter valid email address.'],
@@ -104,8 +104,13 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
 
             [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'required', 'when' => function($model) {
                 return ($model->have_diagnostic_center == '1' && $model->same_as_hospital_details_flag == 0);
-            },'enableClientValidation' => false],
-
+            },'enableClientValidation' => true],
+            [['lab_phone_number'], 'string', 'min'=>10,'max' => 10,'message' => 'Please enter valid Phone Number.'],
+            [['lab_phone_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
+            [['lab_pincode'], 'string', 'min'=>6,'max' => 6],
+            [['lab_pincode'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
+            ['lab_email', 'unique'],
+            ['lab_email', 'email', 'message' => 'Please enter valid email address.'],
             [['name','email', 'password','commision','commision_type'], 'required','on' => 'newrequest'],
             [['password'],'safe'],
 
@@ -146,7 +151,7 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
             'area' => 'Area',
             'latitude' => 'Latitude',
             'longitude' => 'Longitude',
-            'package_id' => 'Package ID',
+            'package_id' => 'Subscription',
             'created_by' => 'Created By',
             'status' => 'Status',
             'state'=>'State',

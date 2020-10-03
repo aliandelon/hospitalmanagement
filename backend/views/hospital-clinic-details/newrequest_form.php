@@ -29,7 +29,7 @@ use yii\widgets\ActiveForm;
       <?php
         echo $form->field($model, 'package_id')->dropDownList(
             ['1' => 'Package 1', '2' => 'Package 2'],['id'=>'package']
-    ); ?>
+    )->label('Subscription'); ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-primary' : 'btn btn-primary']) ?>
     </div>

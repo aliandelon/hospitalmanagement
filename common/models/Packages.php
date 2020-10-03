@@ -37,6 +37,8 @@ class Packages extends \yii\db\ActiveRecord
             [['price','discount_rate'], 'number'],
             [['description'], 'string'],
             [['validity', 'created_on', 'updated_on'], 'safe'],
+            [['validity'], 'string', 'min'=>3],
+            [['sort_order'], 'string', 'min'=>3],
             [['sort_order', 'status','validity'], 'integer'],
             [['package_name'], 'string', 'max' => 150],
         ];

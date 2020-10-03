@@ -77,14 +77,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header'=>'Subscription',
                 'attribute'=>'package_id',
                 'format'=>'raw',//raw,
-                'value'=>function($model){
-                    return $model->packageDetails->package_name;
-                }
+                'value'=>$model->package_id != null?$model->packageDetails->package_name:''
+
+            ],
+
+            [   
+                'attribute'=>'Commision Type',
+                'format'=>'raw',//raw,
+                'value' => $model->commision_type == 1 ? 'Flat' :'Percentage'
                  
             ],
-            
-            
-            'commision_type',
             'commision',
         ],
     ]) ?>

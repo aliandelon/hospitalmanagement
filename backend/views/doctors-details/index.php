@@ -38,8 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'label' => 'Hospital',
             'filter'=>false,
             'value' => function($model){
-                 $data = common\models\HospitalClinicDetails::find()->where(['id'=>$model->hospital_clinic_id])->one();
-                 return $data->name;
+                 $data = common\models\HospitalClinicDetails::find()->where(['user_id'=>$model->hospital_clinic_id])->one();
+                 return isset($data->name)?$data->name:"";
                
             }
             ],            

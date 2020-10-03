@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model common\models\Packages */
 
-$this->title = $model->id;
+$this->title = $model->package_name;
 $this->params['breadcrumbs'][] = ['label' => 'Packages', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -28,13 +28,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+            //'id',
             'package_name',
             'price',
             'description:ntext',
             'validity',
             'sort_order',
-            'status',
+            [                                                  // the owner name of the model
+                'label' => 'Status',
+                'value' => ($model->status == 1)?'Active':'Inactive'          
+            ],
             'created_on',
             'updated_on',
         ],
