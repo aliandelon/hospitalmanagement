@@ -21,14 +21,14 @@ class AppAsset extends AssetBundle {
             'css/bootstrap-datetimepicker.min.css',
             'css/package.css',
             
-            //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css',
             // adding glyficons
-           // "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+           
 
 
-            //data live search for dropdown
+            // data live search for dropdown
             // 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
-            // 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css'
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css'
         ];
         public $js = [
             // 'js/jquery-3.2.1.min.js',
