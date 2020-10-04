@@ -71,4 +71,13 @@ class Banners extends \yii\db\ActiveRecord
             return false;
         }
     }
+
+    public function getBannerCount()
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(id) as count FROM banners WHERE status='1'";
+        $result = $con->createCommand($query)->queryAll();
+        return $result[0]['count'];
+    }
 }

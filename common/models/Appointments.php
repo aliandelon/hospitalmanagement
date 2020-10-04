@@ -57,4 +57,34 @@ class Appointments extends \yii\db\ActiveRecord
             // 'appointment_type' => 'Appointment Type',
         ];
     }
+
+    public function getAppointmentCount()
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(id) as count FROM appointments WHERE 1";
+        $result = $con->createCommand($query)->queryAll();
+        return $result[0]['count'];
+    }
+
+    public function getTopRatedHospitals($fDate,$eDate){
+        $con = \Yii::$app->db;
+        $query = "SELECT hos.name,COALESCE(hos.city,CONCAT(hos.state,',',hos.city),hos.state) as place,COUNT(app.id) as count FROM appointments app LEFT JOIN hospital_clinic_details hos ON hos.user_id = app.hospital_clinic_id WHERE app.app_date >= '2020-09-01' OR app.app_date <= '2020-09-30' GROUP BY app.hospital_clinic_id ORDER BY count DESC";
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
+
+    public function getTopRatedDoctors($fDate,$eDate){
+        $con = \Yii::$app->db;
+        $query = "SELECT doc.name,hos.name as  hosName,COUNT(app.id) as count FROM appointments app LEFT JOIN hospital_clinic_details hos ON hos.user_id = app.hospital_clinic_id LEFT JOIN doctors_details doc ON app.doctor_id = doc.id WHERE (app.app_date >= '2020-09-01' OR app.app_date <= '2020-09-30') AND appointment_type = 1 GROUP BY app.doctor_id ORDER BY count DESC";
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
+
+    public function getTopRatedInvestigations($fDate,$eDate){
+        $con = \Yii::$app->db;
+        $query = "SELECT inv.investigation_name,hos.name as hosName,COUNT(app.id) as count FROM appointments app LEFT JOIN hospital_clinic_details hos ON hos.user_id = app.hospital_clinic_id LEFT JOIN investigations inv ON app.investigation_id = inv.id WHERE (app.app_date >= '2020-09-01' OR app.app_date <= '2020-09-30') AND appointment_type = 0 GROUP BY app.investigation_id ORDER BY count DESC";
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
 }

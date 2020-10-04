@@ -95,5 +95,26 @@ class DoctorsDetails extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    } 
+
+    public function getDocCount($status='')
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(id) as count FROM doctors_details WHERE 1";
+         if($status){
+            $query .= " AND status = '$status'";
+         }
+        $result = $con->createCommand($query)->queryAll();
+        return $result[0]['count'];
+    }
+
+    public function getDoctorMonthwiseCount()
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT DATE_FORMAT(app_date, '%Y-%m') as period,count(id) as DoctorAppointments FROM `appointments` WHERE (app_date >= '".date('Y')."-01-01' OR app_date <= '".date('Y')."-12-31')  AND appointment_type = 1 GROUP BY MONTH(app_date) ORDER BY MONTH(app_date)";
+        $result = $con->createCommand($query)->queryAll();
+        return json_encode($result);
     }
 }

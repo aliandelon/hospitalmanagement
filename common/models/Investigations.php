@@ -56,4 +56,22 @@ class Investigations extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Category::class, ['id' => 'mst_id']);
     }
+
+    public function getInvestigationCount()
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(id) as count FROM investigations WHERE status='1'";
+        $result = $con->createCommand($query)->queryAll();
+        return $result[0]['count'];
+    }
+
+    public function getInvestigationMonthwiseCount()
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT DATE_FORMAT(app_date, '%Y-%m') as period,count(id) as Investigation FROM `appointments` WHERE (app_date >= '".date('Y')."-01-01' OR app_date <= '".date('Y')."-12-31')  AND appointment_type = 0 GROUP BY MONTH(app_date) ORDER BY MONTH(app_date)";
+        $result = $con->createCommand($query)->queryAll();
+        return json_encode($result);
+    }
 }

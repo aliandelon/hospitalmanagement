@@ -198,4 +198,17 @@ class Login  extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+
+    public function getUserCountBasedOnTypes($type,$status='')
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(id) as count FROM login WHERE type='$type'";
+         if($status){
+            $query .= " AND status = '$status'";
+         }
+        $result = $con->createCommand($query)->queryAll();
+        return $result[0]['count'];
+    }
 }
