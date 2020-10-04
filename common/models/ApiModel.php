@@ -27,7 +27,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $images = Yii::$app->request->baseUrl . '/../uploads/';
         switch ($idx) {
             case 100:
-                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,city,area,phone as mobileno,concat('$images','patientdetails/',id,'/',id,'.',profile_image) as profile_image
+                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,city,area,phone as mobileno,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where phone='$mobile' and status =1;";
                 break;
             default :
@@ -128,7 +128,7 @@ class ApiModel extends \yii\db\ActiveRecord
             case 100:
 
                 $check = "SELECT count(id) as cnt from patient_details where id = '$datas[userId]';";
-                $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[userId]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'$datas[profile_image]')ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on),profile_image=values(profile_image);";
+                $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[userId]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'')ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on),profile_image=values(profile_image);";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
@@ -141,7 +141,39 @@ class ApiModel extends \yii\db\ActiveRecord
                 if($checkResult['cnt'] > 0)
                 {
                     $result = $con->createCommand($duplicateInsert)->execute();
-                    $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,concat('$images','patientdetails/',id,'/',id,'.',profile_image) as profile_image
+                    if($result)
+                    {
+                        $id = $datas['userId'];
+                        $image = $datas['profile_image'];
+                        if($image != '')
+                        {
+                            list($type, $image) = explode(';', $image);
+                            list(, $image)      = explode(',', $image);
+                            $image = base64_decode($image);
+                            $extensions = explode('/', $type);
+                            $extension = $extensions[1];
+                            $targetFolder = \yii::$app->basePath . '/../uploads/patientdetails/' . $id ;
+                            $files = glob($targetFolder . '/*');
+                            //Loop through the file list.
+                            foreach($files as $file){
+                                //Make sure that this is a file and not a directory.
+                                if(is_file($file)){
+                                    //Use the unlink function to delete the file.
+                                    unlink($file);
+                                }
+                            }
+                            if (!file_exists($targetFolder. '/')) {
+                                mkdir($targetFolder. '/', 0777, true);
+                                chmod($targetFolder. '/',0777);
+                            }
+                            file_put_contents($targetFolder. '/' . $id . '.' . $extension, $image);
+                        }else{
+                            $extension = '';
+                        }
+                    }
+                    $imageInsertion = "UPDATE patient_details set profile_image = '$extension' where id='$id';";
+                    $con->createCommand($imageInsertion)->execute();
+                    $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where id = '$datas[userId]' AND phone='$datas[mobileno]' and status =1;";
                     $userResult = $con->createCommand($userQuery)->queryOne();
                     $msg = "Profile Updated";
@@ -564,6 +596,8 @@ class ApiModel extends \yii\db\ActiveRecord
         $images = Yii::$app->request->baseUrl . '/../uploads/';
         switch ($idx) {
             case 100:
+            $image = $datas['profile_image'];
+            
             if($datas['mobileno'] == '' || empty($datas['mobileno']))
             {
                 $response = ["status" => 0, "content" => '',"msg"=>"failure, empty mobile no"];
@@ -575,7 +609,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 return $response;
             }
 
-                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'$datas[profile_image]')";
+                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'')";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
@@ -594,9 +628,25 @@ class ApiModel extends \yii\db\ActiveRecord
             $result = $con->createCommand($query)->execute();
             if($result){
                 $id = $con->getLastInsertId();
-                $otpInsertion = "UPDATE patient_details SET otp = '1234' where id='$id';";
+                if($image != '')
+                {
+                    list($type, $image) = explode(';', $image);
+                    list(, $image)      = explode(',', $image);
+                    $image = base64_decode($image);
+                    $extensions = explode('/', $type);
+                    $extension = $extensions[1];
+                    $targetFolder = \yii::$app->basePath . '/../uploads/patientdetails/' . $id . '/';
+                    if (!file_exists($targetFolder)) {
+                        mkdir($targetFolder, 0777, true);
+                        chmod($targetFolder,0777);
+                    }
+                    file_put_contents($targetFolder . $id . '.' . $extension, $image);
+                }else{
+                    $extension = '';
+                }
+                $otpInsertion = "UPDATE patient_details SET otp = '1234' ,profile_image = '$extension' where id='$id';";
                     $con->createCommand($otpInsertion)->execute();
-                $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,concat('$images','patientdetails/',id,'/',id,'.',profile_image) as profile_image
+                $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where id = '$id' AND phone='$datas[mobileno]' and status =1;";
                 $userResult = $con->createCommand($userQuery)->queryOne();
                 $msg = "Profile Created";
