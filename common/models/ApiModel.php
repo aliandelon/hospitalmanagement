@@ -24,9 +24,10 @@ class ApiModel extends \yii\db\ActiveRecord
     {
         $con = \Yii::$app->db;
         $response = [];
+        $images = Yii::$app->request->baseUrl . '/../uploads/';
         switch ($idx) {
             case 100:
-                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,city,area,phone as mobileno,profile_image
+                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,city,area,phone as mobileno,concat('$images','patientdetails/',id,'/',id,'.',profile_image) as profile_image
                     from patient_details where phone='$mobile' and status =1;";
                 break;
             default :
@@ -122,6 +123,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
+        $images = Yii::$app->request->baseUrl . '/../uploads/';
         switch ($idx) {
             case 100:
 
@@ -139,7 +141,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 if($checkResult['cnt'] > 0)
                 {
                     $result = $con->createCommand($duplicateInsert)->execute();
-                    $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,profile_image
+                    $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,concat('$images','patientdetails/',id,'/',id,'.',profile_image) as profile_image
                     from patient_details where id = '$datas[userId]' AND phone='$datas[mobileno]' and status =1;";
                     $userResult = $con->createCommand($userQuery)->queryOne();
                     $msg = "Profile Updated";
@@ -170,6 +172,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $response = [];
         $idx = $datas['idx'];
         $curDate = date('Y-m-d');
+        $images = Yii::$app->request->baseUrl . '/../uploads/';
         switch ($idx) {
             case 100:
                 $type = $datas['type'];
@@ -193,13 +196,14 @@ class ApiModel extends \yii\db\ActiveRecord
                 {
                     $searchCndn = "AND name like '%$searchbyName%' ";
                 }
-                $bannerQuery = "SELECT image from banners where expiry_date > '$curDate' and status = 1; ";
+                $bannerQuery = "SELECT concat('$images','banners/',id,'/',id,'.',image) as image from banners where expiry_date > '$curDate' and status = 1; ";
                 if ($type == 'Hospital')
                 {
                     if(!empty($latitude) && !empty($longitude))
                     {
                         $query = "SELECT
-                                user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image,
+                                user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,
+                                concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image,
                                 (
                                     6371 *
                                     acos(
@@ -225,13 +229,13 @@ class ApiModel extends \yii\db\ActiveRecord
                         {
                             $searchCndn.= "AND city like '%$searchbyName%' ";
                         }
-                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
+                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
                     }
                 }else{
                     if(!empty($latitude) && !empty($longitude))
                     {
                         $query = "SELECT
-                                user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image,
+                                user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image,
                                 (
                                     6371 *
                                     acos(
@@ -257,7 +261,7 @@ class ApiModel extends \yii\db\ActiveRecord
                         {
                             $searchCndn.= "AND city like '%$searchbyName%' ";
                         }
-                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
+                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
                     }
                 } 
                 break;
@@ -284,15 +288,19 @@ class ApiModel extends \yii\db\ActiveRecord
         $response = [];
         $idx = $datas['idx'];
         $curDate = date('Y-m-d');
+        $images = Yii::$app->request->baseUrl . '/../uploads/';
         switch ($idx) {
             case 100:
                 $type = $datas['type'];
                 $id = $datas['id'];
-                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image
+                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image)
+                 as image
                             FROM
                                 hospital_clinic_details 
                             WHERE status = 1 AND type = 1 AND user_id = '$id';";
-                $doctorsQuery = "SELECT doc.name,doc.experience,doc.profile_image,sep.name as speciality,coalesce(fee_charges,0.00) as fees_charges
+                $doctorsQuery = "SELECT doc.name,doc.experience,
+                concat('$images','doctors/',doc.id,'/',doc.id,'.',doc.profile_image) as profile_image
+                ,sep.name as speciality,coalesce(fee_charges,0.00) as fees_charges
                         FROM doctors_details doc
                         JOIN doctor_specialty_mst sep ON sep.id = doc.specialty_id WHERE doc.hospital_clinic_id = '$id';";
                 
@@ -320,11 +328,13 @@ class ApiModel extends \yii\db\ActiveRecord
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
+        $images = Yii::$app->request->baseUrl . '/../uploads/';
         switch ($idx) {
             case 100:
                 $type = $datas['type'];
                 $id = $datas['id'];
-                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image
+                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image)
+                 as image
                             FROM
                                 hospital_clinic_details 
                             WHERE status = 1 AND type = 2 AND user_id = '$id';";
@@ -551,6 +561,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
+        $images = Yii::$app->request->baseUrl . '/../uploads/';
         switch ($idx) {
             case 100:
             if($datas['mobileno'] == '' || empty($datas['mobileno']))
@@ -585,7 +596,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 $id = $con->getLastInsertId();
                 $otpInsertion = "UPDATE patient_details SET otp = '1234' where id='$id';";
                     $con->createCommand($otpInsertion)->execute();
-                $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,profile_image
+                $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,concat('$images','patientdetails/',id,'/',id,'.',profile_image) as profile_image
                     from patient_details where id = '$id' AND phone='$datas[mobileno]' and status =1;";
                 $userResult = $con->createCommand($userQuery)->queryOne();
                 $msg = "Profile Created";
