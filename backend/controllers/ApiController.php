@@ -476,6 +476,8 @@ class ApiController extends \yii\rest\Controller
             }else{
                 $response['status']  = "error";
                 $response['message'] = "failure in registering";
+                $response['content'] = $setUserDetails['msg'];
+                return $response;
             }
             //$this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {

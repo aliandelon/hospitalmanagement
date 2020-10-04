@@ -553,6 +553,17 @@ class ApiModel extends \yii\db\ActiveRecord
         $idx = $datas['idx'];
         switch ($idx) {
             case 100:
+            if($datas['mobileno'] == '' || empty($datas['mobileno']))
+            {
+                $response = ["status" => 0, "content" => '',"msg"=>"failure, empty mobile no"];
+                return $response;
+            }
+            if(strlen($datas['mobileno']) > 10 || strlen($datas['mobileno']) < 10)
+            { 
+                $response = ["status" => 0, "content" => '',"msg"=>"failure, invalid mobile no"];
+                return $response;
+            }
+
                 $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'$datas[profile_image]')";
                 break;
             default :
@@ -560,6 +571,15 @@ class ApiModel extends \yii\db\ActiveRecord
                 return $response;
         }
         try { 
+            $checkMobile = "SELECT count(phone) as cnt from patient_details where phone = '$datas[mobileno]';";
+            $checkResult = $con->createCommand($checkMobile)->queryOne();
+            if($checkResult)
+            {
+                if($checkResult['cnt'] > 0){
+                    $response = ["status" => 0, "content" => '',"msg"=>"failure, mobile no already exist"];
+                    return $response;
+                }
+            }
             $result = $con->createCommand($query)->execute();
             if($result){
                 $id = $con->getLastInsertId();
