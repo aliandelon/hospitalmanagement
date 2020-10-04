@@ -5,6 +5,9 @@ use yii\helpers\Url;
 
 
 $this->title = 'mastermbbs';
+$topHospital = isset($params['topRatedHospital']) ? $params['topRatedHospital'] : [];
+$topInvestigation = isset($params['topRatedInvestigation']) ? $params['topRatedInvestigation'] : [];
+$topDoctor =  isset($params['topRatedDoctors']) ? $params['topRatedDoctors'] : [];
 ?>
   <!-- <div class="product-sales-area mg-tb-30">
             
@@ -18,7 +21,7 @@ $this->title = 'mastermbbs';
                                     <div class="analytics-sparkle-line reso-mg-b-30">
                                         <div class="analytics-content">
                                             <h5>Registered Hospitals</h5>
-                                            <h2><span class="counter">500</span> <span class="tuition-fees">Clinics</span></h2>
+                                            <h2><span class="counter"><?=$params['registeredHospital']?></span> <span class="tuition-fees">Clinics</span></h2>
                                             <span class="text-success">&nbsp;</span>
                                             <div class="progress m-b-0">
                                                 <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:100%;"> <span class="sr-only">20% Complete</span> </div>
@@ -30,7 +33,7 @@ $this->title = 'mastermbbs';
                                     <div class="analytics-sparkle-line reso-mg-b-30">
                                         <div class="analytics-content">
                                             <h5>Registered Sub-Admins</h5>
-                                            <h2><span class="counter">30</span> <span class="tuition-fees">Users</span></h2>
+                                            <h2><span class="counter"><?=$params['registeredSubAdmins']?></span> <span class="tuition-fees">Users</span></h2>
                                             <span class="text-danger">&nbsp;</span>
                                             <div class="progress m-b-0">
                                                 <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:100%;"> <span class="sr-only">230% Complete</span> </div>
@@ -42,7 +45,7 @@ $this->title = 'mastermbbs';
                                     <div class="analytics-sparkle-line reso-mg-b-30 table-mg-t-pro dk-res-t-pro-30">
                                         <div class="analytics-content">
                                             <h5>Registered Doctors</h5>
-                                            <h2><span class="counter">2000</span> <span class="tuition-fees">Specialists</span></h2>
+                                            <h2><span class="counter"><?=$params['registeredDoctors']?></span> <span class="tuition-fees">Specialists</span></h2>
                                             <span class="text-info">&nbsp;</span>
                                             <div class="progress m-b-0">
                                                 <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:100%;"> <span class="sr-only">20% Complete</span> </div>
@@ -54,10 +57,10 @@ $this->title = 'mastermbbs';
                                     <div class="analytics-sparkle-line table-mg-t-pro dk-res-t-pro-30">
                                         <div class="analytics-content">
                                             <h5>Registered Patients</h5>
-                                            <h2><span class="counter">3500</span> <span class="tuition-fees">Users</span></h2>
+                                            <h2><span class="counter"><?=$params['registeredPatients']?></span> <span class="tuition-fees">Users</span></h2>
                                             <span class="text-inverse">&nbsp;</span>
                                             <div class="progress m-b-0">
-                                                <div class="progress-bar progress-bar-inverse" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:100%;"> <span class="sr-only">230% Complete</span> </div>
+                                                <div class="progress-bar progress-bar-inverse" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:100%;"> <span class="sr-only">20% Complete</span> </div>
                                             </div>
                                         </div>
                                     </div>
@@ -79,22 +82,12 @@ $this->title = 'mastermbbs';
                                                 </div>
                                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                                     <div class="actions graph-rp graph-rp-dl">
-                                                        <select class="form-control">
-                                                            <option>Hospital1</option>
-                                                            <option>Hospital2</option>
-                                                            <option>Hospital3</option>
-                                                            <option>Hospital3</option>
-                                                        </select>
+                                                        <input type="radio" name="changerType" checked onclick="$('#morris-area-chart-investigation').show();$('#morris-area-chart-doctor').hide();"/>&nbsp;&nbsp; Investigation
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                                     <div class="actions graph-rp graph-rp-dl">
-                                                         <select class="form-control">
-                                                            <option>Investigation1</option>
-                                                            <option>Investigation2</option>
-                                                            <option>Investigation3</option>
-                                                            <option>Investigation4</option>
-                                                        </select>
+                                                         <input type="radio" name="changerType" onclick="$('#morris-area-chart-investigation').hide();$('#morris-area-chart-doctor').show();"/>&nbsp;&nbsp; Doctor Appointments 
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -109,7 +102,8 @@ $this->title = 'mastermbbs';
                                                 <h5><i class="fa fa-circle" style="color: #006DF0;"></i>investigation</h5>
                                             </li>
                                         </ul>
-                                        <div id="morris-area-chart"></div>
+                                        <div id="morris-area-chart-investigation" style="display:block;"></div>
+                                        <div id="morris-area-chart-doctor" style="display:block;"></div>
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -119,7 +113,7 @@ $this->title = 'mastermbbs';
                                             <li>
                                                 <div id="sparklinedash"></div>
                                             </li>
-                                            <li class="text-right sp-cn-r"><i class="fa fa-level-up" aria-hidden="true"></i> <span class="counter text-success"><span class="counter">1500</span></span>
+                                            <li class="text-right sp-cn-r"><i class="fa fa-level-up" aria-hidden="true"></i> <span class="counter text-success"><span class="counter"><?=$params['totalAppointments']?></span></span>
                                             </li>
                                         </ul>
                                     </div>
@@ -164,7 +158,7 @@ $this->title = 'mastermbbs';
                                     <div class="social-media-edu">
                                         <i class="fa fa-medkit"></i>
                                         <div class="social-edu-ctn">
-                                            <h3>200</h3>
+                                            <h3><?=$params['totalInvestigations']?></h3>
                                             <p>Total Investigations</p>
                                         </div>
                                     </div>
@@ -173,7 +167,7 @@ $this->title = 'mastermbbs';
                                     <div class="social-media-edu twitter-cl res-mg-t-30 table-mg-t-pro-n">
                                         <i class="fa fa-image"></i>
                                         <div class="social-edu-ctn">
-                                            <h3>30</h3>
+                                            <h3><?=$params['totalBanners']?></h3>
                                             <p>Total Banners</p>
                                         </div>
                                     </div>
@@ -182,7 +176,7 @@ $this->title = 'mastermbbs';
                                     <div class="social-media-edu linkedin-cl res-mg-t-30 res-tablet-mg-t-30 dk-res-t-pro-30">
                                         <i class="fa fa-hospital-o"></i>
                                         <div class="social-edu-ctn">
-                                            <h3>7000</h3>
+                                            <h3><?=$params['activeHospital']?></h3>
                                             <p>Active Customers</p>
                                         </div>
                                     </div>
@@ -207,14 +201,16 @@ $this->title = 'mastermbbs';
                                         <div class="single-review-st-hd">
                                             <h2>Top Rated Hospitals</h2>
                                         </div>
+                                        <?php foreach ($topHospital as $key => $value) {?>
                                         <div class="single-review-st-text">
                                             <img src="<?= Yii::$app->request->baseUrl?>/img/notification1/1.jpg" alt="">
                                             <div class="review-ctn-hf">
-                                                <h3>Lisie Hospital</h3>
-                                                <p>Ernakulam</p>
+                                                <h3><?php echo $value['name']?></h3>
+                                                <p><?php echo $value['place']?></p>
                                             </div>
                                         </div>
-                                        <div class="single-review-st-text">
+                                    <?php } ?>
+                                        <!-- <div class="single-review-st-text">
                                             <img src="<?= Yii::$app->request->baseUrl?>/img/notification1/1.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Lourdes Hospital</h3>
@@ -248,7 +244,7 @@ $this->title = 'mastermbbs';
                                                 <h3>Sunrise Hospital</h3>
                                                 <p>Kakkanad</p>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
@@ -256,14 +252,16 @@ $this->title = 'mastermbbs';
                                         <div class="single-review-st-hd">
                                             <h2>Top Investigations</h2>
                                         </div>
+                                        <?php foreach ($topInvestigation as $key => $value) {?>
                                         <div class="single-review-st-text">
                                             <img src="<?= Yii::$app->request->baseUrl?>/img/notification2/1.jpeg" alt="">
                                             <div class="review-ctn-hf">
-                                                <h3>Kidney function test</h3>
-                                                <p>5700 in this month</p>
+                                                <h3><?php echo $value['investigation_name']?><!-- <span style="border: 1px solid #ccc;padding:5px;border-radius: 10px;"><?php echo ($value['count']) ? $value['count'] : ''?></span> --></h3>
+                                                <p><?php echo $value['hosName']?></p>
                                             </div>
                                         </div>
-                                        <div class="single-review-st-text">
+                                    <?php } ?>
+                                        <!-- <div class="single-review-st-text">
                                             <img src="<?= Yii::$app->request->baseUrl?>/img/notification2/1.jpeg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Liver function test</h3>
@@ -297,7 +295,7 @@ $this->title = 'mastermbbs';
                                                 <h3>Pregnancy test</h3>
                                                 <p>250 in this month</p>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
@@ -305,14 +303,16 @@ $this->title = 'mastermbbs';
                                         <div class="single-review-st-hd">
                                             <h2>Top Rated Doctors</h2>
                                         </div>
+                                        <?php foreach ($topDoctor as $key => $value) {?>
                                         <div class="single-review-st-text">
                                             <img src="<?= Yii::$app->request->baseUrl?>/img/notification/1.jpg" alt="">
                                             <div class="review-ctn-hf">
-                                                <h3>Sarah Graves</h3>
-                                                <p>Cardiologist</p>
+                                                <h3><?php echo $value['name']?></h3>
+                                                <p><?php echo $value['hosName']?></p>
                                             </div>
                                         </div>
-                                        <div class="single-review-st-text">
+                                        <?php } ?>
+                                        <!-- <div class="single-review-st-text">
                                             <img src="<?= Yii::$app->request->baseUrl?>/img/notification/2.jpg" alt="">
                                             <div class="review-ctn-hf">
                                                 <h3>Garbease sha</h3>
@@ -346,10 +346,51 @@ $this->title = 'mastermbbs';
                                                 <h3>Julsha Grav</h3>
                                                 <p>Pediatrician</p>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                  
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+       <script>
+           $(document).ready(function(){
+                Morris.Area({
+                    element: 'morris-area-chart-investigation',
+                    data: <?=$params['totalInvestigationsMonthwise']?>,
+                    xkey: 'period',
+                    ykeys: ['Investigation'],
+                    labels: ['Investigation'],
+                    pointSize: 0,
+                    fillOpacity: 0.50,
+                    pointStrokeColors:['#05ab9e'],
+                    behaveLikeLine: true,
+                    gridLineColor: '#e0e0e0',
+                    lineWidth:0,
+                    hideHover: 'auto',
+                    lineColors: ['#05ab9e'],
+                    resize: true
+                    
+                });
+
+                Morris.Area({
+                    element: 'morris-area-chart-doctor',
+                    data: <?=$params['totalDocAppointmentsMonthwise']?>,
+                    xkey: 'period',
+                    ykeys: ['DoctorAppointments'],
+                    labels: ['Doctor Appointments'],
+                    pointSize: 0,
+                    fillOpacity: 0.50,
+                    pointStrokeColors:['#05ab9e'],
+                    behaveLikeLine: true,
+                    gridLineColor: '#e0e0e0',
+                    lineWidth:0,
+                    hideHover: 'auto',
+                    lineColors: ['#05ab9e'],
+                    resize: true
+                    
+                });
+                $('#morris-area-chart-investigation').show();
+                $('#morris-area-chart-doctor').hide();
+           });
+       </script>           
