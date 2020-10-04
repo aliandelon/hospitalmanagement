@@ -292,7 +292,7 @@ class ApiModel extends \yii\db\ActiveRecord
                             FROM
                                 hospital_clinic_details 
                             WHERE status = 1 AND type = 1 AND user_id = '$id';";
-                $doctorsQuery = "SELECT doc.name,doc.experience,doc.profile_image,sep.name as speciality,0 as fees_charges
+                $doctorsQuery = "SELECT doc.name,doc.experience,doc.profile_image,sep.name as speciality,coalesce(fee_charges,0.00) as fees_charges
                         FROM doctors_details doc
                         JOIN doctor_specialty_mst sep ON sep.id = doc.specialty_id WHERE doc.hospital_clinic_id = '$id';";
                 
