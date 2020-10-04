@@ -261,7 +261,7 @@ class ApiController extends \yii\rest\Controller
         }
     }
 
-    public function actionGetHospitalClinicDetails()
+    public function actionGetHospitalLabsDetails()
     {  
         try
         {
@@ -270,7 +270,7 @@ class ApiController extends \yii\rest\Controller
             $model = new ApiModel();
             $rawData  = self::readData();
             $inputData = $rawData;
-            $getHospitalClinic = $model->getHospitalClinicDetails($inputData);
+            $getHospitalClinic = $model->getHospitalLabsDetails($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
             {
                 try {
@@ -288,7 +288,7 @@ class ApiController extends \yii\rest\Controller
         }
     }
 
-    public function actionGetHospitalLabInvestigationDetails()
+    public function actionGetHospitalDetails()
     {  
         try
         {
@@ -297,7 +297,7 @@ class ApiController extends \yii\rest\Controller
             $model = new ApiModel();
             $rawData  = self::readData();
             $inputData = $rawData;
-            $getHospitalClinic = $model->getHospitalLabInvestigationDetails($inputData);
+            $getHospitalClinic = $model->getHospitalDetails($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
             {
                 try {
@@ -316,7 +316,7 @@ class ApiController extends \yii\rest\Controller
         }
     }
 
-    public function actionGetHospitalLabInvestigationSlotdetails()
+    public function actionGetLabDetails()
     {  
         try
         {
@@ -325,7 +325,63 @@ class ApiController extends \yii\rest\Controller
             $model = new ApiModel();
             $rawData  = self::readData();
             $inputData = $rawData;
-            $getHospitalClinic = $model->getHospitalLabInvestigationSlotdetails($inputData);
+            $getHospitalClinic = $model->getLabDetails($inputData);
+            if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
+            {
+                try {
+                    $response['status']  = "success";
+                    $response['content'] = $getHospitalClinic;
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return $response;
+                }
+                return $response;
+            }
+            $this->setResponseFormat(1);
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
+
+    public function actionGetLaboratorySlotdetails()
+    {  
+        try
+        {
+            $response = [];
+            ini_set('memory_limit', '-1');
+            $model = new ApiModel();
+            $rawData  = self::readData();
+            $inputData = $rawData;
+            $getHospitalClinic = $model->getLaboratorySlotdetails($inputData);
+            if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
+            {
+                try {
+                    $response['status']  = "success";
+                    $response['content'] = $getHospitalClinic;
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return $response;
+                }
+                return $response;
+            }
+            $this->setResponseFormat(1);
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
+
+    public function actionGetDoctorSlotdetails()
+    {  
+        try
+        {
+            $response = [];
+            ini_set('memory_limit', '-1');
+            $model = new ApiModel();
+            $rawData  = self::readData();
+            $inputData = $rawData;
+            $getHospitalClinic = $model->getDoctorSlotdetails($inputData);
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
             {
                 try {

@@ -164,29 +164,42 @@ class ApiModel extends \yii\db\ActiveRecord
             return $response;
         }
     }
-    public function getHospitalClinicDetails($datas) 
+    public function getHospitalLabsDetails($datas) 
     {
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
+        $curDate = date('Y-m-d');
         switch ($idx) {
             case 100:
                 $type = $datas['type'];
                 $searchbyName = $datas['searchby_name'];
-                $searchCndn = $latlonSelect = "";
+                $searchCndn = $latlonSelect = $limitOffset = "";
                 $latitude = $datas['latitude'];
                 $longitude = $datas['longitude'];
+                $pageLength = $datas['pageLength'];
+                $curPage = isset($datas['curPage'])?$datas['curPage']:0;
+                if($curPage == 0)
+                {
+                    $start = 0;
+                }else{
+                    $start = $curPage*$pageLength + 1;
+                }
+                if(!empty($pageLength) && isset($curPage))
+                {
+                    $limitOffset = " LIMIT $pageLength OFFSET $start ";
+                }
                 if($searchbyName != '')
                 {
-                    $searchCndn = "AND name like '$searchbyName' ";
+                    $searchCndn = "AND name like '%$searchbyName%' ";
                 }
-                
+                $bannerQuery = "SELECT image from banners where expiry_date > '$curDate' and status = 1; ";
                 if ($type == 'Hospital')
                 {
                     if(!empty($latitude) && !empty($longitude))
                     {
                         $query = "SELECT
-                                *,
+                                user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image,
                                 (
                                     6371 *
                                     acos(
@@ -206,16 +219,19 @@ class ApiModel extends \yii\db\ActiveRecord
                                 distance <= 25 
                             ORDER BY
                                 distance
-                            LIMIT
-                                25 ";
+                            $limitOffset";
                     }else {
-                        $query = "SELECT * $latlonSelect FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn ;";
+                        if($city != '')
+                        {
+                            $searchCndn.= "AND city like '%$searchbyName%' ";
+                        }
+                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
                     }
                 }else{
                     if(!empty($latitude) && !empty($longitude))
                     {
                         $query = "SELECT
-                                *,
+                                user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image,
                                 (
                                     6371 *
                                     acos(
@@ -235,10 +251,13 @@ class ApiModel extends \yii\db\ActiveRecord
                                 distance <= 25 
                             ORDER BY
                                 distance
-                            LIMIT
-                                25 ";
+                            $limitOffset";
                     }else{
-                        $query = "SELECT * $latlonSelect FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn ;";
+                        if($city != '')
+                        {
+                            $searchCndn.= "AND city like '%$searchbyName%' ";
+                        }
+                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
                     }
                 } 
                 break;
@@ -248,7 +267,8 @@ class ApiModel extends \yii\db\ActiveRecord
         }
         try { 
             $result = $con->createCommand($query)->queryAll();
-            $response = ["status" => 1, "content" => $result];
+            $banner = $con->createCommand($bannerQuery)->queryAll();
+            $response = ["status" => 1, "data" => $result,"current_page"=>$curPage,"banner_images"=>$banner];
             $con->close();
             return $response;
         } catch (yii\db\Exception $e) {
@@ -258,53 +278,24 @@ class ApiModel extends \yii\db\ActiveRecord
         }
     }
 
-    public function getHospitalLabInvestigationDetails($datas) 
+    public function getHospitalDetails($datas) 
     {
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
+        $curDate = date('Y-m-d');
         switch ($idx) {
             case 100:
                 $type = $datas['type'];
                 $id = $datas['id'];
-                if ($type == 'Hospital')
-                {
-                    $query = "SELECT
-                                hp.name as hospitalName,
-                                hp.phone_number as phone,
-                                hp.city 
+                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image
                             FROM
-                                hospital_clinic_details hp
-                            WHERE hp.status = 1 AND hp.type = 1 AND hp.user_id = '$id';";
-                    $investigations = "SELECT
-                                hpmapping.investigation_id as invId,
-                                inv.investigation_name as invName,
-                                hpmapping.amount
-                            FROM
-                                hospital_clinic_details hp
-                            JOIN hospital_investigation_mapping hpmapping
-                                ON hpmapping.hospital_clinic_id = hp.user_id
-                            JOIN investigations inv ON inv.id = hpmapping.investigation_id
-                            WHERE hp.status = 1 AND hp.type = 1 AND hp.user_id = '$id'";
-                }else{
-                    $query = "SELECT
-                                hp.name as labName,
-                                hp.phone_number as phone,
-                                hp.city  
-                            FROM
-                                hospital_clinic_details hp
-                            WHERE hp.status = 1 AND hp.type = 2 AND hp.user_id = '$id';";
-                    $investigations = "SELECT
-                                hpmapping.investigation_id as invId,
-                                inv.investigation_name as invName,
-                                hpmapping.amount
-                            FROM
-                                hospital_clinic_details hp
-                            JOIN hospital_investigation_mapping hpmapping
-                                ON hpmapping.hospital_clinic_id = hp.user_id
-                            JOIN investigations inv ON inv.id = hpmapping.investigation_id
-                            WHERE hp.status = 1 AND hp.type = 2 AND hp.user_id = '$id'";
-                } 
+                                hospital_clinic_details 
+                            WHERE status = 1 AND type = 1 AND user_id = '$id';";
+                $doctorsQuery = "SELECT doc.name,doc.experience,doc.profile_image,sep.name as speciality,0 as fees_charges
+                        FROM doctors_details doc
+                        JOIN doctor_specialty_mst sep ON sep.id = doc.specialty_id WHERE doc.hospital_clinic_id = '$id';";
+                
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
@@ -312,8 +303,9 @@ class ApiModel extends \yii\db\ActiveRecord
         }
         try { 
             $result = $con->createCommand($query)->queryAll();
-            $invResult = $con->createCommand($investigations)->queryAll();
-            $response = ["status" => 1, "hospital" => $result,"investigations"=>$invResult];
+            $docResult = $con->createCommand($doctorsQuery)->queryAll();
+            $result['doctor_list'] = $docResult;
+            $response = ["status" => 1, "hospital" => $result];
             $con->close();
             return $response;
         } catch (yii\db\Exception $e) {
@@ -323,7 +315,7 @@ class ApiModel extends \yii\db\ActiveRecord
         }
     }
 
-    public function getHospitalLabInvestigationSlotdetails($datas) 
+    public function getLabDetails($datas) 
     {
         $con = \Yii::$app->db;
         $response = [];
@@ -332,10 +324,71 @@ class ApiModel extends \yii\db\ActiveRecord
             case 100:
                 $type = $datas['type'];
                 $id = $datas['id'];
-                $investigations = $datas['investigations'];
-                if(empty($investigations)){
+                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,hospital_clinic_image as image
+                            FROM
+                                hospital_clinic_details 
+                            WHERE status = 1 AND type = 2 AND user_id = '$id';";
+                $labCategory = "SELECT DISTINCT cat.id as category_id,cat.category_name as category FROM hospital_investigation_mapping hp JOIN investigations inv ON inv.id = hp.investigation_id 
+                    JOIN category_mst cat ON cat.id = inv.mst_id
+                    WHERE hp.hospital_clinic_id = '$id' AND inv.status = 1;";
+                
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $result = $con->createCommand($query)->queryAll();
+            $catResult = $con->createCommand($labCategory)->queryAll();
+            $invResponse = [];
+            if($catResult)
+            {
+                foreach ($catResult as $key => $cat) {
+                    $investigations = "SELECT
+                                hpmapping.investigation_id as sub_category_id,
+                                inv.investigation_name as name,
+                                hpmapping.amount as price,0 as isHomeCollection 
+                            FROM
+                                hospital_clinic_details hp
+                            JOIN hospital_investigation_mapping hpmapping
+                                ON hpmapping.hospital_clinic_id = hp.user_id
+                            JOIN investigations inv ON inv.id = hpmapping.investigation_id
+                            WHERE hp.status = 1 AND hp.type = 2 AND hp.user_id = '$id' AND inv.mst_id = 
+                            '$cat[category_id]';";
+                    $invResult = $con->createCommand($investigations)->queryAll();
+                    if($invResult){
+                        $invResponse[] = [
+                            'category_id'=>$cat['category_id'],
+                            'category'   =>$cat['category'],
+                            'subcategory'=>$invResult
+                        ];
+                    }
+                }
+            }
+            $response = ["status" => 1, "laboratory" => $result,"service"=>$invResponse];
+            $con->close();
+            return $response;
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
+    public function getLaboratorySlotdetails($datas) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        $idx = $datas['idx'];
+        switch ($idx) {
+            case 100:
+                $type = $datas['type'];
+                $id = $datas['id'];
+                if(empty($datas['sub_category_id']) && $datas['sub_category_id'] != ''){
                     return 'empty invstigations';
                 }
+                $investigation = $datas['sub_category_id'];
+                $date = $datas['date'];
                 $typeVal = 1;
                 if($type == 'Hospital')
                 {
@@ -344,29 +397,69 @@ class ApiModel extends \yii\db\ActiveRecord
                     $typeVal = 2;
                 }
                 $investigationsResponse = [];
-                foreach ($investigations as $key => $inv) {
-                    $invQuery = "SELECT DISTINCT
-                                slot.id as slotId,
-                                CONCAT(DATE_FORMAT(slot.from_time, '%H:%i %p'),'-',DATE_FORMAT(slot.to_time, '%H:%i %p'))as slot
-                                
-                            FROM slot_day_time_mapping slot
-                            JOIN 
-                                hospital_clinic_details hp ON hp.user_id = slot.hospital_clinic_id 
-                            JOIN slot_day_mapping day ON day.hospital_clinic_id = slot.hospital_clinic_id  AND slot.investigation_id = day.investigation_id AND slot.slot_day_id = day.id
-                            LEFT JOIN appointments ap ON ap.investigation_id = slot.investigation_id AND ap.hospital_clinic_id = slot.hospital_clinic_id AND slot.id = ap.slot_day_time_mapping_id
-                            WHERE ap.slot_day_time_mapping_id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$inv[investigation]' AND day.day ='$inv[date]' ORDER BY from_time asc;";
+                $invQuery = "SELECT DISTINCT
+                            slot.id as slotId,
+                            CONCAT(DATE_FORMAT(slot.from_time, '%H:%i %p'),'-',DATE_FORMAT(slot.to_time, '%H:%i %p'))as time
+                        FROM slot_day_time_mapping slot
+                        JOIN 
+                            hospital_clinic_details hp ON hp.user_id = slot.hospital_clinic_id 
+                        JOIN slot_day_mapping day ON day.hospital_clinic_id = slot.hospital_clinic_id  AND slot.investigation_id = day.investigation_id AND slot.slot_day_id = day.id
+                        LEFT JOIN appointments ap ON ap.investigation_id = slot.investigation_id AND ap.hospital_clinic_id = slot.hospital_clinic_id AND slot.id = ap.slot_day_time_mapping_id
+                        WHERE ap.slot_day_time_mapping_id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$investigation' AND day.day ='$date' ORDER BY from_time asc;";
 
                     $result = $con->createCommand($invQuery)->queryAll();
-                    $investigationsResponse[$inv['investigation']] = $result;
-                }
-                
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
                 return $response;
         }
         try { 
-            $response = ["status" => 1, "result" => $investigationsResponse];
+            $response = ["status" => 1, "time_slot" => $result];
+            $con->close();
+            return $response;
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
+    public function getDoctorSlotdetails($datas) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        $idx = $datas['idx'];
+        switch ($idx) {
+            case 100:
+                $type = $datas['type'];
+                $id = $datas['id'];
+                $doctorId = $datas['doctorId'];
+                $date = $datas['date'];
+                $typeVal = 1;
+                if($type == 'Hospital')
+                {
+                    $typeVal = 1;
+                }else{
+                    $typeVal = 2;
+                }
+                $docQuery = "SELECT DISTINCT
+                            slot.id as slotId,
+                            CONCAT(DATE_FORMAT(slot.from_time, '%H:%i %p'),'-',DATE_FORMAT(slot.to_time, '%H:%i %p'))as time
+                        FROM slot_day_time_mapping slot
+                        JOIN 
+                            hospital_clinic_details hp ON hp.user_id = slot.hospital_clinic_id 
+                        JOIN slot_day_mapping day ON day.hospital_clinic_id = slot.hospital_clinic_id  AND slot.doctor_id = day.doctor_id AND slot.slot_day_id = day.id
+                        LEFT JOIN appointments ap ON ap.doctor_id = slot.doctor_id AND ap.hospital_clinic_id = slot.hospital_clinic_id AND slot.id = ap.slot_day_time_mapping_id
+                        WHERE ap.slot_day_time_mapping_id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.doctor_id = '$doctorId' AND day.day ='$date' ORDER BY from_time asc;";
+
+                    $result = $con->createCommand($docQuery)->queryAll();
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $response = ["status" => 1, "time_slot" => $result];
             $con->close();
             return $response;
         } catch (yii\db\Exception $e) {
@@ -387,9 +480,9 @@ class ApiModel extends \yii\db\ActiveRecord
                     $transaction = $con->beginTransaction();
                     $type = $datas['type'];
                     $id = $datas['id'];
-                    $appointments = $datas['appointments'];
-                    if(empty($appointments)){
-                        return 'empty appointments';
+                    $investigations = $datas['investigations'];
+                    if(empty($investigations)){
+                        return 'empty investigations';
                     }
                     $typeVal = 1;
                     if($type == 'Hospital')
@@ -398,44 +491,53 @@ class ApiModel extends \yii\db\ActiveRecord
                     }else{
                         $typeVal = 2;
                     }
-                    foreach ($appointments as $key => $appointment) {
+                    $appointmentType = $datas['appointmentType'];
+                    if($appointmentType == 'other')
+                    {
+                        $appointmentTypeVal = 1; 
+                    }else{
+                        $appointmentTypeVal = 0;
+                    }
+                    $totalPrice = '';
+                    foreach ($investigations as $key => $appointment) {
                         //print_r($appointment);exit;
-                        $appointmentQury = "INSERT INTO appointments(patient_id,doctor_id,investigation_id, slot_day_time_mapping_id,hospital_clinic_id,app_date,app_time,appointment_type)VALUES('$datas[paitientId]','$appointment[doctorId]','$appointment[invstigation]','$appointment[slotId]','$id','$appointment[date]','$appointment[time]','$appointment[appointmentType]');";
-                        $result = $con->createCommand($appointmentQury)->execute();
+                        $totalPrice = $appointment['price'];
+                        $appointmentQuery = "INSERT INTO appointments(patient_id,doctor_id,investigation_id, slot_day_time_mapping_id,hospital_clinic_id,app_date,app_time,appointment_type,isHomeCollection,price)VALUES('$datas[paitientId]','$appointment[doctorId]','$appointment[investigation_id]','$appointment[slotId]','$id','$appointment[date]','$appointment[time]','$appointmentTypeVal','$appointment[isHomeCollection]','$appointment[price]');";
+                        $result = $con->createCommand($appointmentQuery)->execute();
                         if($result)
-                        {
-                            if($appointment['appointmentType'] == 'other')
-                            {
-                                if(empty($appointment['detDatas']))
+                        {   $bookingId =$con->getLastInsertId();
+                            if($appointmentType == 'other')
+                            { 
+                                if(empty($datas['detDatas']))
                                 {
                                     $transaction->rollback();
                                     return "empty other patient details";
                                 }else{
-                                    $det = $appointment['detDatas'];
-                                    $mstId = $con->getLastInsertId();
-                                    $detInsert = "INSERT INTO appoinment_det(mst_id,first_name,last_name,age,gender)VALUES('$mstId','$det[firstName]','$det[lastName]','$det[age]','$det[gender]')";
+                                    $det = $datas['detDatas'];
+                                    $detInsert = "INSERT INTO appoinment_det(mst_id,first_name,last_name,age,gender)VALUES('$bookingId','$det[firstName]','$det[lastName]','$det[age]','$det[gender]')";
                                     $resultDet = $con->createCommand($detInsert)->execute();
                                     if($resultDet)
                                     {
                                         $transaction->commit();
-                                        $return = 'success';
+                                        $response = ["status" => 1, "bookingId" => $bookingId,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice];
                                     }
                                 }
+                            }else{
+                               $transaction->commit(); 
                             }
+                            $response = ["status" => 1, "bookingId" => $bookingId,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice];
                         }else{
                             $transaction->rollback();
-                            $return ="Error in appointment bookings";
+                            return "Error in appointment bookings";
                         }
                     }
                     
                     break;
                 default :
-                    $response = ["status" => 2, "content" => ""];
                     return $response;
             }
-            $response = ["status" => 1, "content" => $return];
-            $con->close();
             return $response;
+            $con->close();
         } catch (yii\db\Exception $e) {
             $transaction->rollback();
             $response = ["status" => 0, "content" => $e];
