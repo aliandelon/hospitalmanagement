@@ -261,7 +261,7 @@ class ApiController extends \yii\rest\Controller
         }
     }
 
-    public function actionGetHospitalLabsDetails()
+    public function actionGetHospitalLabDetails()
     {  
         try
         {

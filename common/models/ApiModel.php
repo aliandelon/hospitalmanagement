@@ -95,7 +95,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 return $response;
         }
         try { 
-            $profileComplete = 'No';
+            $profileComplete = false;
             $result = $con->createCommand($query)->queryOne();
             if($result && isset($result['UserId']))
             {
@@ -104,7 +104,7 @@ class ApiModel extends \yii\db\ActiveRecord
 
                     if(!empty($result['first_name']))
                     {
-                        $profileComplete = 'Yes';
+                        $profileComplete = true;
                     }
                     $content = "success";
                     $UserId = $result['UserId'];
