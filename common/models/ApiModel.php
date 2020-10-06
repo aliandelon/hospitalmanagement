@@ -641,8 +641,8 @@ class ApiModel extends \yii\db\ActiveRecord
             
             $result = $con->createCommand($query)->execute();
             if($result){
-                if($image != '')
-                {
+                if($image != '' || trim($image != ''))
+                { 
                     list($type, $image) = explode(';', $image);
                     list(, $image)      = explode(',', $image);
                     $image = base64_decode($image);
@@ -655,17 +655,17 @@ class ApiModel extends \yii\db\ActiveRecord
                     }
                     file_put_contents($targetFolder . $id . '.' . $extension, $image);
                 }else{
+
                     $extension = '';
                 }
                 
+            }
                 $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where id = '$id' AND phone='$datas[mobileno]' and status =1;";
                 $userResult = $con->createCommand($userQuery)->queryOne();
                 $msg = "Profile Created";
                 $response = ["status" => 1, "content" => $userResult,"msg"=>$msg];
-            }else{
-                $response = ["status" => 0, "content" => '',"msg"=>"failure"];
-            }
+            
             $con->close();
             return $response;
         } catch (yii\db\Exception $e) {
