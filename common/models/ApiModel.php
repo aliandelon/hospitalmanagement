@@ -66,11 +66,14 @@ class ApiModel extends \yii\db\ActiveRecord
                 $otpInsertion = "UPDATE patient_details SET otp = '1234' where phone='$mobile';";
                 $con->createCommand($otpInsertion)->execute();
             }else{
-                $result['UserId']="0";
+                $insert = "INSERT INTO patient_details(phone,status,otp)values('$mobile','1','1234');";
+                $result1 = $con->createCommand($insert)->execute();
+                $userId = $con->getLastInsertId();
+                $result['UserId']=$userId;
             }
             $response = ["status" => 1, "content" => $result];
-            $con->close();
             return $response;
+            $con->close();
         } catch (yii\db\Exception $e) {
             $response = ["status" => 0, "content" => $e];
             $con->close();
@@ -78,35 +81,41 @@ class ApiModel extends \yii\db\ActiveRecord
         }
     }
 
-    public function getVerifyOtp($idx, $otp, $userId) 
+    public function getVerifyOtp($idx, $otp, $userId, $mobile) 
     {
         $con = \Yii::$app->db;
         $response = [];
         switch ($idx) {
             case 100:
-                $query = "SELECT id as UserId
-                    from patient_details where otp='$otp' and id ='$userId';";
+                $query = "SELECT id as UserId,first_name,last_name
+                    from patient_details where otp='$otp' and phone ='$mobile';";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
                 return $response;
         }
         try { 
+            $profileComplete = 'No';
             $result = $con->createCommand($query)->queryOne();
             if($result && isset($result['UserId']))
             {
                 if(!empty($result['UserId']))
                 {
+
+                    if(!empty($result['first_name']))
+                    {
+                        $profileComplete = 'Yes';
+                    }
                     $content = "success";
                     $UserId = $result['UserId'];
-                    $response = ["status" => 1, "content" => $content,"UserId"=>$UserId];
+                    $response = ["status" => 1, "content" => $content,"UserId"=>$UserId,"profileComplete"=>$profileComplete];
                 }else{
                     $content = "failure";
                     $UserId = '';
-                    $response = ["status" => 2, "content" => $content,"UserId"=>$UserId];
+                    $response = ["status" => 2, "content" => $content,"UserId"=>$UserId,"profileComplete"=>$profileComplete];
                 }
             }else{
-                $response = ["status" => 2, "content" => "failure","UserId"=>"$userId"];
+                $response = ["status" => 2, "content" => "failure","UserId"=>"$userId","profileComplete"=>$profileComplete];
             }
             
             $con->close();
@@ -608,26 +617,30 @@ class ApiModel extends \yii\db\ActiveRecord
                 $response = ["status" => 0, "content" => '',"msg"=>"failure, invalid mobile no"];
                 return $response;
             }
-
-                $query = "INSERT INTO patient_details(first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'')";
+            $checkMobile = "SELECT id from patient_details where phone = '$datas[mobileno]';";
+            $checkResult = $con->createCommand($checkMobile)->queryOne();
+            if($checkResult)
+            {
+                if($checkResult['id']){
+                    $id = $checkResult['id'];
+                }else{
+                    $response = ["status" => 0, "content" => '',"msg"=>"failure"];
+                    return $response;
+                }
+            }else{
+                $response = ["status" => 0, "content" => '',"msg"=>"failure"];
+                return $response;
+            }
+            $query = "UPDATE patient_details SET first_name = '$datas[firstname]',last_name = '$datas[lastname]',email ='$datas[email]',age='$datas[age]',gender='$datas[gender]',state='$datas[state]',district = '$datas[district]',city='$datas[city]',area='$datas[area]',refer_id='$datas[refererid]',latitude = '$datas[latitude]',longitude = '$datas[longitude]' WHERE id = '$id' AND phone = '$datas[mobileno]';";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
                 return $response;
         }
         try { 
-            $checkMobile = "SELECT count(phone) as cnt from patient_details where phone = '$datas[mobileno]';";
-            $checkResult = $con->createCommand($checkMobile)->queryOne();
-            if($checkResult)
-            {
-                if($checkResult['cnt'] > 0){
-                    $response = ["status" => 0, "content" => '',"msg"=>"failure, mobile no already exist"];
-                    return $response;
-                }
-            }
+            
             $result = $con->createCommand($query)->execute();
             if($result){
-                $id = $con->getLastInsertId();
                 if($image != '')
                 {
                     list($type, $image) = explode(';', $image);
@@ -644,8 +657,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 }else{
                     $extension = '';
                 }
-                $otpInsertion = "UPDATE patient_details SET otp = '1234' ,profile_image = '$extension' where id='$id';";
-                    $con->createCommand($otpInsertion)->execute();
+                
                 $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where id = '$id' AND phone='$datas[mobileno]' and status =1;";
                 $userResult = $con->createCommand($userQuery)->queryOne();

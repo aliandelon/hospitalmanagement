@@ -28,7 +28,7 @@ class ApiController extends \yii\rest\Controller
             //'class' => JwtHttpBearerAuth::class,
             'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
             'optional' => [
-                'verify-mobile','register-user','verify-otp'
+                'verify-mobile','verify-otp'
             ],
         ];
 
@@ -186,13 +186,13 @@ class ApiController extends \yii\rest\Controller
         }
     }
 
-    public function actionVerifyOtp($idx, $otp, $userId)
+    public function actionVerifyOtp($idx, $otp, $userId,$mobile)
     {
         try
         {
             $response = [];
             $model = new ApiModel();
-            $getUserDetails = $model->getVerifyOtp($idx, $otp, $userId);
+            $getUserDetails = $model->getVerifyOtp($idx, $otp, $userId, $mobile);
             if ( $getUserDetails )
             {
                 if($getUserDetails['status'] == 1)
@@ -466,7 +466,6 @@ class ApiController extends \yii\rest\Controller
                     $response['content'] = $setUserDetails;
                     $response['status']  = "success";
                     $response['message'] = "User details updated successfully";
-                    $response['otp'] = '1234';
                 }catch (yii\base\ErrorException $e) {
                     $response['status']  = "error";
                     $response['message'] = 'failue in user detrails updation';
