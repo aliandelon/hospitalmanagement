@@ -351,7 +351,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 return $response;
         }
         try { 
-            $result = $con->createCommand($query)->queryAll();
+            $result = $con->createCommand($query)->queryOne();
             $docResult = $con->createCommand($doctorsQuery)->queryAll();
             $result['doctor_list'] = $docResult;
             $response = ["status" => 1, "hospital" => $result];
