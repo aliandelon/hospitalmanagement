@@ -141,8 +141,8 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
                           <li class="submenu">
                             <a href="#"><i class="fa fa-calendar"></i> <span> Appointments </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                <li><a href="employees.html">Today's Appointments</a></li>
-                                <li><a href="leaves.html">All Appointments</a></li>
+                                <li><a href="<?= Yii::$app->request->baseUrl . '/appointments?type=1'?>">Today's Appointments</a></li>
+                                <li><a href="<?= Yii::$app->request->baseUrl . '/appointments/index2'?>">All Appointments</a></li>
                                
                             </ul>
                         </li>
@@ -161,7 +161,7 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
                         <li class="submenu">
                             <a href="#"><i class="fa fa-user"></i> <span> Patients </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                <li><a href="employees.html">Patients</a></li>
+                                <li><a href="<?= Yii::$app->request->baseUrl . '/patient-details' ?>">Patients</a></li>
                                 <li><a href="leaves.html">Reffered Patients</a></li>
                                
                             </ul>
