@@ -182,7 +182,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     }
                     $imageInsertion = "UPDATE patient_details set profile_image = '$extension' where id='$id';";
                     $con->createCommand($imageInsertion)->execute();
-                    $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
+                    $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' WHEN gender = 3 THEN 'Others' ELSE '' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where id = '$datas[userId]' AND phone='$datas[mobileno]' and status =1;";
                     $userResult = $con->createCommand($userQuery)->queryOne();
                     $msg = "Profile Updated";
@@ -346,7 +346,7 @@ class ApiModel extends \yii\db\ActiveRecord
                             FROM
                                 hospital_clinic_details 
                             WHERE status = 1 AND type = 1 AND user_id = '$id';";
-                $doctorsQuery = "SELECT doc.name,doc.experience,
+                $doctorsQuery = "SELECT doc.id,doc.name,doc.experience,
                 concat('$images','doctors/',doc.id,'/',doc.id,'.',doc.profile_image) as profile_image
                 ,sep.name as speciality,coalesce(fee_charges,0.00) as fees_charges
                         FROM doctors_details doc
@@ -667,7 +667,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 }
                 
             }
-                $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
+                $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' WHEN gender = 3 THEN 'Others' ELSE '' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where id = '$id' AND phone='$datas[mobileno]' and status =1;";
                 $userResult = $con->createCommand($userQuery)->queryOne();
                 $msg = "Profile Created";
