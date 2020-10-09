@@ -24,10 +24,10 @@ class ApiModel extends \yii\db\ActiveRecord
     {
         $con = \Yii::$app->db;
         $response = [];
-        $images = Yii::$app->request->baseUrl . '/../uploads/';
+        $images = 'http://investigohealth.com/uploads/';
         switch ($idx) {
             case 100:
-                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 1 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,city,area,phone as mobileno,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
+                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' WHEN gender = 3 THEN 'Others' ELSE '' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,city,area,phone as mobileno,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where phone='$mobile' and status =1;";
                 break;
             default :
@@ -132,7 +132,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
-        $images = Yii::$app->request->baseUrl . '/../uploads/';
+        $images = 'http://investigohealth.com/uploads/';
         switch ($idx) {
             case 100:
 
@@ -209,11 +209,13 @@ class ApiModel extends \yii\db\ActiveRecord
     }
     public function getHospitalLabsDetails($datas) 
     {
+       
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
         $curDate = date('Y-m-d');
-        $images = Yii::$app->request->baseUrl . '/../uploads/';
+        $images = 'http://investigohealth.com/uploads/';
+        
         switch ($idx) {
             case 100:
                 $type = $datas['type'];
@@ -221,8 +223,9 @@ class ApiModel extends \yii\db\ActiveRecord
                 $searchCndn = $latlonSelect = $limitOffset = "";
                 $latitude = $datas['latitude'];
                 $longitude = $datas['longitude'];
-                $pageLength = $datas['pageLength'];
-                $curPage = isset($datas['curPage'])?$datas['curPage']:0;
+                $pageLength = $datas['page_length'];
+                $curPage = isset($datas['current_page'])?$datas['current_page']:0;
+                
                 if($curPage == 0)
                 {
                     $start = 0;
@@ -238,6 +241,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     $searchCndn = "AND name like '%$searchbyName%' ";
                 }
                 $bannerQuery = "SELECT concat('$images','banners/',id,'/',id,'.',image) as image from banners where expiry_date > '$curDate' and status = 1; ";
+                
                 if ($type == 'Hospital')
                 {
                     if(!empty($latitude) && !empty($longitude))
@@ -273,6 +277,7 @@ class ApiModel extends \yii\db\ActiveRecord
                         $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
                     }
                 }else{
+                    
                     if(!empty($latitude) && !empty($longitude))
                     {
                         $query = "SELECT
@@ -297,6 +302,7 @@ class ApiModel extends \yii\db\ActiveRecord
                             ORDER BY
                                 distance
                             $limitOffset";
+                            
                     }else{
                         if($city != '')
                         {
@@ -311,6 +317,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 return $response;
         }
         try { 
+        //   echo $query;exit;
             $result = $con->createCommand($query)->queryAll();
             $banner = $con->createCommand($bannerQuery)->queryAll();
             $response = ["status" => 1, "data" => $result,"current_page"=>$curPage,"banner_images"=>$banner];
@@ -329,7 +336,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $response = [];
         $idx = $datas['idx'];
         $curDate = date('Y-m-d');
-        $images = Yii::$app->request->baseUrl . '/../uploads/';
+        $images = 'http://investigohealth.com/uploads/';
         switch ($idx) {
             case 100:
                 $type = $datas['type'];
@@ -369,7 +376,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
-        $images = Yii::$app->request->baseUrl . '/../uploads/';
+        $images = 'http://investigohealth.com/../uploads/';
         switch ($idx) {
             case 100:
                 $type = $datas['type'];
@@ -602,7 +609,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
-        $images = Yii::$app->request->baseUrl . '/../uploads/';
+        $images ='http://investigohealth.com/../uploads/';
         switch ($idx) {
             case 100:
             $image = $datas['profile_image'];

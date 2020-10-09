@@ -209,7 +209,7 @@ class ApiController extends \yii\rest\Controller
                         ->permittedFor('http://investigohealth.com/admin')
                         ->identifiedBy('4f1g23a12aa', true)
                         ->issuedAt($time)
-                        ->expiresAt($time + 3600)
+                        ->expiresAt($time + (24*60*60))
                         ->withClaim('uid', $userId)
                         ->getToken($signer, $key);
                         $response['content']['isInitialProfileDone'] = 'Yes';
@@ -316,7 +316,8 @@ class ApiController extends \yii\rest\Controller
         }
     }
 
-    public function actionGetLabDetails()
+    // public function actionGetLabDetails()
+    public function actionGetLaboratoryDetails()
     {  
         try
         {
@@ -438,7 +439,7 @@ class ApiController extends \yii\rest\Controller
             ->identifiedBy('4f1g23a12aa', true) // Configures the id (jti claim), replicating as a header item
             ->issuedAt($time) // Configures the time that the token was issue (iat claim)
             ->canOnlyBeUsedAfter($time + 60) // Configures the time that the token can be used (nbf claim)
-            ->expiresAt($time +     3600) // Configures the expiration time of the token (exp claim)
+            ->expiresAt($time +(24*60*60)) // Configures the expiration time of the token (exp claim)
             ->withClaim('uid', 14) // Configures a new claim, called "uid"
             ->getToken(); // Retrieves the generated token
             $token->getHeaders(); // Retrieves the token headers
