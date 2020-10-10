@@ -409,7 +409,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     $investigations = "SELECT
                                 hpmapping.investigation_id as sub_category_id,
                                 inv.investigation_name as name,
-                                hpmapping.amount as price,CASE hpmapping.isHomeCollection WHEN 1 THEN TRUE ELSE FALSE  END as isHomeCollection 
+                                hpmapping.amount as price,CASE hpmapping.isHomeCollection WHEN 1 THEN 'true' ELSE 'false'  END as isHomeCollection 
                             FROM
                                 hospital_clinic_details hp
                             JOIN hospital_investigation_mapping hpmapping
