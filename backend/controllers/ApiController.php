@@ -28,7 +28,7 @@ class ApiController extends \yii\rest\Controller
             //'class' => JwtHttpBearerAuth::class,
             'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
             'optional' => [
-                'verify-mobile','verify-otp'
+                'verify-mobile','verify-otp','set-userdetails'
             ],
         ];
 
@@ -142,7 +142,7 @@ class ApiController extends \yii\rest\Controller
 	        if ( $getUserDetails && !empty($getUserDetails['userData']))
 	        {
                 try {
-                    $response['status']  = 1;
+                    $response['status']  = "success";
                     $response['message'] = 'User details get success';
                     $response['content'] = $getUserDetails;
                 }catch (yii\base\ErrorException $e) {
@@ -151,7 +151,7 @@ class ApiController extends \yii\rest\Controller
                     return $response;
                 }
 	        }else{
-                $response['status']  = 2;
+                $response['status']  = "failure";
                 $response['message'] = 'User details get failure';
                 $response['content'] = $getUserDetails;
             }
@@ -244,7 +244,8 @@ class ApiController extends \yii\rest\Controller
             if ( $setUserDetails && $setUserDetails['status'] == 1)
             {
                 try {
-                    $response['content'] = $setUserDetails['content'];
+                    $response['content']['userData'] = $setUserDetails['content'];
+                    $response['content']['status'] = 1;
                     $response['status']  = "success";
                     $response['message'] = "user detail updated successfully";
                 }catch (yii\base\ErrorException $e) {
@@ -464,7 +465,8 @@ class ApiController extends \yii\rest\Controller
             if ( $setUserDetails && $setUserDetails['status'] == 1)
             {
                 try {
-                    $response['content'] = $setUserDetails;
+                    $response['content']['userData'] = $setUserDetails['content'];
+                    $response['content']['status'] = 1;
                     $response['status']  = "success";
                     $response['message'] = "User details updated successfully";
                 }catch (yii\base\ErrorException $e) {

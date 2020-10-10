@@ -27,7 +27,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $images = 'http://investigohealth.com/uploads/';
         switch ($idx) {
             case 100:
-                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' WHEN gender = 3 THEN 'Others' ELSE '' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,city,area,phone as mobileno,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
+                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as refererid,city,area,phone as mobileno,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where phone='$mobile' and status =1;";
                 break;
             default :
@@ -129,15 +129,20 @@ class ApiModel extends \yii\db\ActiveRecord
 
     public function setUserDetails($datas) 
     {   
+        
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
+        
         $images = 'http://investigohealth.com/uploads/';
+       
         switch ($idx) {
             case 100:
-
-                $check = "SELECT count(id) as cnt from patient_details where id = '$datas[userId]';";
-                $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[userId]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'')ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on),profile_image=values(profile_image);";
+                if($datas['gender']=='Male'){$gender=1;}else if($datas['gender']=='Female'){$gender=2;}else{$gender='';}
+                $check = "SELECT count(id) as cnt from patient_details where id = '$datas[userId]'";
+                //   $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[userId]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city],'$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'')ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on),profile_image=values(profile_image);";
+                $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[userId]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$gender','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'')ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on),profile_image=values(profile_image);";
+               
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
@@ -182,7 +187,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     }
                     $imageInsertion = "UPDATE patient_details set profile_image = '$extension' where id='$id';";
                     $con->createCommand($imageInsertion)->execute();
-                    $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' WHEN gender = 3 THEN 'Others' ELSE '' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
+                    $userQuery = "SELECT $idx as idx, id as userId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN 'Female' ELSE 'Other' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as refererid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where id = '$datas[userId]' AND phone='$datas[mobileno]' and status =1;";
                     $userResult = $con->createCommand($userQuery)->queryOne();
                     $msg = "Profile Updated";
@@ -225,7 +230,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 $longitude = $datas['longitude'];
                 $pageLength = $datas['page_length'];
                 $curPage = isset($datas['current_page'])?$datas['current_page']:0;
-                
+                $city = $datas['city'];
                 if($curPage == 0)
                 {
                     $start = 0;
@@ -272,7 +277,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     }else {
                         if($city != '')
                         {
-                            $searchCndn.= "AND city like '%$searchbyName%' ";
+                            $searchCndn.= "AND city like '%$city%' ";
                         }
                         $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
                     }
@@ -306,7 +311,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     }else{
                         if($city != '')
                         {
-                            $searchCndn.= "AND city like '%$searchbyName%' ";
+                            $searchCndn.= "AND city like '%$city%' ";
                         }
                         $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
                     }
@@ -317,7 +322,6 @@ class ApiModel extends \yii\db\ActiveRecord
                 return $response;
         }
         try { 
-        //   echo $query;exit;
             $result = $con->createCommand($query)->queryAll();
             $banner = $con->createCommand($bannerQuery)->queryAll();
             $response = ["status" => 1, "data" => $result,"current_page"=>$curPage,"banner_images"=>$banner];
@@ -346,12 +350,12 @@ class ApiModel extends \yii\db\ActiveRecord
                             FROM
                                 hospital_clinic_details 
                             WHERE status = 1 AND type = 1 AND user_id = '$id';";
-                $doctorsQuery = "SELECT doc.id,doc.name,doc.experience,
-                concat('$images','doctors/',doc.id,'/',doc.id,'.',doc.profile_image) as profile_image
+                $doctorsQuery = "SELECT doc.id,doc.name,doc.experience as experiance,
+                concat('$images','doctors/',doc.id,'/',doc.id,'.',doc.profile_image) as doctor_image
                 ,sep.name as speciality,coalesce(fee_charges,0.00) as fees_charges
                         FROM doctors_details doc
                         JOIN doctor_specialty_mst sep ON sep.id = doc.specialty_id WHERE doc.hospital_clinic_id = '$id';";
-                
+               
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
@@ -405,7 +409,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     $investigations = "SELECT
                                 hpmapping.investigation_id as sub_category_id,
                                 inv.investigation_name as name,
-                                hpmapping.amount as price,0 as isHomeCollection 
+                                hpmapping.amount as price,'false' as isHomeCollection 
                             FROM
                                 hospital_clinic_details hp
                             JOIN hospital_investigation_mapping hpmapping
@@ -418,7 +422,7 @@ class ApiModel extends \yii\db\ActiveRecord
                         $invResponse[] = [
                             'category_id'=>$cat['category_id'],
                             'category'   =>$cat['category'],
-                            'subcategory'=>$invResult
+                            'data'=>$invResult
                         ];
                     }
                 }
@@ -638,7 +642,8 @@ class ApiModel extends \yii\db\ActiveRecord
                 $response = ["status" => 0, "content" => '',"msg"=>"failure"];
                 return $response;
             }
-            $query = "UPDATE patient_details SET first_name = '$datas[firstname]',last_name = '$datas[lastname]',email ='$datas[email]',age='$datas[age]',gender='$datas[gender]',state='$datas[state]',district = '$datas[district]',city='$datas[city]',area='$datas[area]',refer_id='$datas[refererid]',latitude = '$datas[latitude]',longitude = '$datas[longitude]' WHERE id = '$id' AND phone = '$datas[mobileno]';";
+            if($datas['gender']=='Male'){$gender=1;}else if($datas['gender']=='Female'){$gender=2;}else{$gender='';}
+            $query = "UPDATE patient_details SET first_name = '$datas[firstname]',last_name = '$datas[lastname]',email ='$datas[email]',age='$datas[age]',gender='$gender',state='$datas[state]',district = '$datas[district]',city='$datas[city]',area='$datas[area]',refer_id='$datas[refererid]',latitude = '$datas[latitude]',longitude = '$datas[longitude]' WHERE id = '$id' AND phone = '$datas[mobileno]';";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
@@ -667,11 +672,10 @@ class ApiModel extends \yii\db\ActiveRecord
                 }
                 
             }
-                $userQuery = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' WHEN gender = 3 THEN 'Others' ELSE '' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as referid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
+                $userQuery = "SELECT $idx as idx, id as userId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as refererid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where id = '$id' AND phone='$datas[mobileno]' and status =1;";
                 $userResult = $con->createCommand($userQuery)->queryOne();
-                $msg = "Profile Created";
-                $response = ["status" => 1, "content" => $userResult,"msg"=>$msg];
+                $response = ["status" => 1, "content" => $userResult];
             
             $con->close();
             return $response;
