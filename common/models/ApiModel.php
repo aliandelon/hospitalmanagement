@@ -141,14 +141,14 @@ class ApiModel extends \yii\db\ActiveRecord
                 if($datas['gender']=='Male'){$gender=1;}else if($datas['gender']=='Female'){$gender=2;}else{$gender='';}
                 $check = "SELECT count(id) as cnt from patient_details where id = '$datas[userId]'";
                 //   $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[userId]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$datas[gender]','$datas[state]','$datas[district]','$datas[city],'$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'')ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on),profile_image=values(profile_image);";
-                $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on,profile_image)VALUES('$datas[userId]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$gender','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now(),'')ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on),profile_image=values(profile_image);";
+                $duplicateInsert = "INSERT INTO patient_details(id,first_name,last_name,email,phone,age,gender,state,district,city,area,status,refer_id,latitude,longitude,created_on)VALUES('$datas[userId]','$datas[firstname]','$datas[lastname]','$datas[email]','$datas[mobileno]','$datas[age]','$gender','$datas[state]','$datas[district]','$datas[city]','$datas[area]',1,'$datas[refererid]','$datas[latitude]','$datas[longitude]',now())ON DUPLICATE KEY UPDATE id =values(id),first_name=values(first_name),last_name=values(last_name),email = values(email),phone=values(phone),age=values(age),gender=values(gender),state=values(state),district = values(district),city = values(city),area = values(area),status = values(status),refer_id=values(refer_id),latitude=values(latitude),longitude = values(longitude),created_on=values(created_on);";
                
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
                 return $response;
         }
-        try { 
+        //try { 
             $checkResult = $con->createCommand($check)->queryOne();
             if($checkResult)
             {
@@ -181,12 +181,10 @@ class ApiModel extends \yii\db\ActiveRecord
                                 chmod($targetFolder. '/',0777);
                             }
                             file_put_contents($targetFolder. '/' . $id . '.' . $extension, $image);
-                        }else{
-                            $extension = '';
+                            $imageInsertion = "UPDATE patient_details set profile_image = '$extension' where id='$id';";
+                            $con->createCommand($imageInsertion)->execute();
                         }
                     }
-                    $imageInsertion = "UPDATE patient_details set profile_image = '$extension' where id='$id';";
-                    $con->createCommand($imageInsertion)->execute();
                     $userQuery = "SELECT $idx as idx, id as userId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN 'Female' ELSE 'Other' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as refererid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
                     from patient_details where id = '$datas[userId]' AND phone='$datas[mobileno]' and status =1;";
                     $userResult = $con->createCommand($userQuery)->queryOne();
@@ -196,8 +194,10 @@ class ApiModel extends \yii\db\ActiveRecord
                     $userResult = [];
                     $msg = "Profile Not Found";
                     $status = 2;
+                    $response = ["status" => $status, "content" => $userResult,"msg"=>$msg];
+                    return $response;
                 }
-            }else{
+            }else{ 
                     $userResult = [];
                     $msg = "Profile Not Found";
                     $status = 2;
@@ -206,11 +206,11 @@ class ApiModel extends \yii\db\ActiveRecord
             $response = ["status" => $status, "content" => $userResult,"msg"=>$msg];
             $con->close();
             return $response;
-        } catch (yii\db\Exception $e) {
-            $response = ["status" => 0, "content" => $e];
-            $con->close();
-            return $response;
-        }
+        // } catch (yii\db\Exception $e) {
+        //     $response = ["status" => 0, "content" => $e];
+        //     $con->close();
+        //     return $response;
+        // }
     }
     public function getHospitalLabsDetails($datas) 
     {
@@ -399,7 +399,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 $response = ["status" => 2, "content" => ""];
                 return $response;
         }
-        try { 
+        //try { 
             $result = $con->createCommand($query)->queryAll();
             $catResult = $con->createCommand($labCategory)->queryAll();
             $invResponse = [];
@@ -409,7 +409,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     $investigations = "SELECT
                                 hpmapping.investigation_id as sub_category_id,
                                 inv.investigation_name as name,
-                                hpmapping.amount as price,'false' as isHomeCollection 
+                                hpmapping.amount as price,CASE hpmapping.isHomeCollection WHEN 1 THEN TRUE ELSE FALSE  END as isHomeCollection 
                             FROM
                                 hospital_clinic_details hp
                             JOIN hospital_investigation_mapping hpmapping
@@ -430,11 +430,11 @@ class ApiModel extends \yii\db\ActiveRecord
             $response = ["status" => 1, "laboratory" => $result,"service"=>$invResponse];
             $con->close();
             return $response;
-        } catch (yii\db\Exception $e) {
-            $response = ["status" => 0, "content" => $e];
-            $con->close();
-            return $response;
-        }
+        // } catch (yii\db\Exception $e) {
+        //     $response = ["status" => 0, "content" => $e];
+        //     $con->close();
+        //     return $response;
+        // }
     }
 
     public function getLaboratorySlotdetails($datas) 

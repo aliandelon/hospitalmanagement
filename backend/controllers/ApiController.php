@@ -255,6 +255,8 @@ class ApiController extends \yii\rest\Controller
                     return $response;
                 }
                 return $response;
+            }else{
+                return $setUserDetails;
             }
             //$this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
