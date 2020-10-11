@@ -27,7 +27,7 @@ class ApiModel extends \yii\db\ActiveRecord
         $images = 'http://investigohealth.com/uploads/';
         switch ($idx) {
             case 100:
-                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as refererid,city,area,phone as mobileno,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
+                $query = "SELECT $idx as idx, id as UserId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as refererid,city,area,phone as mobileno,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else concat('$images','patientdetails/default.png') end as profile_image
                     from patient_details where phone='$mobile' and status =1;";
                 break;
             default :
@@ -185,7 +185,7 @@ class ApiModel extends \yii\db\ActiveRecord
                             $con->createCommand($imageInsertion)->execute();
                         }
                     }
-                    $userQuery = "SELECT $idx as idx, id as userId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN 'Female' ELSE 'Other' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as refererid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
+                    $userQuery = "SELECT $idx as idx, id as userId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN 'Female' ELSE 'Other' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as refererid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else concat('$images','patientdetails/default.png') end as profile_image
                     from patient_details where id = '$datas[userId]' AND phone='$datas[mobileno]' and status =1;";
                     $userResult = $con->createCommand($userQuery)->queryOne();
                     $msg = "Profile Updated";
@@ -253,7 +253,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     {
                         $query = "SELECT
                                 user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,
-                                concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image,
+                                case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image,
                                 (
                                     6371 *
                                     acos(
@@ -279,14 +279,14 @@ class ApiModel extends \yii\db\ActiveRecord
                         {
                             $searchCndn.= "AND city like '%$city%' ";
                         }
-                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
+                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
                     }
                 }else{
                     
                     if(!empty($latitude) && !empty($longitude))
                     {
                         $query = "SELECT
-                                user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image,
+                                user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end  as image,
                                 (
                                     6371 *
                                     acos(
@@ -313,7 +313,7 @@ class ApiModel extends \yii\db\ActiveRecord
                         {
                             $searchCndn.= "AND city like '%$city%' ";
                         }
-                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
+                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end  as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
                     }
                 } 
                 break;
@@ -345,13 +345,13 @@ class ApiModel extends \yii\db\ActiveRecord
             case 100:
                 $type = $datas['type'];
                 $id = $datas['id'];
-                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image)
+                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end
                  as image
                             FROM
                                 hospital_clinic_details 
                             WHERE status = 1 AND type = 1 AND user_id = '$id';";
-                $doctorsQuery = "SELECT doc.id,doc.name,doc.experience as experiance,
-                concat('$images','doctors/',doc.id,'/',doc.id,'.',doc.profile_image) as doctor_image
+                $doctorsQuery = "SELECT doc.id,doc.name,doc.experience as experiance,CASE when profile_image <> '' then 
+                concat('$images','doctors/',doc.id,'/',doc.id,'.',doc.profile_image) else concat('$images','doctors/default.png') end as doctor_image
                 ,sep.name as speciality,coalesce(fee_charges,0.00) as fees_charges
                         FROM doctors_details doc
                         JOIN doctor_specialty_mst sep ON sep.id = doc.specialty_id WHERE doc.hospital_clinic_id = '$id';";
@@ -385,7 +385,7 @@ class ApiModel extends \yii\db\ActiveRecord
             case 100:
                 $type = $datas['type'];
                 $id = $datas['id'];
-                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image)
+                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end
                  as image
                             FROM
                                 hospital_clinic_details 
@@ -672,7 +672,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 }
                 
             }
-                $userQuery = "SELECT $idx as idx, id as userId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as refererid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else '' end as profile_image
+                $userQuery = "SELECT $idx as idx, id as userId,first_name as firstname,last_name as lastname,email,age,CASE WHEN gender = 1 THEN 'Male' WHEN gender = 2 THEN ' Female' ELSE 'Others' END as gender,state,city,district,city,area,latitude,longitude,phone as mobileno,refer_id as refererid,case when profile_image <> '' then concat('$images','patientdetails/',id,'/',id,'.',profile_image) else concat('$images','patientdetails/default.png') end as profile_image
                     from patient_details where id = '$id' AND phone='$datas[mobileno]' and status =1;";
                 $userResult = $con->createCommand($userQuery)->queryOne();
                 $response = ["status" => 1, "content" => $userResult];
