@@ -86,7 +86,7 @@ class DoctorsDetails extends \yii\db\ActiveRecord
 
     public function upload($file, $id, $name) {
 
-       $targetFolder = \yii::$app->basePath . '/../uploads/doctors/';
+       $targetFolder = \yii::$app->basePath . '/../uploads/doctors/'. $id . '/';
         if (!file_exists($targetFolder)) {
             mkdir($targetFolder, 0777, true);
         }

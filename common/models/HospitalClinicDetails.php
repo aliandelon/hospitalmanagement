@@ -85,7 +85,7 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
         return [
             [['user_id', 'name', 'email', 'status', 'created_by'], 'required'],
 
-            [['name','email','phone_number','pincode','address','street1', 'street2', 'latitude', 'longitude','city', 'area','state','hospital_clinic_image'], 'required','on' => 'updateFrontend'],
+            [['name','email','phone_number','pincode','address','street1', 'street2', 'latitude', 'longitude','city', 'area','state'], 'required','on' => 'updateFrontend'],
 
 [['phone_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
 
@@ -104,7 +104,7 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
 
             [['lab_name','lab_phone_number','lab_email','lab_address','lab_pincode','lab_street1','lab_street2','lab_city','lab_area','lab_latitude','lab_longitude'],'required', 'when' => function($model) {
                 return ($model->have_diagnostic_center == '1' && $model->same_as_hospital_details_flag == 0);
-            },'enableClientValidation' => true],
+            },'enableClientValidation' => false],
             [['lab_phone_number'], 'string', 'min'=>10,'max' => 10,'message' => 'Please enter valid Phone Number.'],
             [['lab_phone_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
             [['lab_pincode'], 'string', 'min'=>6,'max' => 6],
@@ -159,18 +159,14 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getStatusName($status)
+   public function getStatusName($status)
     {
-        if($status == 2)
-        {
-            return 'Created';
-        }else if($status == 3)
-        {
-            return 'Verification Pending';
-        }else{
-            return 'Verified';
-        }
+        $statArray=['4'=>'Account created','3'=>'Details entered','2'=>'Put on hold','1'=>'Approved'];    
+        
+            return $statArray[$status];
+       
     }
+
 
     public function getPackageDetails() {
         return $this->hasOne(Packages::className(), ['id' => 'package_id']);

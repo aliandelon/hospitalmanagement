@@ -5,12 +5,12 @@ namespace common\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Schedule;
+use common\models\SlotDayMapping;
 
 /**
- * ScheduleSearch represents the model behind the search form about `common\models\Schedule`.
+ * SlotDayMappingSearch represents the model behind the search form about `common\models\SlotDayMapping`.
  */
-class ScheduleSearch extends Schedule
+class SlotDayMappingSearch extends SlotDayMapping
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ScheduleSearch extends Schedule
     public function rules()
     {
         return [
-            [['id', 'investigation_id', 'hospital_id', 'doctor_id', 'sunday_holiday', 'status'], 'integer'],
-            [['created_on','category'], 'safe'],
+            [['id', 'investigation_id', 'hospital_clinic_id', 'doctor_id'], 'integer'],
+            [['day'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class ScheduleSearch extends Schedule
      */
     public function search($params)
     {
-        $query = Schedule::find();
+        $query = SlotDayMapping::find();
 
         // add conditions that should always apply here
 
@@ -61,26 +61,17 @@ class ScheduleSearch extends Schedule
         $query->andFilterWhere([
             'id' => $this->id,
             'investigation_id' => $this->investigation_id,
-            'hospital_id' => $this->hospital_id,
+            'hospital_clinic_id' => $this->hospital_clinic_id,
             'doctor_id' => $this->doctor_id,
-            'sunday_holiday' => $this->sunday_holiday,
-            'status' => $this->status,
-            'created_on' => $this->created_on,
         ]);
-        if($this->category != '')
-        {
-            $query->joinWith('investigations');
-            $query->andFilterWhere(['mst_id' =>$this->category]);
-        }
+
+        $query->andFilterWhere(['like', 'day', $this->day]);
 
         return $dataProvider;
     }
-
-
-
-     public function searchDoctor($params)
+     public function searchDoctor($params,$doctorId)
     {
-        $query = Schedule::find();
+        $query = SlotDayMapping::find();
 
         // add conditions that should always apply here
 
@@ -100,21 +91,12 @@ class ScheduleSearch extends Schedule
         $query->andFilterWhere([
             'id' => $this->id,
             'investigation_id' => $this->investigation_id,
-            'hospital_id' => $this->hospital_id,
+            'hospital_clinic_id' => $this->hospital_clinic_id,
             'doctor_id' => $this->doctor_id,
-            'sunday_holiday' => $this->sunday_holiday,
-            'status' => $this->status,
-            'created_on' => $this->created_on,
         ]);
-        $query->andWhere(['=','hospital_id',Yii::$app->user->identity->id]);
-        // $query->andWhere(['=','doctor_id',$doctorId]);    
 
+        $query->andFilterWhere(['like', 'day', $this->day]);
+        $query->andFilterWhere(['=', 'doctor_id', $doctorId]);
         return $dataProvider;
     }
-
-
-
-
-
-    
 }
