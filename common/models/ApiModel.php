@@ -467,7 +467,14 @@ class ApiModel extends \yii\db\ActiveRecord
                             hospital_clinic_details hp ON hp.user_id = slot.hospital_clinic_id 
                         JOIN slot_day_mapping day ON day.hospital_clinic_id = slot.hospital_clinic_id  AND slot.investigation_id = day.investigation_id AND slot.slot_day_id = day.id
                         LEFT JOIN appointments ap ON ap.investigation_id = slot.investigation_id AND ap.hospital_clinic_id = slot.hospital_clinic_id AND slot.id = ap.slot_day_time_mapping_id
-                        WHERE ap.slot_day_time_mapping_id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$investigation' AND day.day ='$date' ORDER BY from_time asc;";
+                        LEFT JOIN holiday_list holy ON 
+                    -- holy.investigation_id = slot.investigation_id AND 
+                    holy.hospital_id = slot.hospital_clinic_id AND holy.holiday_date = '$date'
+                        LEFT JOIN holiday_list holy1 ON 
+                    holy1.investigation_id = slot.investigation_id AND 
+                    holy1.hospital_id = slot.hospital_clinic_id AND holy1.holiday_date = '$date'
+                        WHERE ap.slot_day_time_mapping_id IS NULL AND 
+                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$investigation' AND day.day ='$date' ORDER BY from_time asc;";
 
                     $result = $con->createCommand($invQuery)->queryAll();
                 break;
@@ -512,7 +519,14 @@ class ApiModel extends \yii\db\ActiveRecord
                             hospital_clinic_details hp ON hp.user_id = slot.hospital_clinic_id 
                         JOIN slot_day_mapping day ON day.hospital_clinic_id = slot.hospital_clinic_id  AND slot.doctor_id = day.doctor_id AND slot.slot_day_id = day.id
                         LEFT JOIN appointments ap ON ap.doctor_id = slot.doctor_id AND ap.hospital_clinic_id = slot.hospital_clinic_id AND slot.id = ap.slot_day_time_mapping_id
-                        WHERE ap.slot_day_time_mapping_id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.doctor_id = '$doctorId' AND day.day ='$date' ORDER BY from_time asc;";
+                        LEFT JOIN holiday_list holy ON 
+                        -- holy.doctor_id = slot.doctor_id AND 
+                        holy.hospital_id = slot.hospital_clinic_id AND holy.holiday_date = '$date'
+                        LEFT JOIN holiday_list holy1 ON 
+                         holy1.doctor_id = slot.doctor_id AND 
+                        holy1.hospital_id = slot.hospital_clinic_id AND holy1.holiday_date = '$date'
+                        WHERE ap.slot_day_time_mapping_id IS NULL AND 
+                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.doctor_id = '$doctorId' AND day.day ='$date' ORDER BY from_time asc;";
 
                     $result = $con->createCommand($docQuery)->queryAll();
                 break;

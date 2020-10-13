@@ -35,7 +35,7 @@ class AppAsset extends AssetBundle {
             'js/popper.min.js',
             'js/bootstrap.min.js',
             'js/jquery.slimscroll.js',
-            'js/chart.bundle.js',
+            'js/Chart.bundle.js',
             // 'js/select2.min.js',
             'js/moment.min.js',
             // 'js/jquery-ui.min.html',

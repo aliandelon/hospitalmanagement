@@ -102,3 +102,6 @@ $get = !empty(Yii::$app->request->get()) ? Yii::$app->request->get() : array('ty
         ],
     ]) ?>
 </div>
+<script type="text/javascript">
+    var baseurl = "<?php print \yii\helpers\Url::base() . "/"; ?>";
+</script>
