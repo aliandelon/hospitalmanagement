@@ -5,6 +5,7 @@ use yii\grid\GridView;
 use common\models\Investigations;
 use common\models\DoctorsDetails;
 use common\models\Category;
+use common\models\Schedule;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
@@ -14,11 +15,34 @@ use yii\helpers\ArrayHelper;
 $this->title = 'Schedules';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<?php /*$this->registerCssFile("@web/css/themes/black-and-white.css", [
-    'depends' => [\yii\bootstrap\BootstrapAsset::className()],
-    'media' => 'print',
-], 'css-print-theme');*/
-?>
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<style>
+.button {
+  display: inline-block;
+    border-radius: 4px;
+    background-color: #05ab9e;
+    border: none;
+    height: 0px;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 11px;
+    /* padding-top: 5px; */
+    padding: 20px;
+    padding-top: 3px;
+    width: 102px;
+    transition: all 0.5s;
+    cursor: pointer;
+    /* margin: -1px;
+}
+</style>
+  <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Large Modal</button> -->
+<!-- Modal -->
+
+
+
+
+
+
 <div class="schedule-index">
     <div class="row">
         <div class="col-sm-4 col-3">
@@ -28,94 +52,73 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::a('Create Schedule', ['create'], ['class' => 'btn btn-primary btn-rounded float-right']) ?>
         </div>
     </div>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php 
+    $doctorsList = Schedule::find()->select('doctor_id')->distinct()->andWhere(['<>','doctor_id',''])->andWhere(['=','hospital_id',Yii::$app->user->identity->id])->all();
+    ?>
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <?= GridView::widget([
-                    'dataProvider' => $dataProvider,
-                    'filterModel' => $searchModel,
-                    'columns' => [
-                        ['class' => 'yii\grid\SerialColumn'],
-
-                        [
-                            'attribute'=>'investigation_id',
-                            'label' => 'Investigation',
-                            'value' => function($model){
-                                if($model->investigation_id)
-                                return $model->investigations->investigation_name;
-                            },
-                            'filter'=>ArrayHelper::map(Investigations::find()->where('status = 1')->all(), 'id','investigation_name'),
-                            'filterInputOptions' => ['class' => 'form-control', 'id' => 'category'],
-                        ],
-                        [
-                            'attribute' => 'category',
-                            'label' => 'Investigation Catgory',
-                            'value' => function($model){
-                                if($model->investigation_id)
-                                return $model->investigations->category->category_name;
-                            },
-                            'filter'=>ArrayHelper::map(Category::find()->asArray()->all(), 'id', 'category_name'),
-                            'filterInputOptions' => ['class' => 'form-control', 'id' => 'category'],
-                            'format'=>'raw',
-                        ],
-                        /*[
-                            'attribute'=>'hospital_id',
-                            'label' => 'Hospital',
-                            'value' => function($model){
-                                return $model->hospital->name;
-                            },
-                            'filter'=>ArrayHelper::map(DoctorsDetails::find()->where('status = 1 AND  hospital_clinic_id = 2')->all(), 'id','name'),
-                            'filterInputOptions' => ['class' => 'form-control', 'id' => 'category'],
-                        ],*/
-                        [
-                            'attribute'=>'doctor_id',
-                            'label' => 'Doctor',
-                            'value' => function($model){
-                                if($model->doctor_id)
-                                return $model->doctor->name;
-                            },
-                            'filter'=>ArrayHelper::map(Investigations::find()->where('status = 1')->all(), 'id','investigation_name'),
-                            'filterInputOptions' => ['class' => 'form-control', 'id' => 'category'],
-                        ],
-                        [   
-                            'attribute'=>'sunday_holiday',
-                            'format'=>'raw',//raw,
-                            'filter'=>['1'=>'Yes','0'=>'No'],
-                            'filterInputOptions' => ['class' => 'form-control', 'id' => 'leave_status'],
-                            'value'=>function($model){
-                                if($model->status=="1"){
-                                 return Html::a('<span class="label label-success">Yes</span>');
-                                 }else{
-                                return Html::a("<span class='label label-warning'>No</span>");
-                                 }    
-                                 
+               <div class="card-box">
+                   <div class="form-group row">
+                        <label class="col-form-label col-md-1">Schedules For</label>
+                            <div class="col-md-4">
+                                <select class="form-control">
+                                    <option>Doctor</option>
+                                    <option>Investigation</option>
+                                    
+                                </select>
+                            </div>
+                            <?php
+                            if(!empty($doctorsList)){
+                             ?>
+                            <div class="col-md-4">
+                                <select class="form-control">
+                                    <?php
+                                    foreach($doctorsList as $docList){
+    $doctors = DoctorsDetails::find()->where(['id'=>$docList->doctor_id])->one();                             
+                                    ?>
+                                    <option value="<?=$doctors->id?>"><?=$doctors->name?></option>
+                                   
+                                     <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <?php
+                            }else{
+                            ?>
+                             <div class="col-md-4">
+                                <select class="form-control">
+                                    <option>investigati1</option>
+                                    <option>investigati2</option>
+                                    
+                                </select>
+                            </div>
+                            <?php
                             }
-                        ],
-                        [   
-                            'attribute'=>'status',
-                            'format'=>'raw',//raw,
-                            'filter'=>['1'=>'Active','0'=>'In Active'],
-                            'filterInputOptions' => ['class' => 'form-control', 'id' => 'leave_status'],
-                            'value'=>function($model){
-                                if($model->status=="1"){
-                                 return Html::a('<span class="label label-success">Active</span>');
-                                 }else{
-                                return Html::a("<span class='label label-warning'>In Active</span>");
-                                 }    
-                                 
-                            }
-                        ],
-                        // 'created_on',
+                            ?>
+                    </div> 
+ <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
 
-                        // ['class' => 'yii\grid\ActionColumn',
-                        //     'header' => 'update',
-                        //     'template' => '{update}'],
-                        // ['class' => 'yii\grid\ActionColumn',
-                        //     'header' => 'view',
-                        //     'template' => '{view}',
-                        // ],
-                        [
+            // 'id',
+            // 'investigation_id',
+            // 'hospital_clinic_id',
+            // 'doctor_id',
+            'day',
+    ['class' => 'yii\grid\ActionColumn', 
+    'template' => '{new_action1}',
+     'header' => 'View slots', 
+     'headerOptions' => ['style' => 'color:#3181d2'],
+     'buttons' => ['new_action1' => function ($url, $model) {
+        return Html::button('View slots', ['class' => 'button view-slot','slotId'=>$model->id]);
+     }],
+    ],
+
+                    [
                           'class' => 'yii\grid\ActionColumn',
                           'header' => 'Actions',
                           'headerOptions' => ['style' => 'color:#337ab7'],
@@ -132,22 +135,63 @@ $this->params['breadcrumbs'][] = $this->title;
 
                           ],
                       ],
-                      [
-                          'class' => 'yii\grid\ActionColumn',
-                          'header' => 'Actions',
-                          'headerOptions' => ['style' => 'color:#337ab7'],
-                          'template' => '{update}',
-                          'buttons' => [
-                          'update' => function ($url, $model) {
-                                return Html::a('Update', ['create','investigation'=>$model->investigation_id], [
-                                            'title' => Yii::t('app', 'lead-update'),
-                                ]);
-                            },
-                        ],
-                      ]
-                    ],
-                ]); ?>
+        ],
+    ]); ?>
+<!-- <div id="add_schedule_event" class="modal" role="dialog"> -->
+           <div class="modal" id="myModal" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Sloat Timings</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          
+        </div>
+        
+          
+            <div class="modal-body">
+                <div class="container" style="max-width: 100%">
+              <div class="row" id="slot-time-view" >
+               
+              </div>
+              
+            <!-- </div> -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+               </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    var baseurl = '<?php print \yii\helpers\Url::base() . "/"; ?>';
+  </script>
+<?php
+$this->registerJs("
+    $(document).ready(function(){
+        $('.view-slot').on('click',function(e){
+            var slotid=$(this).attr('slotid');
+           $.ajax({
+                     url:baseurl+'schedule/view-time',
+                     data:{'slotid':slotid},
+                     type:'POST',
+                     success:function(data){
+                       
+                        $('#slot-time-view').html('');
+                        $('#slot-time-view').append(data);
+                     },
+                     error:function(){
+                     }
+                });
+        $('#myModal').modal('toggle');
+        });
+    });
+
+");
+        ?>

@@ -67,11 +67,7 @@ class SiteController extends Controller {
             return parent::beforeAction($action);
         }
 
-        /**
-         * Displays homepage.
-         *
-         * @return mixed
-         */
+       
         public function actionIndex() {
             $params = [];
             $permission=HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
@@ -92,6 +88,7 @@ class SiteController extends Controller {
 
 
             public function actionLogin() {
+                
                 $this->layout = 'loginNew2';
                 if (!Yii::$app->user->isGuest) {
                         return $this->goHome();

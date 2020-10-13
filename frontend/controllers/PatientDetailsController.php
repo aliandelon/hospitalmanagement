@@ -3,16 +3,16 @@
 namespace frontend\controllers;
 
 use Yii;
-use common\models\Appointments;
-use common\models\AppointmentsSearch;
+use common\models\PatientDetails;
+use common\models\PatientDetailsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * AppointmentsController implements the CRUD actions for Appointments model.
+ * PatientDetailsController implements the CRUD actions for PatientDetails model.
  */
-class AppointmentsController extends Controller
+class PatientDetailsController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,56 +30,32 @@ class AppointmentsController extends Controller
     }
 
     /**
-     * Lists all Appointments models.
+     * Lists all PatientDetails models.
      * @return mixed
      */
     public function actionIndex()
     {
+        $searchModel = new PatientDetailsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $searchModel = new AppointmentsSearch();
-        if(isset($_GET['type']) && $_GET['type']==1){
-            $dataProvider2 = $searchModel->search2(Yii::$app->request->queryParams); 
-        }else{
-
-            $dataProvider = $searchModel->search1(Yii::$app->request->queryParams);
-        }
-
-        if(isset($_GET['type']) && $_GET['type']==1){
-
-            return $this->render('index1', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider2,
-            ]);
-         }else{
-
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);  
-         }
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
-
-
-    public function actionIndex2()
+     public function actionIndex2()
     {
+        $searchModel = new PatientDetailsSearch();
+        $dataProvider = $searchModel->search2(Yii::$app->request->queryParams);
 
-        $searchModel = new AppointmentsSearch();
-        $dataProvider = $searchModel->search3(Yii::$app->request->queryParams); 
-        return $this->render('index3', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);  
-        
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
-
-
-
-
-
-
 
     /**
-     * Displays a single Appointments model.
+     * Displays a single PatientDetails model.
      * @param integer $id
      * @return mixed
      */
@@ -91,13 +67,13 @@ class AppointmentsController extends Controller
     }
 
     /**
-     * Creates a new Appointments model.
+     * Creates a new PatientDetails model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Appointments();
+        $model = new PatientDetails();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -109,7 +85,7 @@ class AppointmentsController extends Controller
     }
 
     /**
-     * Updates an existing Appointments model.
+     * Updates an existing PatientDetails model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -128,7 +104,7 @@ class AppointmentsController extends Controller
     }
 
     /**
-     * Deletes an existing Appointments model.
+     * Deletes an existing PatientDetails model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -141,15 +117,15 @@ class AppointmentsController extends Controller
     }
 
     /**
-     * Finds the Appointments model based on its primary key value.
+     * Finds the PatientDetails model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Appointments the loaded model
+     * @return PatientDetails the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Appointments::findOne($id)) !== null) {
+        if (($model = PatientDetails::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

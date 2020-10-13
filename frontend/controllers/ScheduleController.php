@@ -12,7 +12,9 @@ use yii\filters\VerbFilter;
 use common\models\HospitalInvestigationMapping;
 use common\models\HolidayList;
 use common\models\SlotDayMapping;
+use common\models\SlotDayMappingSearch;
 use common\models\SlotDayTimeMapping;
+
 /**
  * ScheduleController implements the CRUD actions for Schedule model.
  */
@@ -41,11 +43,23 @@ class ScheduleController extends Controller
      * Lists all Schedule models.
      * @return mixed
      */
-    public function actionIndex()
-    {
-        $searchModel = new ScheduleSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+public function actionIndex()
+{
+    $searchModel = new SlotDayMappingSearch();
+    $doctorsList = Schedule::find()->select('doctor_id')->distinct()->andWhere(['<>','doctor_id',''])->andWhere(['=','hospital_id',Yii::$app->user->identity->id])->one();
+    $dataProvider = $searchModel->searchDoctor(Yii::$app->request->queryParams,$doctorsList->doctor_id);
+        // $dataProvider = $searchModel->searchDoctor(Yii::$app->request->queryParams);
+//         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//         $render='index';
+// $doctorsList = Schedule::find()->select('doctor_id')->distinct()->andWhere(['<>','doctor_id',''])->andWhere(['=','hospital_id',Yii::$app->user->identity->id])->one();
+// if(!empty($doctorsList)){
+//     $dataProvider = $searchModel->searchDoctor(Yii::$app->request->queryParams,$doctorsList->doctor_id);
+//     $render='index';
+// }else{
+// $investigationList = Schedule::find()->select('investigation_id')->distinct()->andWhere(['<>','investigation_id',''])->andWhere(['=','hospital_id',Yii::$app->user->identity->id])->all();
+//   $dataProvider = $searchModel->searchInvestigation(Yii::$app->request->queryParams);
+//   $render='investigation-index';
+// }    
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -430,5 +444,25 @@ class ScheduleController extends Controller
             }
             
         }
+
+
+
+ public function actionViewTime()
+    {
+        $post = Yii::$app->request->post();
+        if($post){
+            $slotid = $post['slotid'];
+            
+
+        }
+        // SELECT DATE_FORMAT(from_time,'%h:%i %p') FROM `slot_day_time_mapping` WHERE 1
+$slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all();
+        $this->layout = FALSE;
+    return $this->renderAjax('_slotDayTime',['slotDayTime'=>$slotDayTime]);
+        
+        
+    }
+
+
 
 }

@@ -26,7 +26,8 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
                 <?= Html::csrfMetaTags() ?>
                 <title><?= Html::encode($this->title) ?></title>
                 <?php $this->head() ?>
-                <?php $actionArray = ['site'];$pageArray = ['index'];if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$app->controller->id , $actionArray)) {
+                <?php $actionArray = ['site'];$pageArray = ['index'];
+if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$app->controller->id , $actionArray)) {
 ?>
 <style>
 .header-left{

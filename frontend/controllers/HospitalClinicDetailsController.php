@@ -108,6 +108,7 @@ class HospitalClinicDetailsController extends Controller
                 }
             }
         $model = $this->findModel($id);
+
         $model->scenario = 'updateFrontend';
         $images = $model->hospital_clinic_image;
         if ($model->load(Yii::$app->request->post())) {
@@ -125,7 +126,7 @@ class HospitalClinicDetailsController extends Controller
                 
                    $model->hospital_clinic_image = $file->extension;     
                 }else{
-                    echo "reach2";exit;
+                
                     $model->hospital_clinic_image = $images;
                 }
             if($model->save()){
@@ -149,7 +150,8 @@ class HospitalClinicDetailsController extends Controller
 
 
               
-                }else{print_r($model->getErrors());exit;}
+                }
+                // else{print_r($model->getErrors());exit;}
             
         }
             return $this->render('update-form', [

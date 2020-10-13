@@ -14,6 +14,7 @@ use kartik\file\FileInput;
     }
 </style>
   <?php
+ 
                                 if($model->have_diagnostic_center == '1' && $model->same_as_hospital_details_flag == 0){
                                     $displayVal="display: block;";
                                     $checkeddisplayFlag="false";
@@ -55,6 +56,7 @@ use kartik\file\FileInput;
                 ],
     ]);
     ?>
+    <?= $form->errorSummary($model); ?>
                          <?php //echo $form->errorSummary($model); ?>
                             <div class="row">
                                 <div class="col-sm-6">
@@ -84,9 +86,17 @@ use kartik\file\FileInput;
                                  'allowedFileExtensions' => ['jpg', 'png', 'bmp'],
                                  'maxFileSize' => 300,
                                     // 'options' => ['accept' => 'pdf/*'],
-                                    'mainClass' => 'other-class',
+                                    // 'mainClass' => 'other-class',
                                     'browseLabel' => 'Select image',
                                      'showUpload' => false,
+                                     'showRemove' => false,
+                                  'showPreview' => true,
+                                   'browseOnZoneClick'=> false,
+                                  'overwriteInitial'=> true,
+
+                                    // 'showCaption' => true,
+                                    // 'showRemove' => true,
+                                    // 'showUpload' => true
                                     ],
                             ])->label(false);
                             ?>
@@ -97,7 +107,7 @@ use kartik\file\FileInput;
                                     <div class="col-sm-12">
                                         <?php
                                         if ($model->hospital_clinic_image != "") {
-                                            echo '<div class="col-md-2" style="background-color:#ccc;margin-right:5px"><img width="125" style="border: 2px solid #d2d2d2;margin-right:.5em;" src="' . Yii::$app->request->baseUrl . '/uploads/hospitalClinicImage/'. $model->id.'/'.$model->id.'.'.$model->hospital_clinic_image.'" /></div>';
+                                            echo '<div class="col-md-2" style=""><img width="125" style="border: 2px solid #d2d2d2;margin-right:.5em;" src="' . Yii::$app->request->baseUrl . '/uploads/hospitalClinicImage/'. $model->id.'/'.$model->id.'.'.$model->hospital_clinic_image.'" /></div>';
                                             ?>
                                             <br>
                                             <br>
