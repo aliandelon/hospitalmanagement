@@ -3,17 +3,16 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\Banners;
-use common\models\BannersSearch;
+use common\models\SlotDayTimeMapping;
+use common\models\SlotDayTimeMappingSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\UploadedFile;
 
 /**
- * BannersController implements the CRUD actions for Banners model.
+ * SlotDayTimeMappingController implements the CRUD actions for SlotDayTimeMapping model.
  */
-class BannersController extends Controller
+class SlotDayTimeMappingController extends Controller
 {
     /**
      * @inheritdoc
@@ -31,12 +30,12 @@ class BannersController extends Controller
     }
 
     /**
-     * Lists all Banners models.
+     * Lists all SlotDayTimeMapping models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new BannersSearch();
+        $searchModel = new SlotDayTimeMappingSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -46,7 +45,7 @@ class BannersController extends Controller
     }
 
     /**
-     * Displays a single Banners model.
+     * Displays a single SlotDayTimeMapping model.
      * @param integer $id
      * @return mixed
      */
@@ -58,42 +57,25 @@ class BannersController extends Controller
     }
 
     /**
-     * Creates a new Banners model.
+     * Creates a new SlotDayTimeMapping model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Banners();
+        $model = new SlotDayTimeMapping();
 
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        //     return $this->redirect(['view', 'id' => $model->id]);
-        // } else {
-        //     return $this->render('create', [
-        //         'model' => $model,
-        //     ]);
-        // }
-        $model->scenario='oncreate';
-        if ($model->load(Yii::$app->request->post()))
-            {
-                $file = UploadedFile::getInstance($model, 'image');
-                if ($file) {
-                   $model->image = $file->extension;     
-                }
-                if($model->save()) {
-                    if ($file) {
-                    $model->upload($file, $model->id,$model->id);
-                    }
-                return $this->redirect(['index']);
-                }
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
             return $this->render('create', [
                 'model' => $model,
             ]);
+        }
     }
 
     /**
-     * Updates an existing Banners model.
+     * Updates an existing SlotDayTimeMapping model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -102,28 +84,6 @@ class BannersController extends Controller
     {
         $model = $this->findModel($id);
 
-        $model->scenario='onupdate';
-        $images = $model->image;
-        if ($model->load(Yii::$app->request->post()))
-            {
-                
-                $file = UploadedFile::getInstance($model, 'image');
-                if($file != "") {
-                   $model->image = $file->extension;     
-                }else{
-                    $model->image = $images;
-                }
-                if($model->save()) {
-                    if ($file) {
-                    $model->upload($file, $model->id,$model->id);
-                    }
-                return $this->redirect(['index']);
-                }
-            }else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -134,7 +94,7 @@ class BannersController extends Controller
     }
 
     /**
-     * Deletes an existing Banners model.
+     * Deletes an existing SlotDayTimeMapping model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -147,15 +107,15 @@ class BannersController extends Controller
     }
 
     /**
-     * Finds the Banners model based on its primary key value.
+     * Finds the SlotDayTimeMapping model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Banners the loaded model
+     * @return SlotDayTimeMapping the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Banners::findOne($id)) !== null) {
+        if (($model = SlotDayTimeMapping::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
