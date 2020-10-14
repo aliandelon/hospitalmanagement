@@ -425,7 +425,16 @@ class ApiController extends \yii\rest\Controller
                     $response['message'] = $e->getMessage();
                     return $response;
                 }
-                    return $response;
+                return $response;
+            }else if ( $getHospitalClinic && $getHospitalClinic['status'] == 2)
+            {
+                $response['status']  = "failure";
+                $response['message'] = 'Slot Already Booked';
+                 return $response;
+            }else{
+                $response['status']  = "failure";
+                $response['message'] = '';
+                 return $response;
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {

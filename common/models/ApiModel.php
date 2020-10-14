@@ -451,6 +451,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 }
                 $investigation = $datas['sub_category_id'];
                 $date = $datas['date'];
+                $today = date('Y-m-d');
                 $typeVal = 1;
                 if($type == 'Hospital')
                 {
@@ -474,8 +475,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     holy1.investigation_id = slot.investigation_id AND 
                     holy1.hospital_id = slot.hospital_clinic_id AND holy1.holiday_date = '$date'
                         WHERE ap.slot_day_time_mapping_id IS NULL AND 
-                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$investigation' AND day.day ='$date' ORDER BY from_time asc;";
-
+                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$investigation' AND day.day ='$date' AND day.day>='$today' ORDER BY from_time asc;";
                     $result = $con->createCommand($invQuery)->queryAll();
                 break;
             default :
@@ -504,6 +504,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 $id = $datas['id'];
                 $doctorId = $datas['doctorId'];
                 $date = $datas['date'];
+                $today = date('Y-m-d');
                 $typeVal = 1;
                 if($type == 'Hospital')
                 {
@@ -526,8 +527,7 @@ class ApiModel extends \yii\db\ActiveRecord
                          holy1.doctor_id = slot.doctor_id AND 
                         holy1.hospital_id = slot.hospital_clinic_id AND holy1.holiday_date = '$date'
                         WHERE ap.slot_day_time_mapping_id IS NULL AND 
-                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.doctor_id = '$doctorId' AND day.day ='$date' ORDER BY from_time asc;";
-
+                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.doctor_id = '$doctorId' AND day.day ='$date' AND day.day>='$today' ORDER BY from_time asc;";
                     $result = $con->createCommand($docQuery)->queryAll();
                 break;
             default :
@@ -576,7 +576,13 @@ class ApiModel extends \yii\db\ActiveRecord
                     }
                     $totalPrice = '';
                     foreach ($investigations as $key => $appointment) {
-                        //print_r($appointment);exit;
+                        $checkSql = "SELECT  count(patient_id) cnt from appointments where doctor_id = '$appointment[doctorId]' AND investigation_id = '$appointment[investigation_id]' AND slot_day_time_mapping_id ='$appointment[slotId]' AND  hospital_clinic_id = '$id' AND app_date = '$appointment[date]';";
+                        $count = $result = $con->createCommand($checkSql)->queryOne();
+                        if($count && $count['cnt'] > 0)
+                        {
+                            $response = ["status" => 2] ;
+                            return $response;
+                        }
                         $totalPrice = $appointment['price'];
                         $appointmentQuery = "INSERT INTO appointments(patient_id,doctor_id,investigation_id, slot_day_time_mapping_id,hospital_clinic_id,app_date,app_time,appointment_type,isHomeCollection,price)VALUES('$datas[paitientId]','$appointment[doctorId]','$appointment[investigation_id]','$appointment[slotId]','$id','$appointment[date]','$appointment[time]','$appointmentTypeVal','$appointment[isHomeCollection]','$appointment[price]');";
                         $result = $con->createCommand($appointmentQuery)->execute();
