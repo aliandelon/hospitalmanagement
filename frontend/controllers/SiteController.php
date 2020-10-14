@@ -28,7 +28,7 @@ class SiteController extends Controller {
                         'class' => AccessControl::className(),
                         'rules' => [
                             [
-                                'actions' => ['login','holiday','event','error',"viewevent","viewinvestigations","publish"],
+                                'actions' => ['login','holiday','event','error',"viewevent","viewinvestigations","publish","privacaypolicy","termsandcondition"],
                                 'allow' => true,
                             ],
                             [
@@ -190,5 +190,11 @@ class SiteController extends Controller {
             $api_key='rzp_test_QXEhrosnKHyZqA';
 
             return $this->render('payment', ['apikey' => $api_key]);
+        }
+        public function actionPrivacaypolicy() {
+            return $this->render('privacaypolicy.html');
+        }
+        public function actionTermsandcondition() {
+            return $this->render('termsandcondition.html');
         }
 }
