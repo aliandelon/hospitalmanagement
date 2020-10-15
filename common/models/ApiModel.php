@@ -438,7 +438,7 @@ class ApiModel extends \yii\db\ActiveRecord
     }
 
     public function getLaboratorySlotdetails($datas) 
-    {
+    {   
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
@@ -574,16 +574,24 @@ class ApiModel extends \yii\db\ActiveRecord
                     }else{
                         $appointmentTypeVal = 0;
                     }
-                    $totalPrice = '';
+                    $totalPrice = 0;
+                    $status = "";
+                    $resultVal = 1;
+                    $bookedDuplicateArray = [];
+                    $bookedArray = [];
                     foreach ($investigations as $key => $appointment) {
                         $checkSql = "SELECT  count(patient_id) cnt from appointments where doctor_id = '$appointment[doctorId]' AND investigation_id = '$appointment[investigation_id]' AND slot_day_time_mapping_id ='$appointment[slotId]' AND  hospital_clinic_id = '$id' AND app_date = '$appointment[date]';";
                         $count = $result = $con->createCommand($checkSql)->queryOne();
                         if($count && $count['cnt'] > 0)
                         {
-                            $response = ["status" => 2] ;
+                            $status = 2 ;
+                            $resultVal = 2;
+                            $bookedDuplicateArray[] = $appointment;
+                            $transaction->commit();
+                            $response = ["status" => $status, "alradyBookedAppoinments" => $bookedDuplicateArray,"booking_status"=>"failure","total_amount_to_pay"=>$totalPrice];
                             return $response;
                         }
-                        $totalPrice = $appointment['price'];
+                        $totalPrice = $totalPrice + $appointment['price'];
                         $appointmentQuery = "INSERT INTO appointments(patient_id,doctor_id,investigation_id, slot_day_time_mapping_id,hospital_clinic_id,app_date,app_time,appointment_type,isHomeCollection,price)VALUES('$datas[paitientId]','$appointment[doctorId]','$appointment[investigation_id]','$appointment[slotId]','$id','$appointment[date]','$appointment[time]','$appointmentTypeVal','$appointment[isHomeCollection]','$appointment[price]');";
                         $result = $con->createCommand($appointmentQuery)->execute();
                         if($result)
@@ -592,28 +600,53 @@ class ApiModel extends \yii\db\ActiveRecord
                             { 
                                 if(empty($datas['detDatas']))
                                 {
-                                    $transaction->rollback();
-                                    return "empty other patient details";
+                                    // $transaction->rollback();
+                                    // return "empty other patient details";
+                                    $status = 3 ;
+                                    $resultVal = 3;
+                                    $msg = "empty other patient details";
+                                    break;
                                 }else{
                                     $det = $datas['detDatas'];
                                     $detInsert = "INSERT INTO appoinment_det(mst_id,first_name,last_name,age,gender)VALUES('$bookingId','$det[firstName]','$det[lastName]','$det[age]','$det[gender]')";
                                     $resultDet = $con->createCommand($detInsert)->execute();
                                     if($resultDet)
                                     {
-                                        $transaction->commit();
-                                        $response = ["status" => 1, "bookingId" => $bookingId,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice];
+                                        //$transaction->commit();
+                                        $resultVal = 1;
+                                        $status = 1;
+                                        $bookedArray[] = $bookingId;
+                                        // $response = ["status" => 1, "bookingId" => $bookingId,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice];
                                     }
                                 }
                             }else{
-                               $transaction->commit(); 
+                               //$transaction->commit(); 
+                                $resultVal = 1;
+                                $status = 1;
+                                $bookedArray[] = $bookingId;
                             }
-                            $response = ["status" => 1, "bookingId" => $bookingId,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice];
+                            // $response = ["status" => 1, "bookingId" => $bookingId,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice];
                         }else{
-                            $transaction->rollback();
-                            return "Error in appointment bookings";
+                            // $transaction->rollback();
+                            // return "Error in appointment bookings";
+                            $resultVal = 4;
+                            $status = 4;
                         }
                     }
-                    
+                    if($resultVal == 1){
+                        $transaction->commit();
+                        $response = ["status" => 1, "bookingId" => $bookedArray,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice];
+                    }else{
+                        if($resultVal == 3)
+                        {
+                            $msg = "empty other patient details";
+                        }elseif($resultVal == 4)
+                        {
+                            $msg ="Error in appointment bookings";
+                        }
+                        $transaction->rollback();
+                        $response = ["status" => 1,"message"=>$msg];
+                    }
                     break;
                 default :
                     return $response;

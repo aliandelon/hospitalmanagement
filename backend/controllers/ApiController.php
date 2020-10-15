@@ -430,6 +430,9 @@ class ApiController extends \yii\rest\Controller
             {
                 $response['status']  = "failure";
                 $response['message'] = 'Slot Already Booked';
+                $response['alradyBookedAppoinments'] = $getHospitalClinic['alradyBookedAppoinments'];
+                $response['booking_status'] = $getHospitalClinic['booking_status'];
+                $response['total_amount_to_pay'] = $getHospitalClinic['total_amount_to_pay'];
                  return $response;
             }else{
                 $response['status']  = "failure";
