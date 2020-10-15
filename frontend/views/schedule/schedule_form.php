@@ -30,18 +30,20 @@ use common\models\DoctorsDetails;
     <?php endif; ?>
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->errorSummary($model) ?>
+   
     <div class="row">
         <div class="col-md-6">
             <div class="form-group field-schedule-type has-success">
                 <label class="control-label" for="type">Choose a Type:</label>
                 <select name="type" id="type" class="form-control">
-                  <option value="1">Investigation</option>
                   <option value="2">Doctor Appoinment</option>
+                  <option value="1">Investigation</option>
+                  
                 </select>
             </div>
         </div>
         <div class="col-md-6">
-            <div id="doctor" style="display: none;">
+            <div id="doctor">
                 <?php $details=DoctorsDetails::find()->where(["status"=>1,"hospital_clinic_id"=>Yii::$app->user->identity->id])->all();
 
                 $listData=ArrayHelper::map($details,'id','name');
@@ -51,7 +53,7 @@ use common\models\DoctorsDetails;
                     )->label('Doctor');
                     ?>
             </div>
-            <div  id="investigation">
+            <div  id="investigation" style="display: none;">
             <?php 
                 $Investigations = Investigations::find()->where('status = 1')->all();
                 $listData=ArrayHelper::map($Investigations,'id','investigation_name');
@@ -72,61 +74,22 @@ use common\models\DoctorsDetails;
     </div>
     <div class="row">
         
-        <div class="col-md-6" id="amount">
+        <div class="col-md-6" id="amount" style="display: none">
             <?= $form->field($model, 'amount')->textInput(['maxlength' => true]) ?>
             <span id="amounterror" style="color: red;display: none;">Please enter amount</span>
         </div>
-    </div>
-    <!-- <div class="row">
-        <div class="col-md-6">
-            <div class="form-group field-schedule-type has-success">
-                <label class="control-label" for="type">Choose a Type:</label>
-                <select name="type" id="type" class="form-control">
-                  <option value="1">Investigation</option>
-                  <option value="2">Doctor Appoinment</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div id="invstigations">
+         <div class="col-md-6" id="">
+            <div class="form-check form-check-inline" id="sample-collection" style="padding-top: 30px;width:100%;display: none">
+                <!-- <input type="checkbox" id="schedule-ishomecollection" name="Schedule[isHomeCollection]" value="1"> -->
+    <?= $form->field($model, "isHomeCollection")->checkbox(['label' => "
+Sample collection available"])->label(false); ?>
                 
+              <!-- <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> -->
+             
             </div>
-            <div id="doctor"> -->
-                <?php 
-
-                /*$details=DoctorsDetails::find()->where(["status"=>1,"hospital_clinic_id"=>Yii::$app->user->identity->id])->all();
-
-                $listData=ArrayHelper::map($details,'id','name');
-                echo $form->field($model, 'doctor_id')->dropDownList(
-                    $listData,
-                    ['prompt'=>'Select Doctor...','disabled' => true]
-                    )->label('Doctor');*/
-                ?>
-          <!--   </div>
         </div>
-    </div> -->
-    <!-- <div class="row">
-        <div class="col-md-6"> -->
-            <?php //$form->field($model, 'amount')->textInput(['maxlength' => true]) ?>
-        <!-- </div>
-        <div class="col-md-6" style="margin-top: 25px;"> -->
-            <?php //$model->sunday_holiday = true; echo $form->field($model, 'sunday_holiday')->checkbox(['checked' => true]);
-            ?>
-       <!--  </div>
     </div>
-    <div class="row">
-        <div class="col-md-6"> -->
-            <?php
-                /*echo $form->field($model, 'status')->dropDownList(
-                    ['1' => 'Active', '0' => 'Inactive']
-            );*/ ?>
-        <!-- </div>
-    </div>
-    <div class="m-t-20 text-center">
-        <div class="form-group">
-            <?php //Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-primary' : 'btn btn-primary']) ?>
-        </div>
-    </div> -->
+  
 
     <?php ActiveForm::end(); ?>
 
@@ -265,10 +228,15 @@ $(document).ready(function(){
         $('#type').on('change',function(e){
             var type = $('#type').val();
             if(type == 1){
+                
+
+
+                $('#sample-collection').css('display','block');
                 $('#doctor').css('display','none');
                 $('#amount').css('display','block');
                 $('#investigation').css('display','block');
             }else{
+                $('#sample-collection').css('display','none');
                 $('#doctor').css('display','block');
                 $('#amount').css('display','none');
                 $('#investigation').css('display','none');
@@ -296,6 +264,7 @@ $(document).ready(function(){
                     $('#dateerror2').css('display','none');
                 }
                 var amount = $('#schedule-amount').val();
+                var ishomecollection=$('#schedule-ishomecollection').val();
                 var investigation = $('#schedule-investigation_id').val();
                 var slots = $('#slot').val(); 
                 if(slots == '' || slots == null){
@@ -335,9 +304,10 @@ $(document).ready(function(){
                 {
                     $('#amounterror').css('display','none');
                 }
+                // alert(ishomecollection);
                 $.ajax({
                      url:baseurl+'schedule/schedule',
-                     data:{'eDate':eventDate,'eDate2':eventDate2,'slots':slots,'investigation':investigation,'amount':amount},
+                     data:{'eDate':eventDate,'eDate2':eventDate2,'slots':slots,'investigation':investigation,'amount':amount,'ishomecollection':ishomecollection},
                      type:'POST',
                      success:function(data){
                         // $('#accordion').html(data);
@@ -418,11 +388,24 @@ $(document).ready(function(){
                 type:'POST',
                 success:function(data){
                     var result = JSON.parse(data);
+
                     if(typeof(result[0]) != 'undefined') 
                     {                    
                         $('#schedule-amount').val(result[0]['amount']);
+                        // alert(result[0]['isHomeCollection']);
+                        if(result[0]['isHomeCollection']=='1'){
+                                $('#schedule-ishomecollection').val(1);
+                                $('#schedule-ishomecollection').attr('checked','true');
+                            }else{
+                                 $('#schedule-ishomecollection').attr('checked','false');
+                                $('#schedule-ishomecollection').val(0);
+                            }
                     }else
                     {
+                        
+                        $('#schedule-ishomecollection').attr('checked', false);
+                       
+                         $('#schedule-ishomecollection').val(0);
                         $('#schedule-amount').val(null);
                     }
                     // $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {

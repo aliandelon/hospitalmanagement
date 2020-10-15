@@ -224,6 +224,8 @@ public function actionIndex()
             $model3->details = '';
             $model3->status = 1;
             if($post){
+                // echo '<pre>';
+                // print_r($post);exit;
                 $hospital_id = Yii::$app->user->identity->id;
                 $model->hospital_id = $hospital_id;
                 $model->investigation_id = $post['investigation'];
@@ -233,6 +235,7 @@ public function actionIndex()
                 $model2->day = $date->format('Y-m-d'); */
                 $model2->hospital_clinic_id = $model->hospital_id;
                 $model->amount = $post['amount'];
+                $model->isHomeCollection = $post['ishomecollection'];
                 if($model->createSchedule($con, $model)){
                     $start = $post['eDate'];
                     $end = $post['eDate2'];
@@ -251,6 +254,8 @@ public function actionIndex()
                         $model3->investigation_id = $model->investigation_id;
                         $model3->hospital_clinic_id = $model->hospital_id;
                         $model3->amount = $model->amount;
+                        $model3->isHomeCollection=$model->isHomeCollection;
+
                         if($model3->saveHospitalInvestigation($con,$model3)){
                             $model2->investigation_id = $model->investigation_id;
                             if($slotId = $model2->saveSlotDayMapping($con,$model2)){

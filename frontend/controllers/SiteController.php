@@ -14,6 +14,10 @@ use yii\web\Response;
 use frontend\models\LoginForm;
 use common\models\HolidayList;
 use common\models\HospitalClinicDetails;
+use common\models\Appointments;
+use common\models\HospitalInvestigationMapping;
+use common\models\SlotDayTimeMapping;
+
 /**
  * Site controller
  */
@@ -68,23 +72,23 @@ class SiteController extends Controller {
         }
 
        
-        public function actionIndex() {
-            $params = [];
-            $permission=HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
-            if(!empty($permission)){
-                if($permission->status=="4"){
-                  return $this->redirect(['hospital-clinic-details/update2?id='.$permission->id]);
+        // public function actionIndex() {
+        //     $params = [];
+        //     $permission=HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
+        //     if(!empty($permission)){
+        //         if($permission->status=="4"){
+        //           return $this->redirect(['hospital-clinic-details/update2?id='.$permission->id]);
                  
-                }else if($permission->status=="3"){
+        //         }else if($permission->status=="3"){
 
-                }else if($permission->status=="2"){
+        //         }else if($permission->status=="2"){
 
-                }else if($permission->status=="1"){
-                  return $this->render('index',['params'=>$params]);
-                }
-            }
+        //         }else if($permission->status=="1"){
+        //           return $this->render('index',['params'=>$params]);
+        //         }
+        //     }
             
-        }
+        // }
 
 
             public function actionLogin() {
@@ -198,5 +202,69 @@ class SiteController extends Controller {
         public function actionTermsandcondition() {
             $this->layout = 'loginNew';
             return $this->render('termsandcondition.html');
+        }
+         /**
+         * Displays homepage.
+         *
+         * @return mixed
+         */
+        public function actionIndex() {
+            $params = [];
+            $permission=HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
+            if(!empty($permission)){
+                if($permission->status=="4"){
+                  return $this->redirect(['hospital-clinic-details/update2?id='.$permission->id]);
+                 
+                }else if($permission->status=="3"){
+
+                }else if($permission->status=="2"){
+
+                }else if($permission->status=="1"){
+                  $model1 = new DoctorsDetails();
+                  $model2 = new Appointments();
+                  $model3 = new HospitalInvestigationMapping();
+                  $model4 = new SlotDayTimeMapping();
+                  $params['ourDoctors'] = $model1->getOurDoctorsCount();
+                  $params['ourAppointments'] = $model2->getOurAppointmentCount();
+                  $params['ourPatients'] = $model2->getOurPatientsCount();
+                  $params['ourInvestigations'] = $model3->getOurInvestigationCount();
+                  $params['investigationEarning'] = $model4->getTotalInvestigationEarnings();
+                  $params['appointmentEarning'] = $model4->getTotalAppointmentsEarnings();
+                  // echo "<pre>";print_r($params);exit;
+                  $monthArr = array('1' => 'Jan','2' => 'Feb', '3' => 'Mar', '4' => 'Apr', '5' => 'May', '6' => 'Jun', '7' => 'Jul', '8' => 'Aug', '9' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec' );
+                  $amount = array('Jan' => '0','Feb' => '0' , 'Mar'=> '0' , 'Apr' => '0' , 'May' => '0' , 'Jun' => '0' , 'Jul' => '0' , 'Aug' => '0' , 'Sep' => '0' , 'Oct' => '0' , 'Nov' => '0' , 'Dec' => '0' );
+                  $count = array('Jan' => '0','Feb' => '0' , 'Mar'=> '0' , 'Apr' => '0' , 'May' => '0' , 'Jun' => '0' , 'Jul' => '0' , 'Aug' => '0' , 'Sep' => '0' , 'Oct' => '0' , 'Nov' => '0' , 'Dec' => '0' );
+                  foreach ($params['investigationEarning'] as $key => $value) {
+                    if(in_array($value['month'], $monthArr)){
+                        $amount[$value['month']] = $value['amt'];
+                        $count[$value['month']] = $value['count'];
+                    }
+                  }
+                    $graphArr = [];
+                    $graphArr['amt'] = implode(',', $amount);
+                    $graphArr['cnt'] = implode(',', $count);
+                    $params['graph1'] = $graphArr;
+                  $monthArr = array('1' => 'Jan','2' => 'Feb', '3' => 'Mar', '4' => 'Apr', '5' => 'May', '6' => 'Jun', '7' => 'Jul', '8' => 'Aug', '9' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec' );
+                  $amount = array('Jan' => '0','Feb' => '0' , 'Mar'=> '0' , 'Apr' => '0' , 'May' => '0' , 'Jun' => '0' , 'Jul' => '0' , 'Aug' => '0' , 'Sep' => '0' , 'Oct' => '0' , 'Nov' => '0' , 'Dec' => '0' );
+                  $count = array('Jan' => '0','Feb' => '0' , 'Mar'=> '0' , 'Apr' => '0' , 'May' => '0' , 'Jun' => '0' , 'Jul' => '0' , 'Aug' => '0' , 'Sep' => '0' , 'Oct' => '0' , 'Nov' => '0' , 'Dec' => '0' );
+                  foreach ($params['appointmentEarning'] as $key => $value) {
+                    if(in_array($value['month'], $monthArr)){
+                        $amount[$value['month']] = $value['amt'];
+                        $count[$value['month']] = $value['count'];
+                    }
+                  }
+                    $graphArr = [];
+                    $graphArr['amt'] = implode(',', $amount);
+                    $graphArr['cnt'] = implode(',', $count);
+                    $params['graph2'] = $graphArr;
+                    $params['doctorSummary'] = $model1->getDoctorSummary(Yii::$app->user->identity->id);
+                    $params['doctorsView'] = $model1->viewDoctorsDashboard(Yii::$app->user->identity->id);
+                    $params['investigationSummary'] = $model2->getInvestigationSummary(Yii::$app->user->identity->id,10);
+
+                  // echo '<pre>';print_r($params);exit;
+                  return $this->render('index',['params'=>$params]);
+                }
+            }
+            
         }
 }

@@ -5,7 +5,7 @@
                         <div class="dash-widget">
 							<span class="dash-widget-bg1"><i class="fa fa-stethoscope" aria-hidden="true"></i></span>
 							<div class="dash-widget-info text-right">
-								<h3>98</h3>
+								<h3><?php echo $params['ourDoctors'] ?></h3>
 								<span class="widget-title1">Total Doctors <i class="fa fa-check" aria-hidden="true"></i></span>
 							</div>
                         </div>
@@ -14,7 +14,7 @@
                         <div class="dash-widget">
                             <span class="dash-widget-bg3"><i class="fa fa-user-md" aria-hidden="true"></i></span>
                             <div class="dash-widget-info text-right">
-                                <h3>72</h3>
+                                <h3><?php echo $params['ourAppointments']?></h3>
                                 <span class="widget-title3">Appointments <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
@@ -23,7 +23,7 @@
                         <div class="dash-widget">
                             <span class="dash-widget-bg2"><i class="fa fa-wheelchair"></i></span>
                             <div class="dash-widget-info text-right">
-                                <h3>1072</h3>
+                                <h3><?php echo $params['ourPatients']?></h3>
                                 <span class="widget-title2">Total Patients <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
@@ -32,29 +32,145 @@
                         <div class="dash-widget">
                             <span class="dash-widget-bg4"><i class="fa fa-heartbeat" aria-hidden="true"></i></span>
                             <div class="dash-widget-info text-right">
-                                <h3>618</h3>
+                                <h3><?php echo $params['ourInvestigations']?></h3>
                                 <span class="widget-title4">Investigations <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
                     </div>
                 </div>
 				<div class="row">
-					<div class="col-12 col-md-6 col-lg-6 col-xl-6">
+					<div class="col-12 col-md-8 col-lg-8 col-xl-8">
 						<div class="card">
 							<div class="card-body">
 								<div class="chart-title">
-									<h4>Total Investigations In This Year</h4>
+									<h4>Total Investigations & Appointments In This Year</h4>
 									<!-- <span class="float-right"><i class="fa fa-caret-up" aria-hidden="true"></i> 15% Higher than Last Month</span> -->
 								</div>	
 								<canvas id="linegraph"></canvas>
 							</div>
 						</div>
 					</div>
-					<div class="col-12 col-md-6 col-lg-6 col-xl-6">
+					<div class="col-12 col-md-4 col-lg-4 col-xl-4" style="min-height: 100%">
+						<div class="card" style="border:1px solid #05ab9e;">
+							<div class="card-body" style="text-align: center;min-height: 100%;">
+								<div class="chart-title" style="float:left">
+									<h4>Subscription Expiry</h4>
+								</div>
+								<div id="clockdiv" style="margin-top: -5px">
+								  <div>
+								    <span class="days"></span>
+								    <div class="smalltext">Days</div>
+								  </div><br/><br/>
+								  <div>
+								    <span class="hours"></span>
+								    <div class="smalltext">Hours</div>
+								  </div>
+								  <div>
+								    <span class="minutes"></span>
+								    <div class="smalltext">Minutes</div>
+								  </div>
+								  <div>
+								    <span class="seconds"></span>
+								    <div class="smalltext">Seconds</div>
+								  </div>
+								</div>
+								<!-- <div class="bar-chart">
+										<div class="progress">
+											  <div class="progress-bar text-green" role="progressbar" aria-valuenow="60"
+											  aria-valuemin="0" aria-valuemax="100" style="width:60%;background-color: #00BF96;">
+											  </div>
+									</div>
+								</div> -->
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                        <div class="card member-panel">
+							<div class="card-header bg-white">
+								<h4 class="card-title mb-0">Today's Doctors Summary</h4>
+							</div>
+                            <div class="card-body">
+                                <ul class="contact-list">
+                                	<?php foreach ($params['doctorSummary'] as $key => $value) { ?>
+                                    <li>
+                                        <div class="contact-cont">
+                                            <div class="float-left user-img m-r-10">
+                                                <a href="profile.html" title="John Doe"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status <?php echo ($value['doctor_id']) ? 'offline' : 'online'?>"></span></a>
+                                            </div>
+                                            <div class="contact-info">
+                                                <span class="contact-name text-ellipsis"><?php echo $value['name']?></span>
+                                                <span class="contact-date"><?php echo ($value['doctor_id']) ? 'Leave' : $value['docId'].' Appointments'?></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                <?php } ?>
+                                    <!-- <li>
+                                        <div class="contact-cont">
+                                            <div class="float-left user-img m-r-10">
+                                                <a href="profile.html" title="Richard Miles"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status offline"></span></a>
+                                            </div>
+                                            <div class="contact-info">
+                                                <span class="contact-name text-ellipsis">Dr. Naveen Nandagopal</span>
+                                                <span class="contact-date">Leave</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="contact-cont">
+                                            <div class="float-left user-img m-r-10">
+                                                <a href="profile.html" title="John Doe"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
+                                            </div>
+                                            <div class="contact-info">
+                                                <span class="contact-name text-ellipsis">Dr. Jerry Varghese</span>
+                                                <span class="contact-date">20 Appointments</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="contact-cont">
+                                            <div class="float-left user-img m-r-10">
+                                                <a href="profile.html" title="Richard Miles"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
+                                            </div>
+                                            <div class="contact-info">
+                                                <span class="contact-name text-ellipsis">Dr. Suthambiga</span>
+                                                <span class="contact-date">20 Appointments</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="contact-cont">
+                                            <div class="float-left user-img m-r-10">
+                                                <a href="profile.html" title="John Doe"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status offline"></span></a>
+                                            </div>
+                                            <div class="contact-info">
+                                                <span class="contact-name text-ellipsis">Dr. Moncy Mathai</span>
+                                                <span class="contact-date">Leave</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="contact-cont">
+                                            <div class="float-left user-img m-r-10">
+                                                <a href="profile.html" title="Richard Miles"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
+                                            </div>
+                                            <div class="contact-info">
+                                                <span class="contact-name text-ellipsis">Dr. Sunil</span>
+                                                <span class="contact-date">20 Appointments</span>
+                                            </div>
+                                        </div>
+                                    </li> -->
+                                </ul>
+                            </div>
+                            <div class="card-footer text-center bg-white">
+                                <!-- <a href="doctors.html" class="text-muted">View all Doctors</a> -->
+                            </div>
+                        </div>
+                    </div>
+					<div class="col-12 col-md-8 col-lg-8 col-xl-8">
 						<div class="card">
 							<div class="card-body">
 								<div class="chart-title">
-									<h4>Toatal earnings In This Year</h4>
+									<h4>Total Earnings In This Year</h4>
 									<div class="float-right">
 										<ul class="chat-user-total">
 											<!-- <li><i class="fa fa-circle current-users" aria-hidden="true"></i>ICU</li>
@@ -79,7 +195,6 @@
 										<thead class="d-none">
 											<tr>
 												<th>Patient Name</th>
-												<th>Investigation Name</th>
 												<th>Doctor Name</th>
 												<th>Timing</th>
 											</tr>
@@ -89,11 +204,7 @@
 												<td style="min-width: 200px;">
 													<a class="avatar" href="profile.html">B</a>
 													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>
-												<td>
-													<h5 class="time-title p-0">Blood Test</h5>
-													<p>Investigation</p>
-												</td>                 
+												</td>               
 												<td>
 													<h5 class="time-title p-0">Appointment With</h5>
 													<p>Dr. Cristina Groves</p>
@@ -107,10 +218,34 @@
 												<td style="min-width: 200px;">
 													<a class="avatar" href="profile.html">B</a>
 													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>    
+												</td>                
 												<td>
-													<h5 class="time-title p-0">Blood Test</h5>
-													<p>Investigation</p>
+													<h5 class="time-title p-0">Appointment With</h5>
+													<p>Dr. Cristina Groves</p>
+												</td>
+												<td>
+													<h5 class="time-title p-0">Timing</h5>
+													<p>7:00 PM - 7:30PM</p>
+												</td>
+											</tr>
+											<tr>
+												<td style="min-width: 200px;">
+													<a class="avatar" href="profile.html">B</a>
+													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
+												</td>                     
+												<td>
+													<h5 class="time-title p-0">Appointment With</h5>
+													<p>Dr. Cristina Groves</p>
+												</td>
+												<td>
+													<h5 class="time-title p-0">Timing</h5>
+													<p>7:00 PM - 7:30PM</p>
+												</td>
+											</tr>
+											<tr>
+												<td style="min-width: 200px;">
+													<a class="avatar" href="profile.html">B</a>
+													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
 												</td>                  
 												<td>
 													<h5 class="time-title p-0">Appointment With</h5>
@@ -125,47 +260,7 @@
 												<td style="min-width: 200px;">
 													<a class="avatar" href="profile.html">B</a>
 													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>   
-												<td>
-													<h5 class="time-title p-0">Blood Test</h5>
-													<p>Investigation</p>
-												</td>                   
-												<td>
-													<h5 class="time-title p-0">Appointment With</h5>
-													<p>Dr. Cristina Groves</p>
-												</td>
-												<td>
-													<h5 class="time-title p-0">Timing</h5>
-													<p>7:00 PM - 7:30PM</p>
-												</td>
-											</tr>
-											<tr>
-												<td style="min-width: 200px;">
-													<a class="avatar" href="profile.html">B</a>
-													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>     
-												<td>
-													<h5 class="time-title p-0">Blood Test</h5>
-													<p>Investigation</p>
-												</td>                 
-												<td>
-													<h5 class="time-title p-0">Appointment With</h5>
-													<p>Dr. Cristina Groves</p>
-												</td>
-												<td>
-													<h5 class="time-title p-0">Timing</h5>
-													<p>7:00 PM - 7:30PM</p>
-												</td>
-											</tr>
-											<tr>
-												<td style="min-width: 200px;">
-													<a class="avatar" href="profile.html">B</a>
-													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>  
-												<td>
-													<h5 class="time-title p-0">Blood Test</h5>
-													<p>Investigation</p>
-												</td>                    
+												</td>                     
 												<td>
 													<h5 class="time-title p-0">Appointment With</h5>
 													<p>Dr. Cristina Groves</p>
@@ -188,18 +283,20 @@
 							</div>
                             <div class="card-body">
                                 <ul class="contact-list">
+                                	<?php foreach ($params['doctorsView'] as $key => $value) { ?>
                                     <li>
                                         <div class="contact-cont">
                                             <div class="float-left user-img m-r-10">
-                                                <a href="profile.html" title="John Doe"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
+                                                <a href="profile.html" title="John Doe"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status <?php echo ($value['doctor_id']) ? 'offline' : 'online'?>"></span></a>
                                             </div>
                                             <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">Dr. John Baskar</span>
-                                                <span class="contact-date">Blood Test</span>
+                                                <span class="contact-name text-ellipsis"><?php echo $value['name']?></span>
+                                                <span class="contact-date"><?php echo $value['spectial']?></span>
                                             </div>
                                         </div>
                                     </li>
-                                    <li>
+                                <?php } ?>
+                                    <!-- <li>
                                         <div class="contact-cont">
                                             <div class="float-left user-img m-r-10">
                                                 <a href="profile.html" title="Richard Miles"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status offline"></span></a>
@@ -213,7 +310,7 @@
                                     <li>
                                         <div class="contact-cont">
                                             <div class="float-left user-img m-r-10">
-                                                <a href="profile.html" title="John Doe"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status away"></span></a>
+                                                <a href="profile.html" title="John Doe"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
                                             </div>
                                             <div class="contact-info">
                                                 <span class="contact-name text-ellipsis">Dr. Jerry Varghese</span>
@@ -246,14 +343,14 @@
                                     <li>
                                         <div class="contact-cont">
                                             <div class="float-left user-img m-r-10">
-                                                <a href="profile.html" title="Richard Miles"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status away"></span></a>
+                                                <a href="profile.html" title="Richard Miles"><img src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
                                             </div>
                                             <div class="contact-info">
                                                 <span class="contact-name text-ellipsis">Dr. Sunil</span>
                                                 <span class="contact-date">ECG</span>
                                             </div>
                                         </div>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </div>
                             <div class="card-footer text-center bg-white">
@@ -335,15 +432,17 @@
 								</div>
 							</div> -->
 							<div class="chart clearfix">
+								<?php foreach ($params['investigationSummary'] as $key => $value) { ?>
 								<div class="item">
 									<div class="bar">
-										<span class="percent">200</span>
-										<div class="item-progress" data-percent="0">
-											<span class="title">MRI Scan</span>
+										<span class="percent"><?php echo $value['invIdCount']?></span>
+										<div class="item-progress" data-percent="20">
+											<span class="title"><?php echo $value['name']?></span>
 										</div>
 									</div>
 								</div>
-								<div class="item">
+							<?php } ?>
+								<!-- <div class="item">
 									<div class="bar">
 										<span class="percent">7100</span>
 										<div class="item-progress" data-percent="0">
@@ -374,9 +473,188 @@
 											<span class="title">Pregnancy Test</span>
 										</div>
 									</div>
-								</div>
+								</div> -->
 							</div>
 						</div>
 					 </div>
 				</div>
-           
+<style>
+h1{
+  color: #396;
+  font-weight: 100;
+  font-size: 40px;
+  margin: 40px 0px 20px;
+}
+
+#clockdiv{
+	text-align: center;
+	font-family: sans-serif;
+	color: #fff;
+	display: inline-block;
+	font-weight: 100;
+	text-align: center;
+	font-size: 30px;
+}
+
+#clockdiv > div{
+	color: #fff;
+	padding: 4px;
+	border-radius: 7px;
+	background: #00BF96;
+	display: inline-block;
+}
+
+#clockdiv .days{
+	color: #fff;
+	padding: 40px;
+	border-radius: 3px;
+	background: #00816A;
+	display: inline-block;
+}
+
+#clockdiv .hours{
+	color: #fff;
+	padding: 15px;
+	border-radius: 3px;
+	background: #00816A;
+	display: inline-block;
+}
+
+#clockdiv .minutes{
+	color: #fff;
+	padding: 15px;
+	border-radius: 3px;
+	background: #00816A;
+	display: inline-block;
+}
+
+#clockdiv .seconds{
+	color: #fff;
+	padding: 15px;
+	border-radius: 3px;
+	background: #00816A;
+	display: inline-block;
+}
+
+.smalltext{
+	padding-top: 5px;
+	font-size: 14px;
+}
+</style>
+<script>
+	// Set the date we're counting down to
+function getTimeRemaining(endtime) {
+  var t = Date.parse(endtime) - Date.parse(new Date());
+  var seconds = Math.floor((t / 1000) % 60);
+  var minutes = Math.floor((t / 1000 / 60) % 60);
+  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+  var days = Math.floor(t / (1000 * 60 * 60 * 24));
+  return {
+    'total': t,
+    'days': days,
+    'hours': hours,
+    'minutes': minutes,
+    'seconds': seconds
+  };
+}
+
+function initializeClock(id, endtime) {
+  var clock = document.getElementById(id);
+  var daysSpan = clock.querySelector('.days');
+  var hoursSpan = clock.querySelector('.hours');
+  var minutesSpan = clock.querySelector('.minutes');
+  var secondsSpan = clock.querySelector('.seconds');
+
+  function updateClock() {
+    var t = getTimeRemaining(endtime);
+
+    daysSpan.innerHTML = t.days;
+    hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+    if (t.total <= 0) {
+      clearInterval(timeinterval);
+    }
+  }
+
+  updateClock();
+  var timeinterval = setInterval(updateClock, 1000);
+}
+
+// var deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
+var deadline = new Date("2021-02-21 00:00:00");
+initializeClock('clockdiv', deadline);
+</script>
+
+           <script>
+           	$(document).ready(function() {
+				// Line Chart
+
+				var lineChartData = {
+					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+					datasets: [{
+						label: "Doctor Appointments",
+						backgroundColor: "rgba(204, 99, 48, 0.5)",
+						borderColor: '#F12404',
+						borderWidth: 1,
+						data: [<?=$params['graph2']['cnt']?>]
+					}, {
+					label: "Investigations",
+					backgroundColor: "rgba(5, 171, 158, 0.5)",
+					borderColor: 'rgba(0, 158, 251, 1)',
+						borderWidth: 1,
+					fill: true,
+					data: [<?=$params['graph1']['cnt']?>]
+					}]
+				};
+
+				var linectx = document.getElementById('linegraph').getContext('2d');
+				window.myLine = new Chart(linectx, {
+					type: 'line',
+					data: lineChartData,
+					options: {
+						responsive: true,
+						legend: {
+							display: false,
+						},
+						tooltips: {
+							mode: 'index',
+							intersect: false,
+						}
+					}
+				});
+
+				// Bar Chart
+
+				var barChartData = {
+					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+					datasets: [{
+						label: 'Appointments Earnings',
+						backgroundColor: '#ffbc35',//'rgba(0, 158, 251, 0.5)',
+						borderColor: 'rgba(0, 158, 251, 1)',
+						borderWidth: 1,
+						data: [<?=$params['graph2']['amt']?>]
+					}, {
+						label: 'Investigations Earnings',
+						backgroundColor: '#05ab9e',//'rgba(255, 188, 53, 0.5)',
+						borderColor: 'rgba(255, 188, 53, 1)',
+						borderWidth: 1,
+						data: [<?=$params['graph1']['amt']?>]
+					}]
+				};
+
+				var ctx = document.getElementById('bargraph').getContext('2d');
+				window.myBar = new Chart(ctx, {
+					type: 'bar',
+					data: barChartData,
+					options: {
+						responsive: true,
+						legend: {
+							display: false,
+						}
+					}
+				});
+				$('.card-body').parent('div').css("height","93%");
+			});
+           </script>

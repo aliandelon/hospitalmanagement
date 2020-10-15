@@ -168,7 +168,9 @@ if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$a
                             </ul>
                         </li>
                          <li>
-                            <a href="<?= Yii::$app->request->baseUrl . '/schedule/index' ?>"><i class="fa fa-calendar-check-o"></i> <span>Schedule</span></a>
+                           <!--  <a href="<?php //echo Yii::$app->request->baseUrl . '/schedule/index' ?>"><i class="fa fa-calendar-check-o"></i> <span>Schedule</span></a> -->
+                             <a href="<?= Yii::$app->request->baseUrl . '/schedule/create' ?>"><i class="fa fa-calendar-check-o"></i> <span>Schedule</span></a>
+                            
                         </li>
                         
                         <li>
