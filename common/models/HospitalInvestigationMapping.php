@@ -34,7 +34,7 @@ class HospitalInvestigationMapping extends \yii\db\ActiveRecord
             [['investigation_id', 'hospital_clinic_id', 'amount', 'duration', 'status'], 'required'],
             [['investigation_id', 'hospital_clinic_id', 'status'], 'integer'],
             [['amount'], 'number'],
-            [['duration'], 'safe'],
+            [['duration','isHomeCollection'], 'safe'],
             [['details'], 'string'],
         ];
     }
@@ -80,12 +80,28 @@ class HospitalInvestigationMapping extends \yii\db\ActiveRecord
         $query = "SELECT id from  hospital_investigation_mapping where investigation_id='$model->investigation_id' and hospital_clinic_id = '$model->hospital_clinic_id' AND status =1;";
         $result = $con->createCommand($query)->queryOne();
         if($result['id']){
-            return true;
+             $query = "UPDATE hospital_investigation_mapping SET amount = '$model->amount',isHomeCollection='$model->isHomeCollection' where investigation_id='$model->investigation_id' and hospital_clinic_id = '$model->hospital_clinic_id' AND status =1;";
+        $result = $con->createCommand($query)->execute();
+        return true;
         }else{
-            $sql = "INSERT into hospital_investigation_mapping(investigation_id,hospital_clinic_id,amount,duration,status)VALUES('$model->investigation_id','$model->hospital_clinic_id','$model->amount','30','1');";
+            $sql = "INSERT into hospital_investigation_mapping(investigation_id,hospital_clinic_id,amount,duration,status,isHomeCollection)VALUES('$model->investigation_id','$model->hospital_clinic_id','$model->amount','30','1','$model->isHomeCollection');";
             $result = $con->createCommand($sql)->execute();
             return $result;
         }
 
     }
+public function getOurInvestigationCount()
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(id) as count FROM hospital_investigation_mapping WHERE hospital_clinic_id = ".Yii::$app->user->identity->id." AND  status='1'";
+        $result = $con->createCommand($query)->queryAll();
+        return $result[0]['count'];
+    }
+
+
+
+
+
+    
 }

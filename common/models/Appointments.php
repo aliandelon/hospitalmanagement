@@ -87,4 +87,35 @@ class Appointments extends \yii\db\ActiveRecord
         $result = $con->createCommand($query)->queryAll();
         return $result;
     }
+
+    public function getOurAppointmentCount()
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(id) as count FROM appointments WHERE hospital_clinic_id = ".Yii::$app->user->identity->id;
+        $result = $con->createCommand($query)->queryAll();
+        return $result[0]['count'];
+    }
+
+    public function getOurPatientsCount()
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(count) as count FROM (SELECT distinct patient_id as count FROM appointments WHERE hospital_clinic_id = ".Yii::$app->user->identity->id.") as tables";
+        $result = $con->createCommand($query)->queryAll();
+        return $result[0]['count'];
+    }
+
+    public function getInvestigationSummary($hospital, $limit)
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(app.investigation_id) as invIdCount, inv.investigation_name as name FROM hospital_investigation_mapping map LEFT JOIN investigations inv ON inv.id = map.investigation_id LEFT JOIN appointments app ON app.investigation_id = map.investigation_id WHERE map.hospital_clinic_id = '$hospital' GROUP BY app.investigation_id ORDER BY inv.investigation_name";
+        if($limit){
+            $query .= ' limit '. $limit;
+        }
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }    
+
 }

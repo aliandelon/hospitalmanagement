@@ -21,6 +21,7 @@ class Schedule extends \yii\db\ActiveRecord
     public $amount; 
     public $category; 
     public $day;
+    public $isHomeCollection;
     /**
      * @inheritdoc
      */
@@ -99,7 +100,7 @@ class Schedule extends \yii\db\ActiveRecord
     public function getScheduleDetails($hospital, $Investigation)
     {
         $con = \Yii::$app->db;
-        $query = "SELECT hospInv.amount
+        $query = "SELECT hospInv.amount,hospInv.isHomeCollection
             FROM schedule sh
             JOIN hospital_investigation_mapping hospInv ON hospInv.hospital_clinic_id = sh.hospital_id AND hospInv.investigation_id = sh.investigation_id   
             WHERE sh.hospital_id = '$hospital' AND sh.investigation_id = '$Investigation'";

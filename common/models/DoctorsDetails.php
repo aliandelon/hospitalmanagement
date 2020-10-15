@@ -117,4 +117,30 @@ class DoctorsDetails extends \yii\db\ActiveRecord
         $result = $con->createCommand($query)->queryAll();
         return json_encode($result);
     }
+
+    public function getOurDoctorsCount()
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(id) as count FROM doctors_details WHERE hospital_clinic_id = ".Yii::$app->user->identity->id." AND status = 1";
+        $result = $con->createCommand($query)->queryAll();
+        return $result[0]['count'];
+    }
+
+    public function getDoctorSummary($hospital)
+    {
+
+        $con = \Yii::$app->db;
+        $query = "SELECT count(app.doctor_id) as docId, doc.name as name, app.app_date,holi.doctor_id FROM doctors_details doc LEFT JOIN appointments app ON app.doctor_id = doc.id AND app.app_date = DATE_FORMAT(now(),'%Y-%m-%d') LEFT JOIN holiday_list holi ON holi.holiday_date = DATE_FORMAT(now(),'%Y-%m-%d') AND holi.doctor_id = doc.id WHERE doc.hospital_clinic_id = '$hospital' GROUP BY doc.id ORDER BY doc.name";
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
+
+    public function viewDoctorsDashboard($hospital)
+    {
+        $con = \Yii::$app->db;
+         $query = "SELECT doc.id,doc.name as name,doc.profile_image as img,doc.qualifications,doc.registration_no,doc.phone,doc.gender,doc.email,doc.address,spec.name as spectial, holi.doctor_id FROM doctors_details doc LEFT JOIN doctor_specialty_mst spec ON doc.specialty_id = spec.id LEFT JOIN holiday_list holi ON holi.holiday_date = DATE_FORMAT(now(),'%Y-%m-%d') AND holi.doctor_id = doc.id WHERE doc.hospital_clinic_id = '$hospital' ORDER BY name LIMIT 20";
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
 }

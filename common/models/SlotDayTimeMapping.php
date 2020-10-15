@@ -84,4 +84,19 @@ class SlotDayTimeMapping extends \yii\db\ActiveRecord
         $result  = $con->createCommand($sql)->execute();
         return $result;
     }
+    public function getTotalInvestigationEarnings()
+    {
+        $con = \Yii::$app->db;
+        $query = "SELECT date_format(pay.pay_date,'%b') as month,sum(pay.amount) as amt,count(map.investigation_id) as count FROM payment_details pay LEFT JOIN slot_day_time_mapping map ON pay.slot_day_time_mapping_id = map.id WHERE map.investigation_id != '' AND map.investigation_id != '0' AND map.hospital_clinic_id = '3' GROUP BY MONTH(pay.pay_date) ORDER BY MONTH(pay.pay_date)";
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
+
+    public function getTotalAppointmentsEarnings()
+    {
+        $con = \Yii::$app->db;
+        $query = "SELECT date_format(pay.pay_date,'%b') as month,sum(pay.amount) as amt,count(map.doctor_id) as count FROM payment_details pay LEFT JOIN slot_day_time_mapping map ON pay.slot_day_time_mapping_id = map.id WHERE map.doctor_id != '' AND map.doctor_id != '0' AND map.hospital_clinic_id = '3' GROUP BY MONTH(pay.pay_date) ORDER BY MONTH(pay.pay_date)";
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
 }
