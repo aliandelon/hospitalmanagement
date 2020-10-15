@@ -192,9 +192,11 @@ class SiteController extends Controller {
             return $this->render('payment', ['apikey' => $api_key]);
         }
         public function actionPrivacaypolicy() {
+            $this->layout = 'loginNew';
             return $this->render('privacaypolicy.html');
         }
         public function actionTermsandcondition() {
+            $this->layout = 'loginNew';
             return $this->render('termsandcondition.html');
         }
 }
