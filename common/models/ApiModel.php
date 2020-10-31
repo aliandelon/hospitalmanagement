@@ -81,7 +81,7 @@ class ApiModel extends \yii\db\ActiveRecord
         }
     }
 
-    public function getVerifyOtp($idx, $otp, $userId, $mobile) 
+    public function getVerifyOtp($idx, $otp, $userId, $mobile, $firebaseToken) 
     {
         $con = \Yii::$app->db;
         $response = [];
@@ -89,6 +89,7 @@ class ApiModel extends \yii\db\ActiveRecord
             case 100:
                 $query = "SELECT id as UserId,first_name,last_name
                     from patient_details where otp='$otp' and phone ='$mobile';";
+                $insert="UPDATE patient_details SET firebase_token = '$firebaseToken' WHERE phone ='$mobile' AND id='$userId';";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
@@ -99,6 +100,7 @@ class ApiModel extends \yii\db\ActiveRecord
             $result = $con->createCommand($query)->queryOne();
             if($result && isset($result['UserId']))
             {
+                $result2 = $con->createCommand($insert)->execute();
                 if(!empty($result['UserId']))
                 {
 

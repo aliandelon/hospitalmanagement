@@ -186,13 +186,13 @@ class ApiController extends \yii\rest\Controller
         }
     }
 
-    public function actionVerifyOtp($idx, $otp, $userId,$mobile)
+    public function actionVerifyOtp($idx, $otp, $userId,$mobile,$firebaseToken)
     {
         try
         {
             $response = [];
             $model = new ApiModel();
-            $getUserDetails = $model->getVerifyOtp($idx, $otp, $userId, $mobile);
+            $getUserDetails = $model->getVerifyOtp($idx, $otp, $userId, $mobile, $firebaseToken);
             if ( $getUserDetails )
             {
                 if($getUserDetails['status'] == 1)
