@@ -411,7 +411,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     $investigations = "SELECT
                                 hpmapping.investigation_id as sub_category_id,
                                 inv.investigation_name as name,
-                                hpmapping.amount as price,CASE hpmapping.isHomeCollection WHEN 1 THEN 'true' ELSE 'false'  END as isHomeCollection 
+                                hpmapping.amount as price,CASE hpmapping.isHomeCollection WHEN 1 THEN 'true' ELSE 'false'  END as isHomeCollection ,COALESCE(hpmapping.details,'') as package_details 
                             FROM
                                 hospital_clinic_details hp
                             JOIN hospital_investigation_mapping hpmapping
@@ -734,6 +734,32 @@ class ApiModel extends \yii\db\ActiveRecord
             
             $con->close();
             return $response;
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
+    public function setFeedBack($data) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        $idx = $data['idx'];
+        switch ($idx) {
+            case 100:
+                $date = date('Y-m-d');
+                $insert = "INSERT INTO feedback(user_id,user_type,message,rating,submit_date)values('$data[userId]','$data[userType]','$data[message]','$data[rating]','$date');";
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $result = $con->createCommand($insert)->execute();
+            $response = ["status" => 1, "content" => $result];
+            return $response;
+            $con->close();
         } catch (yii\db\Exception $e) {
             $response = ["status" => 0, "content" => $e];
             $con->close();

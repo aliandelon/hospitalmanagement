@@ -500,4 +500,31 @@ class ApiController extends \yii\rest\Controller
             return $e;
         }
     }
+    public function actionSetfeedback()
+    {  
+        try
+        {
+            $response = [];
+            ini_set('memory_limit', '-1');
+            $model = new ApiModel();
+            $rawData  = self::readData();
+            $inputData = $rawData;
+            $setFeedBack = $model->setFeedBack($inputData);
+            if ( $setFeedBack && $setFeedBack['status'] == 1)
+            {
+                try {
+                    $response['status']  = "success";
+                    $response['content'] = $setFeedBack;
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return $response;
+                }
+                return $response;
+            }
+            $this->setResponseFormat(1);
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
 }
