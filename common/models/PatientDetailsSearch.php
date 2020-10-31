@@ -41,7 +41,7 @@ class PatientDetailsSearch extends PatientDetails
      */
     public function search($params)
     {
-        $query = PatientDetails::find();
+        $query = PatientDetails::find()->joinWith('appointments');;
 
         // add conditions that should always apply here
 
@@ -76,7 +76,8 @@ class PatientDetailsSearch extends PatientDetails
             ->andFilterWhere(['like', 'district', $this->district])
             ->andFilterWhere(['like', 'city', $this->city])
             ->andFilterWhere(['like', 'area', $this->area]);
-            $query->andFilterWhere(['=', 'refer_id', 0]);
+             $query->andWhere(['=','hospital_clinic_id',Yii::$app->user->identity->id]);
+        $query->andWhere(['=','refer_id','0']);
        
         return $dataProvider;
     }
@@ -120,4 +121,47 @@ class PatientDetailsSearch extends PatientDetails
 
         return $dataProvider;
     }
+    public function search3($params)
+    {
+        $query = PatientDetails::find()->joinWith('appointments');
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'age' => $this->age,
+            'gender' => $this->gender,
+            'status' => $this->status,
+            'created_on' => $this->created_on,
+        ]);
+
+        $query->andFilterWhere(['like', 'first_name', $this->first_name])
+            ->andFilterWhere(['like', 'last_name', $this->last_name])
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'phone', $this->phone])
+            ->andFilterWhere(['like', 'profile_image', $this->profile_image])
+            ->andFilterWhere(['like', 'address', $this->address])
+            ->andFilterWhere(['like', 'state', $this->state])
+            ->andFilterWhere(['like', 'district', $this->district])
+            ->andFilterWhere(['like', 'city', $this->city])
+            ->andFilterWhere(['like', 'area', $this->area]);
+        $query->andWhere(['=','hospital_clinic_id',Yii::$app->user->identity->id]);
+        $query->andWhere(['<>','refer_id','0']);
+
+        return $dataProvider;
+    }
 }
+// select dispatient.

@@ -71,6 +71,7 @@ class AppointmentsSearch extends Appointments
         ]);
         $query->andFilterWhere(['>', 'investigation_id', 0]);
         $query->andFilterWhere(['=', 'hospital_clinic_id', Yii::$app->user->identity->id]);
+        $query->andFilterWhere(['=', 'app_date', date("Y-m-d")]);
         return $dataProvider;
     }
      public function search2($params)
@@ -104,6 +105,7 @@ class AppointmentsSearch extends Appointments
         ]);
          $query->andFilterWhere(['>', 'doctor_id', 0]);
         $query->andFilterWhere(['=', 'hospital_clinic_id', Yii::$app->user->identity->id]);
+         $query->andFilterWhere(['=', 'app_date', date("Y-m-d")]);
         return $dataProvider;
     }
 
@@ -137,6 +139,7 @@ class AppointmentsSearch extends Appointments
             'app_time' => $this->app_time,
         ]);
         $query->andFilterWhere(['=', 'hospital_clinic_id', Yii::$app->user->identity->id]);
+
         return $dataProvider;
     }
 

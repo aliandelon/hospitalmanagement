@@ -229,4 +229,13 @@ class PatientDetails extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+
+     public function getAppointments()
+        {
+            return $this->hasMany(Appointments::className(), ['patient_id' => 'id']);
+           
+
+        }
+
 }

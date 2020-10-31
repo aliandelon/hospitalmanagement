@@ -107,6 +107,17 @@ class Schedule extends \yii\db\ActiveRecord
         $result = $con->createCommand($query)->queryAll();
         return $result;
     }
+     public function getDoctorScheduleDetails($hospital, $docId)
+    {
+        $con = \Yii::$app->db;
+        $query = "SELECT docSch.amount
+            FROM schedule sh
+            JOIN doctor_schedule_mapping docSch ON docSch.hospital_clinic_id = sh.hospital_id AND docSch.doctor_id = sh.doctor_id   
+            WHERE sh.hospital_id = '$hospital' AND sh.doctor_id = '$docId'";
+        $result = $con->createCommand($query)->queryAll();
+        return $result;
+    }
+    
     public function createSchedule($con, $model)
     {
         $check = "SELECT count(investigation_id) cnt FROM schedule WHERE investigation_id = '$model->investigation_id' AND hospital_id = '$model->hospital_id';";

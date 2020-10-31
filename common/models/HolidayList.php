@@ -75,14 +75,17 @@ class HolidayList extends \yii\db\ActiveRecord
 
     public function viewLeaveDoctors($con,$hospital)
     {
-         $query = "SELECT doc.name as name,doc.id as id, doc.profile_image as image, DATE_FORMAT(hlist.holiday_date, '%b %d %Y') as leaveDate FROM holiday_list hlist LEFT JOIN  doctors_details doc ON hlist.doctor_id = doc.id WHERE hospital_id = '$hospital' AND doctor_id != 0 ORDER BY hlist.holiday_date ASC";
+        $date=date("Y-m-d");
+         $query = "SELECT doc.name as name,doc.id as id, doc.profile_image as image, DATE_FORMAT(hlist.holiday_date, '%d-%m-%Y') as leaveDate FROM holiday_list hlist JOIN  doctors_details doc ON hlist.doctor_id = doc.id WHERE hospital_id = '$hospital' AND doctor_id != 0 AND hlist.holiday_date = '$date' ORDER BY hlist.holiday_date ASC";
+        
         $result = $con->createCommand($query)->queryAll();
         return $result;
     }
 
      public function viewLeaveDoctorsAjax($con,$hospital,$startDate,$endDate)
         {
-        $query = "SELECT doc.name as name,doc.id as id, doc.profile_image as image, DATE_FORMAT(hlist.holiday_date, '%b %d %Y') as leaveDate FROM holiday_list hlist LEFT JOIN  doctors_details doc ON hlist.doctor_id = doc.id WHERE hospital_id = '$hospital' AND doctor_id != 0 AND hlist.holiday_date >= '$startDate' AND hlist.holiday_date<='$endDate' ORDER BY hlist.holiday_date ASC";
+        $query = "SELECT doc.name as name,doc.id as id, doc.profile_image as image, DATE_FORMAT(hlist.holiday_date, '%d-%m-%Y') as leaveDate FROM holiday_list hlist JOIN  doctors_details doc ON hlist.doctor_id = doc.id WHERE hospital_id = '$hospital' AND doctor_id != 0 AND hlist.holiday_date >= '$startDate' AND hlist.holiday_date<='$endDate' ORDER BY hlist.holiday_date ASC";
+        
             $result = $con->createCommand($query)->queryAll();
         return $result;
     }
