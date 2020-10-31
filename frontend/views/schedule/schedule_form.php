@@ -86,6 +86,10 @@ use common\models\DoctorsDetails;
             <?= $form->field($model, 'amount')->textInput(['maxlength' => true]) ?>
             <span id="amounterror" style="color: red;display: none;">Please enter amount</span>
         </div>
+        <div class="col-md-6" id="details" style="display: none">
+            <?= $form->field($model, 'details')->textArea(['maxlength' => true]) ?>
+            <span id="detailserror" style="color: red;display: none;">Please enter package details</span>
+        </div>
          <div class="col-md-6" id="">
             <div class="form-check form-check-inline" id="sample-collection" style="padding-top: 30px;width:100%;display: none">
                 <!-- <input type="checkbox" id="schedule-ishomecollection" name="Schedule[isHomeCollection]" value="1"> -->
@@ -236,16 +240,19 @@ $(document).ready(function(){
         $('#type').on('change',function(e){
             var type = $('#type').val();
              $('.field-schedule-amount').css('display','none');
+             $('.field-schedule-details').css('display','none');
             if(type == 1){
                 
 
 
                 $('#sample-collection').css('display','block');
+                $('#details').css('display','block');
                 $('#doctor').css('display','none');
                 
                 $('#investigation').css('display','block');
             }else{
                 $('#sample-collection').css('display','none');
+                $('#details').css('display','none');
                 $('#doctor').css('display','block');
               
                 $('#investigation').css('display','none');
@@ -273,6 +280,7 @@ $(document).ready(function(){
                     $('#dateerror2').css('display','none');
                 }
                 var amount = $('#schedule-amount').val();
+                var details = $('#schedule-details').val();
                 var ishomecollection=$('#schedule-ishomecollection').val();
                 var investigation = $('#schedule-investigation_id').val();
                 var slots = $('#slot').val(); 
@@ -316,7 +324,7 @@ $(document).ready(function(){
                 // alert(ishomecollection);
                 $.ajax({
                      url:baseurl+'schedule/schedule',
-                     data:{'eDate':eventDate,'eDate2':eventDate2,'slots':slots,'investigation':investigation,'amount':amount,'ishomecollection':ishomecollection},
+                     data:{'eDate':eventDate,'eDate2':eventDate2,'slots':slots,'investigation':investigation,'amount':amount,'details':details,'ishomecollection':ishomecollection},
                      type:'POST',
                      success:function(data){
                         // $('#accordion').html(data);
@@ -400,6 +408,7 @@ $(document).ready(function(){
         });
         $('#schedule-investigation_id').on('change', function() {
             $('.field-schedule-amount').css('display','block');
+            $('.field-schedule-details').css('display','block');
             var option = this.value;
             $('#add_schedule_button').css('display','block');
             $.ajax({
@@ -412,6 +421,7 @@ $(document).ready(function(){
                     if(typeof(result[0]) != 'undefined') 
                     {                    
                         $('#schedule-amount').val(result[0]['amount']);
+                        $('#schedule-details').val(result[0]['details']);
                         // alert(result[0]['isHomeCollection']);
                         if(result[0]['isHomeCollection']=='1'){
                                 $('#schedule-ishomecollection').val(1);
@@ -427,6 +437,7 @@ $(document).ready(function(){
                        
                          $('#schedule-ishomecollection').val(0);
                         $('#schedule-amount').val(null);
+                        $('#schedule-details').val(null);
                     }
                     // $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
                     //  $('#schedule_calendar').fullCalendar('removeEvents', item.id);
