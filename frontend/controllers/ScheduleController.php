@@ -99,7 +99,7 @@ public function actionIndex()
             $model2->hospital_clinic_id = $model->hospital_id;
             $model2->amount = $model->amount;
             $model2->duration = '30';
-            $model2->details = '';
+            $model2->details =  $model->details;
             $model2->status = 1;
             $checkResult = $model->checkScheduleExist($con, $model);
             if($checkResult == 0){
@@ -235,6 +235,7 @@ public function actionIndex()
                 $model2->day = $date->format('Y-m-d'); */
                 $model2->hospital_clinic_id = $model->hospital_id;
                 $model->amount = $post['amount'];
+                $model->details = $post['details'];
                 $model->isHomeCollection = $post['ishomecollection'];
                 if($model->createSchedule($con, $model)){
                     $start = $post['eDate'];
@@ -254,6 +255,7 @@ public function actionIndex()
                         $model3->investigation_id = $model->investigation_id;
                         $model3->hospital_clinic_id = $model->hospital_id;
                         $model3->amount = $model->amount;
+                        $model3->details = $model->details;
                         $model3->isHomeCollection=$model->isHomeCollection;
 
                         if($model3->saveHospitalInvestigation($con,$model3)){
