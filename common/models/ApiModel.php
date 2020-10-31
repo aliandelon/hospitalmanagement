@@ -231,7 +231,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 $latitude = $datas['latitude'];
                 $longitude = $datas['longitude'];
                 $pageLength = $datas['page_length'];
-                $userId     = $datas['userId'];
+                $userId     = isset($datas['userId'])?$datas['userId']:'';
                 $curPage = isset($datas['current_page'])?$datas['current_page']:0;
                 $city = $datas['city'];
                 if($curPage == 0)
