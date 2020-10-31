@@ -231,6 +231,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 $latitude = $datas['latitude'];
                 $longitude = $datas['longitude'];
                 $pageLength = $datas['page_length'];
+                $userId     = $datas['userId'];
                 $curPage = isset($datas['current_page'])?$datas['current_page']:0;
                 $city = $datas['city'];
                 if($curPage == 0)
@@ -250,8 +251,32 @@ class ApiModel extends \yii\db\ActiveRecord
                 $bannerQuery = "SELECT concat('$images','banners/',id,'/',id,'.',image) as image from banners where expiry_date > '$curDate' and status = 1; ";
                 
                 if ($type == 'Hospital')
-                {
-                    if(!empty($latitude) && !empty($longitude))
+                {   
+                    if($city == '' && empty($latitude) && empty($longitude))
+                    {
+                        if(!empty($userId))
+                        { 
+                            $userCity = "SELECT city from patient_details where id = '$userId';";
+                            $result = $con->createCommand($userCity)->queryOne();
+                            if($result)
+                            {
+                                $cityVal = $result['city'];
+                                $searchCndn.= "AND city like '%$cityVal%' ";
+                                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
+                            }else{
+                                $response = ["status" => 2, "content" => "user city is empty"];
+                                return $response;
+                            }
+                        }else{ 
+                            $response = ["status" => 2, "content" => "please pass user id"];
+                            return $response;
+                        }
+                    }
+                    else if($city != '')
+                    {
+                        $searchCndn.= "AND city like '%$city%' ";
+                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
+                    }else if(!empty($latitude) && !empty($longitude))
                     {
                         $query = "SELECT
                                 user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,
@@ -276,19 +301,38 @@ class ApiModel extends \yii\db\ActiveRecord
                             ORDER BY
                                 distance
                             $limitOffset";
-                    }else {
-                        if($city != '')
-                        {
-                            $searchCndn.= "AND city like '%$city%' ";
-                        }
-                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
                     }
                 }else{
                     
-                    if(!empty($latitude) && !empty($longitude))
+                    if($city == '' && empty($latitude) && empty($longitude))
+                    {
+                        if(!empty($userId))
+                        { 
+                            $userCity = "SELECT city from patient_details where id = '$userId';";
+                            $result = $con->createCommand($userCity)->queryOne();
+                            if($result)
+                            {
+                                $cityVal = $result['city'];
+                                $searchCndn.= "AND city like '%$cityVal%' ";
+                                $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
+                            }else{
+                                $response = ["status" => 2, "content" => "user city is empty"];
+                                return $response;
+                            }
+                        }else{ 
+                            $response = ["status" => 2, "content" => "please pass user id"];
+                            return $response;
+                        }
+                    }
+                    else if($city != '')
+                    {
+                        $searchCndn.= "AND city like '%$city%' ";
+                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
+                    }else if(!empty($latitude) && !empty($longitude))
                     {
                         $query = "SELECT
-                                user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end  as image,
+                                user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,
+                                case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image,
                                 (
                                     6371 *
                                     acos(
@@ -309,13 +353,6 @@ class ApiModel extends \yii\db\ActiveRecord
                             ORDER BY
                                 distance
                             $limitOffset";
-                            
-                    }else{
-                        if($city != '')
-                        {
-                            $searchCndn.= "AND city like '%$city%' ";
-                        }
-                        $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end  as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
                     }
                 } 
                 break;
@@ -323,7 +360,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 $response = ["status" => 2, "content" => ""];
                 return $response;
         }
-        try { 
+        try { //print($query);exit;
             $result = $con->createCommand($query)->queryAll();
             $banner = $con->createCommand($bannerQuery)->queryAll();
             $response = ["status" => 1, "data" => $result,"current_page"=>$curPage,"banner_images"=>$banner];
@@ -749,7 +786,7 @@ class ApiModel extends \yii\db\ActiveRecord
         switch ($idx) {
             case 100:
                 $date = date('Y-m-d');
-                $insert = "INSERT INTO feedback(user_id,user_type,message,rating,submit_date)values('$data[userId]','$data[userType]','$data[message]','$data[rating]','$date');";
+                $insert = "INSERT INTO feedback(user_id,user_type,message,submit_date)values('$data[userId]','$data[userType]','$data[message]','$date');";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];

@@ -284,6 +284,9 @@ class ApiController extends \yii\rest\Controller
                     return $response;
                 }
                 return $response;
+            }else{
+                $response['content']  = $getHospitalClinic;
+                return $response;
             }
             $this->setResponseFormat(1);
         }catch (yii\base\ErrorException $e) {
