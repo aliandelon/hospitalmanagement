@@ -13,9 +13,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="doctors-details-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+<div class="card-box mb-0">
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
+</div>
 
 </div>

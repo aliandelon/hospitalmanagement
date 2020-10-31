@@ -8,6 +8,11 @@ use common\models\Investigations;
 use common\models\DoctorsDetails;
 // use kartik\select2\Select2;
 ?>
+<style>
+.field-schedule-amount{
+    display: none;
+}
+</style>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
@@ -30,14 +35,17 @@ use common\models\DoctorsDetails;
     <?php endif; ?>
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->errorSummary($model) ?>
-   
+   <?php $invaccess=\common\models\HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one()
+   ?>
     <div class="row">
         <div class="col-md-6">
             <div class="form-group field-schedule-type has-success">
                 <label class="control-label" for="type">Choose a Type:</label>
                 <select name="type" id="type" class="form-control">
                   <option value="2">Doctor Appoinment</option>
+                 <?php if($invaccess->have_diagnostic_center=='1'){ ?>
                   <option value="1">Investigation</option>
+                    <?php } ?>
                   
                 </select>
             </div>
@@ -74,7 +82,7 @@ use common\models\DoctorsDetails;
     </div>
     <div class="row">
         
-        <div class="col-md-6" id="amount" style="display: none">
+        <div class="col-md-6" id="amount">
             <?= $form->field($model, 'amount')->textInput(['maxlength' => true]) ?>
             <span id="amounterror" style="color: red;display: none;">Please enter amount</span>
         </div>
@@ -227,18 +235,19 @@ $(document).ready(function(){
         });
         $('#type').on('change',function(e){
             var type = $('#type').val();
+             $('.field-schedule-amount').css('display','none');
             if(type == 1){
                 
 
 
                 $('#sample-collection').css('display','block');
                 $('#doctor').css('display','none');
-                $('#amount').css('display','block');
+                
                 $('#investigation').css('display','block');
             }else{
                 $('#sample-collection').css('display','none');
                 $('#doctor').css('display','block');
-                $('#amount').css('display','none');
+              
                 $('#investigation').css('display','none');
             }
 
@@ -335,6 +344,7 @@ $(document).ready(function(){
                 }else{
                     $('#dateerror').css('display','none');
                 }
+                var amount = $('#schedule-amount').val();
                 var doctor = $('#schedule-doctor_id').val();
                 var slots = $('#slot').val(); 
                 if(slots == '' || slots == null){
@@ -365,9 +375,18 @@ $(document).ready(function(){
                 }else{
                     $('#commonerror').css('display','none');
                 } 
+                 if(amount == '')
+                {
+                    $('#add_schedule_event').modal('hide')
+                    $('#amounterror').css('display','block');
+                    return false;
+                }else
+                {
+                    $('#amounterror').css('display','none');
+                }
                 $.ajax({
                      url:baseurl+'schedule/doctor-schedule',
-                     data:{'eDate':eventDate,'eDate2':eventDate2,'slots':slots,'doctor':doctor},
+        data:{'eDate':eventDate,'eDate2':eventDate2,'slots':slots,'doctor':doctor,'amount':amount},
                      type:'POST',
                      success:function(data){
                         // $('#accordion').html(data);
@@ -380,6 +399,7 @@ $(document).ready(function(){
             }
         });
         $('#schedule-investigation_id').on('change', function() {
+            $('.field-schedule-amount').css('display','block');
             var option = this.value;
             $('#add_schedule_button').css('display','block');
             $.ajax({
@@ -420,12 +440,65 @@ $(document).ready(function(){
         });
 
         $('#schedule-doctor_id').on('change', function() {
-            // $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
-            //  $('#schedule_calendar').fullCalendar('removeEvents', item.id);
-            // });
-            $('#schedule_calendar').fullCalendar('destroy');
-            $.CalendarApp1.init();
+           
+            $('.field-schedule-amount').css('display','block');
+
+             var option = this.value;
+
             $('#add_schedule_button').css('display','block');
+            $.ajax({
+                url:baseurl+'schedule/get-doctor-schedule',
+                data:{'option':option},
+                type:'POST',
+                success:function(data){
+                    var result = JSON.parse(data);
+
+                    if(typeof(result[0]) != 'undefined') 
+                    {                    
+                        $('#schedule-amount').val(result[0]['amount']);
+                        // alert(result[0]['isHomeCollection']);
+                        // if(result[0]['isHomeCollection']=='1'){
+                        //         $('#schedule-ishomecollection').val(1);
+                        //         $('#schedule-ishomecollection').attr('checked','true');
+                        //     }else{
+                        //          $('#schedule-ishomecollection').attr('checked','false');
+                        //         $('#schedule-ishomecollection').val(0);
+                        //     }
+                    }else
+                    {
+                        
+                        // $('#schedule-ishomecollection').attr('checked', false);
+                       
+                        //  $('#schedule-ishomecollection').val(0);
+                        $('#schedule-amount').val(null);
+                    }
+                    // $.each($('#schedule_calendar').fullCalendar('clientEvents'), function (i, item) {
+                    //  $('#schedule_calendar').fullCalendar('removeEvents', item.id);
+                    // });
+                    $('#schedule_calendar').fullCalendar('destroy');
+                    $.CalendarApp1.init();
+                },
+                error:function(){
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // $('#schedule_calendar').fullCalendar('destroy');
+            // $.CalendarApp1.init();
+            // $('#add_schedule_button').css('display','block');
         });
         var date_diff_indays = function(date1,date2 ) {
           dt1 = new Date(date1);

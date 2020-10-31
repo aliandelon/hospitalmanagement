@@ -13,22 +13,20 @@ $this->params['breadcrumbs'][] = $this->title;
 $get = !empty(Yii::$app->request->get()) ? Yii::$app->request->get() : array('type' =>  1);
 
 ?>
+<div class="card-box mb-0">
 <div class="appointments-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
   
-    <?php 
-   // print_r($dataProvider2);exit;
-    GridView::widget([
+   <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'id',
-            // 'patient_id',
             ['attribute'=>'patient_id',
             'label' => 'Patient',
             'filter'=>false,
@@ -40,16 +38,17 @@ $get = !empty(Yii::$app->request->get()) ? Yii::$app->request->get() : array('ty
                         return "";
                     }
             }],
-            ['attribute'=>'doctor_id',
+            // 'doctor_id',
+             ['attribute'=>'doctor_id',
             'label' => 'Doctor',
             'filter'=>false,
-            'visible' => ($get['type'] != 0) ? true : false,
+            // 'visible' => ($get['type'] != 0) ? true : false,
             'value' => function($model){
                  $tata = common\models\DoctorsDetails::findOne($model->doctor_id);
                  if(!empty($tata)){
                     return $tata->name;
                 }else{
-                    return "";
+                    return "NO";
                 }
                  
                
@@ -57,7 +56,7 @@ $get = !empty(Yii::$app->request->get()) ? Yii::$app->request->get() : array('ty
             ],  
             ['attribute'=>'investigation_id',
             'label' => 'Investigation',
-            'visible' => ($get['type'] != 1) ? true : false,
+            // 'visible' => ($get['type'] != 1) ? true : false,
             // 'filter'=>ArrayHelper::map(common\models\Investigations::find()->where(['hospital_clinic_id'=>$searchModel->hospital_clinic_id])->asArray()->all(), 'id', 'investigation_name'),
             'value' => function($model){
                  $data = common\models\HospitalInvestigationMapping::findOne($model->investigation_id);
@@ -66,42 +65,50 @@ $get = !empty(Yii::$app->request->get()) ? Yii::$app->request->get() : array('ty
                     if(!empty($data1)){
                         return $data1->investigation_name;
                     }else{
-                        return "";
+                        return "NO";
                     }
                  }else{
-                    return "";
+                    return "NO";
                  }
                  
                
             }
             ],
             // 'slot_day_time_mapping_id:datetime',
-            // ['attribute'=>'slot_day_time_mapping_id',
-            // 'label' => 'Slot',
-            // 'filter'=>false,
-            // 'value' => function($model){
-            //      $data = common\models\SlotDayTimeMapping::find()->where(['id'=>$model->slot_day_time_mapping_id])->one();
-            //      return $data->from_time.'-'.$data->to_time;
-               
-            // }
-            // ],
-            ['attribute'=>'hospital_clinic_id',
-            'label' => 'Hospital',
+            // 'hospital_clinic_id',
+            // '',
+            
+            ['attribute'=>'app_time',
+            'label' => 'Appointment Time',
             'filter'=>false,
             'value' => function($model){
-                 $data = common\models\HospitalClinicDetails::find()->where(['user_id'=>$model->hospital_clinic_id])->one();
-                 return $data->name;
+                 $datea= date_create($model->app_time);
+                return date_format($datea,'h:i A');
+              
                
             }
-            ],
-            // 'app_date',
-            // 'app_time',
-            // 'appointment_type',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            ],  
+             ['attribute'=>'app_date',
+            'label' => 'Appointment Date',
+            'filter'=>false,
+            'value' => function($model){
+                 $datea= date_create($model->app_date);
+                return date_format($datea,'d-m-Y');
+                //  $tata = common\models\DoctorsDetails::findOne($model->doctor_id);
+                //  if(!empty($tata)){
+                //     return $tata->name;
+                // }else{
+                //     return "";
+                // }
+                 
+               
+            }
+            ],  
+            // ['class' => 'yii\grid\ActionColumn'],
         ],
-    ]) ?>
+    ]); ?>
 </div>
 <script type="text/javascript">
     var baseurl = "<?php print \yii\helpers\Url::base() . "/"; ?>";
 </script>
+</div>

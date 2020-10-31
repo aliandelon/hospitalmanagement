@@ -163,7 +163,7 @@ if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$a
                             <a href="#"><i class="fa fa-user"></i> <span> Patients </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
                                 <li><a href="<?= Yii::$app->request->baseUrl . '/patient-details' ?>">Patients</a></li>
-                                <li><a href="leaves.html">Reffered Patients</a></li>
+                                <li><a href="<?= Yii::$app->request->baseUrl . '/patient-details/reffered-patients' ?>">Reffered Patients</a></li>
                                
                             </ul>
                         </li>
@@ -181,7 +181,7 @@ if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$a
                             <a href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update2?id='.$selectHospitalId->id ?>"><i class="fa fa-cog"></i> <span>Settings</span></a>
                         </li>
                         <li>
-                            <a href="salary-settings.html"><i class="fa fa-money"></i> <span>Payments</span></a>
+                            <a href="<?= Yii::$app->request->baseUrl . '/payment-details' ?>"><i class="fa fa-money"></i> <span>Earnings</span></a>
                         </li>
                         <li>
                             <a href="<?= Yii::$app->request->baseUrl . '/packages' ?>"><i class="fa fa-money"></i> <span>Subscription</span></a>

@@ -56,7 +56,7 @@ use yii\widgets\ActiveForm;
                             <div class="profile-upload">
                                 <div class="upload-img">
                                     <?php if($model->profile_image){?>
-                                        <img alt="" src="<?php echo Yii::$app->request->baseUrl . '/uploads/doctors/'.$model->id.'.'. $model->profile_image?>" width="60px">
+                                        <img alt="" src="<?php echo Yii::$app->request->baseUrl . '/uploads/doctors/'.$model->id.'/'.$model->id.'.'. $model->profile_image?>" width="60px">
                                     <?php }else{?>
                                         <i class="fa fa-user-md fa-2x"></i>
                                     <?php } ?>

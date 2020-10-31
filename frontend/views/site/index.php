@@ -2,15 +2,18 @@
 
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="dash-widget">
+                       <a href="<?= Yii::$app->request->baseUrl . '/doctors-details' ?>"> 
+                       	<div class="dash-widget">
 							<span class="dash-widget-bg1"><i class="fa fa-stethoscope" aria-hidden="true"></i></span>
 							<div class="dash-widget-info text-right">
 								<h3><?php echo $params['ourDoctors'] ?></h3>
 								<span class="widget-title1">Total Doctors <i class="fa fa-check" aria-hidden="true"></i></span>
 							</div>
                         </div>
+                       </a> 
                     </div>
                      <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                     	 <a href="<?= Yii::$app->request->baseUrl . '/appointments/index2'?>"> 
                         <div class="dash-widget">
                             <span class="dash-widget-bg3"><i class="fa fa-user-md" aria-hidden="true"></i></span>
                             <div class="dash-widget-info text-right">
@@ -18,8 +21,10 @@
                                 <span class="widget-title3">Appointments <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
+                         </a> 
                     </div>
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    	 <a href="<?= Yii::$app->request->baseUrl . '/patient-details' ?>"> 
                         <div class="dash-widget">
                             <span class="dash-widget-bg2"><i class="fa fa-wheelchair"></i></span>
                             <div class="dash-widget-info text-right">
@@ -27,8 +32,10 @@
                                 <span class="widget-title2">Total Patients <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
+                         </a> 
                     </div>
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    	
                         <div class="dash-widget">
                             <span class="dash-widget-bg4"><i class="fa fa-heartbeat" aria-hidden="true"></i></span>
                             <div class="dash-widget-info text-right">
@@ -37,6 +44,7 @@
                             </div>
                         </div>
                     </div>
+                    
                 </div>
 				<div class="row">
 					<div class="col-12 col-md-8 col-lg-8 col-xl-8">

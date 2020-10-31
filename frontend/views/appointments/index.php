@@ -16,10 +16,10 @@ $get = !empty(Yii::$app->request->get()) ? Yii::$app->request->get() : array('ty
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+<div class="card-box mb-0">
     <p>
         <input type="radio" name="appointmentType" <?php echo ($get['type']!=0) ? "checked" : "";?> onclick="window.location.href='?type=1'"> Doctors Appoinments
-        <input type="radio" name="appointmentType" <?php echo ($get['type']!=1) ? "checked" : "";?> onclick="window.location.href='?type=0'"> Investigations Appoinments
+        <input type="radio" name="appointmentType" <?php echo ($get['type']!=1) ? "checked" : "";?> onclick="window.location.href='?type=0'"> Investigations
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -60,12 +60,33 @@ $get = !empty(Yii::$app->request->get()) ? Yii::$app->request->get() : array('ty
                
             }
             ],
-            // 'slot_day_time_mapping_id:datetime',
-            // 'hospital_clinic_id',
-            'app_date',
-            'app_time',
-
-            // ['class' => 'yii\grid\ActionColumn'],
+             ['attribute'=>'app_time',
+            'label' => 'Appointment Time',
+            'filter'=>false,
+            'value' => function($model){
+                 $datea= date_create($model->app_time);
+                return date_format($datea,'h:i A');
+              
+               
+            }
+            ],  
+             ['attribute'=>'app_date',
+            'label' => 'Appointment Date',
+            'filter'=>false,
+            'value' => function($model){
+                 $datea= date_create($model->app_date);
+                return date_format($datea,'d-m-Y');
+                //  $tata = common\models\DoctorsDetails::findOne($model->doctor_id);
+                //  if(!empty($tata)){
+                //     return $tata->name;
+                // }else{
+                //     return "";
+                // }
+                 
+               
+            }
+            ],  
         ],
     ]); ?>
+</div>
 </div>

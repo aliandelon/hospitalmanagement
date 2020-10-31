@@ -10,6 +10,7 @@ use yii\grid\GridView;
 $this->title = 'Doctors Details';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<div class="card-box mb-0">
 <div class="content">
                 <div class="row">
                     <div class="col-sm-4 col-3">
@@ -51,6 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div> -->
             </div>
+            </div>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -65,8 +67,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
         $('.applyBtn').html('View Doctors');
         $('.applyBtn').click(function(){
-            var dates = $('input[name=\'dates\']').val();
-            alert(dates);
+            // var dates = $('input[name=\'dates\']').val();
+            var dates = $('.drp-selected').html();
+            // alert(dates);
             $.ajax({
                  url:baseurl+'doctors-details/leave-list-ajax',
                  data:{'dates':dates},
