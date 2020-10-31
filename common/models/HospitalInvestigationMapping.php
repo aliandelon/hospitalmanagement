@@ -80,11 +80,11 @@ class HospitalInvestigationMapping extends \yii\db\ActiveRecord
         $query = "SELECT id from  hospital_investigation_mapping where investigation_id='$model->investigation_id' and hospital_clinic_id = '$model->hospital_clinic_id' AND status =1;";
         $result = $con->createCommand($query)->queryOne();
         if($result['id']){
-             $query = "UPDATE hospital_investigation_mapping SET amount = '$model->amount',isHomeCollection='$model->isHomeCollection' where investigation_id='$model->investigation_id' and hospital_clinic_id = '$model->hospital_clinic_id' AND status =1;";
+             $query = "UPDATE hospital_investigation_mapping SET amount = '$model->amount',details = '$model->details',isHomeCollection='$model->isHomeCollection' where investigation_id='$model->investigation_id' and hospital_clinic_id = '$model->hospital_clinic_id' AND status =1;";
         $result = $con->createCommand($query)->execute();
         return true;
         }else{
-            $sql = "INSERT into hospital_investigation_mapping(investigation_id,hospital_clinic_id,amount,duration,status,isHomeCollection)VALUES('$model->investigation_id','$model->hospital_clinic_id','$model->amount','30','1','$model->isHomeCollection');";
+            $sql = "INSERT into hospital_investigation_mapping(investigation_id,hospital_clinic_id,amount,duration,status,isHomeCollection,details)VALUES('$model->investigation_id','$model->hospital_clinic_id','$model->amount','30','1','$model->isHomeCollection','$model->details');";
             $result = $con->createCommand($sql)->execute();
             return $result;
         }

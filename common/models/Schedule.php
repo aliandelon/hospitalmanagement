@@ -22,6 +22,7 @@ class Schedule extends \yii\db\ActiveRecord
     public $category; 
     public $day;
     public $isHomeCollection;
+    public $details;
     /**
      * @inheritdoc
      */
@@ -36,7 +37,7 @@ class Schedule extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['investigation_id', 'hospital_id','amount'], 'required'],
+            [['investigation_id', 'hospital_id','amount','details'], 'required'],
             [['id', 'investigation_id', 'hospital_id', 'doctor_id', 'sunday_holiday', 'status'], 'integer'],
             [['created_on','amount','category'], 'safe'],
             //['amount', 'PriceValidator'],
@@ -100,7 +101,7 @@ class Schedule extends \yii\db\ActiveRecord
     public function getScheduleDetails($hospital, $Investigation)
     {
         $con = \Yii::$app->db;
-        $query = "SELECT hospInv.amount,hospInv.isHomeCollection
+        $query = "SELECT hospInv.amount,hospInv.isHomeCollection,hospInv.details
             FROM schedule sh
             JOIN hospital_investigation_mapping hospInv ON hospInv.hospital_clinic_id = sh.hospital_id AND hospInv.investigation_id = sh.investigation_id   
             WHERE sh.hospital_id = '$hospital' AND sh.investigation_id = '$Investigation'";
