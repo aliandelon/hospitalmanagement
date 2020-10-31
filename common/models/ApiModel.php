@@ -804,4 +804,53 @@ class ApiModel extends \yii\db\ActiveRecord
         }
     }
 
+    public function getStates($idx) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        switch ($idx) {
+            case 100:
+                $query = "SELECT id as stateId,name as stateName
+                    from state ;";
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $result = $con->createCommand($query)->queryAll();
+            $response = ["status" => 1, "content" => $result];
+            return $response;
+            $con->close();
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+    public function getCity($idx,$stateId) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        switch ($idx) {
+            case 100:
+                $query = "SELECT id as cityId,name as cityName
+                    from city WHERE state_id = '$stateId' ;";
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $result = $con->createCommand($query)->queryAll();
+            $response = ["status" => 1, "content" => $result];
+            return $response;
+            $con->close();
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
 }

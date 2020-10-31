@@ -530,4 +530,61 @@ class ApiController extends \yii\rest\Controller
             return $e;
         }
     }
+    public function actionGetStates($idx)
+    {  
+        try
+        {
+            $response = [];
+            ini_set('memory_limit', '-1');
+            $model = new ApiModel();
+            $getStates = $model->getStates($idx);
+            if ( $getStates && $getStates['status'] == 1)
+            {
+                try {
+                    $response['status']  = "success";
+                    $response['content'] = $getStates;
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return $response;
+                }
+            }else{
+                $response['status']  = "failure";
+                $response['content'] = $getStates;
+            }
+            return $response;
+            $this->setResponseFormat(1);
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
+
+    public function actionGetCity($idx,$stateId)
+    {  
+        try
+        {
+            $response = [];
+            ini_set('memory_limit', '-1');
+            $model = new ApiModel();
+            $getCity = $model->getCity($idx,$stateId);
+            if ( $getCity && $getCity['status'] == 1)
+            {
+                try {
+                    $response['status']  = "success";
+                    $response['content'] = $getCity;
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return $response;
+                }
+            }else{
+                $response['status']  = "failure";
+                $response['content'] = $getCity;
+            }
+            return $response;
+            $this->setResponseFormat(1);
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
 }
