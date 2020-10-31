@@ -58,6 +58,7 @@ class DoctorsDetailsController extends Controller
             $ftoDates=$this->correctDateFormat($dates);
 
         }
+
         $model = new HolidayList();
         $con = \Yii::$app->db;
         $hospital_id = Yii::$app->user->identity->id;
@@ -90,12 +91,7 @@ class DoctorsDetailsController extends Controller
      */
     public function actionIndex()
     {
-        // $searchModel = new DoctorsDetailsSearch();
-        // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        // return $this->render('index', [
-        //     'searchModel' => $searchModel,
-        //     'dataProvider' => $dataProvider,
-        // ]);
+        
         $model = new DoctorsDetails();
         $con = \Yii::$app->db;
         $hospital_id = Yii::$app->user->identity->id;
@@ -152,13 +148,7 @@ class DoctorsDetailsController extends Controller
             ]);
         }
 
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        //     return $this->redirect(['view', 'id' => $model->id]);
-        // } else {
-        //     return $this->render('create', [
-        //         'model' => $model,
-        //     ]);
-        // }
+        
     }
 
     /**

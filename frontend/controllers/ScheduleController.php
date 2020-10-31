@@ -14,7 +14,7 @@ use common\models\HolidayList;
 use common\models\SlotDayMapping;
 use common\models\SlotDayMappingSearch;
 use common\models\SlotDayTimeMapping;
-
+use common\models\DoctorScheduleMapping;
 /**
  * ScheduleController implements the CRUD actions for Schedule model.
  */
@@ -333,6 +333,18 @@ public function actionIndex()
             return json_encode($getScheduleDetails);
         }
 
+         public function actionGetDoctorSchedule() {
+            $post = Yii::$app->request->post();
+            $model = new Schedule();
+            $con = \Yii::$app->db;
+            $hospitalId = Yii::$app->user->identity->id;
+            $getScheduleDetails = $model->getDoctorScheduleDetails($hospitalId, $post['option']);
+            return json_encode($getScheduleDetails);
+        }
+
+
+
+
         public function actionDeleteSchedule()
         {
             $model = new Schedule();
@@ -365,11 +377,15 @@ public function actionIndex()
             $model2 = new SlotDayMapping();
             $con = \Yii::$app->db;
             $transaction = $con->beginTransaction();
-           //$model3 = new HospitalInvestigationMapping();
+            $model3 = new DoctorScheduleMapping();
             $model4 = new SlotDayTimeMapping();
             //$model3->duration = '30';
            //$model3->details = '';
             //$model3->status = 1;
+
+
+            // echo '<pre>';
+            // print_r($post);exit;
             if($post){
                 $hospital_id = Yii::$app->user->identity->id;
                 $model->hospital_id = $hospital_id;
@@ -377,13 +393,15 @@ public function actionIndex()
                 // $source = str_replace('/', '-',$post['eDate']);
                 // $date = new DateTime($source);
                 // $model2->day = $date->format('Y-m-d'); 
+                  $model->amount = $post['amount'];
                 $model2->hospital_clinic_id = $model->hospital_id;
                 $model->doctor_id = $post['doctor'];
                 if($model->createDoctorSchedule($con, $model)){
                     //$model3->investigation_id = $model->investigation_id;
-                    //$model3->hospital_clinic_id = $model->hospital_id;
-                    //$model3->amount = $model->amount;
-                    //if($model3->saveHospitalInvestigation($con,$model3)){
+                    $model3->doctor_id=$model->doctor_id;
+                    $model3->hospital_clinic_id = $model->hospital_id;
+                    $model3->amount = $model->amount;
+                    if($model3->saveDoctorInvestigation($con,$model3)){
                         $start = $post['eDate'];
                         $end = $post['eDate2'];
                         $date = date_create($post['eDate']);
@@ -446,6 +464,18 @@ public function actionIndex()
                     $transaction->rollback();
                     return 'failure';
                 }
+
+
+                 }else{
+                    $transaction->rollback();
+                    return 'failure';
+                }
+
+
+
+
+
+
             }
             
         }

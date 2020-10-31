@@ -54,6 +54,22 @@ class PatientDetailsController extends Controller
         ]);
     }
 
+      public function actionRefferedPatients()
+    {
+        $searchModel = new PatientDetailsSearch();
+        $dataProvider = $searchModel->search3(Yii::$app->request->queryParams);
+
+        return $this->render('reffered-patients', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+
+
+
+
     /**
      * Displays a single PatientDetails model.
      * @param integer $id
