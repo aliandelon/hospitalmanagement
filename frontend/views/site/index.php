@@ -82,13 +82,11 @@
 								    <div class="smalltext">Seconds</div>
 								  </div>
 								</div>
-								<!-- <div class="bar-chart">
-										<div class="progress">
-											  <div class="progress-bar text-green" role="progressbar" aria-valuenow="60"
-											  aria-valuemin="0" aria-valuemax="100" style="width:60%;background-color: #00BF96;">
-											  </div>
-									</div>
-								</div> -->
+								<div id="clockdiv1" style="display:none;text-align: center">
+									<br/><br/>
+									<h1><i class="fa fa-calendar"></i></h1>
+									<h1 id='endDate'></h1>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -493,6 +491,14 @@ h1{
   font-size: 40px;
   margin: 40px 0px 20px;
 }
+#clockdiv1{
+	text-align: center;
+	font-family: sans-serif;
+	color: #00816A;
+	font-weight: 500;
+	text-align: center;
+	font-size: 30px;
+}
 
 #clockdiv{
 	text-align: center;
@@ -573,14 +579,35 @@ function initializeClock(id, endtime) {
   var minutesSpan = clock.querySelector('.minutes');
   var secondsSpan = clock.querySelector('.seconds');
 
+  	function getLastDate(dateObject) {
+	    var d = new Date(dateObject);
+	    var day = d.getDate();
+	    var month = d.getMonth() + 1;
+	    var year = d.getFullYear();
+	    if (day < 10) {
+	        day = "0" + day;
+	    }
+	    if (month < 10) {
+	        month = "0" + month;
+	    }
+	    var date = day + "-" + month + "-" + year;
+
+	    return date;
+	};
   function updateClock() {
     var t = getTimeRemaining(endtime);
-
-    daysSpan.innerHTML = t.days;
-    hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
-    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
-    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
-
+    if(t.days <= 30){
+	    daysSpan.innerHTML = t.days;
+	    hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+	    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+	    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+	    $('#clockdiv1').hide();
+	    $('#clockdiv').show();
+	}else{
+		$('#clockdiv').hide();
+		$('#clockdiv1').show();
+		$('#endDate').html(getLastDate(endtime));
+	}
     if (t.total <= 0) {
       clearInterval(timeinterval);
     }
