@@ -85,7 +85,7 @@ class HospitalClinicDetails extends \yii\db\ActiveRecord
         return [
             [['user_id', 'name', 'email', 'status', 'created_by'], 'required'],
 
-            [['name','email','phone_number','pincode','address','street1', 'street2', 'latitude', 'longitude','city', 'area','state'], 'required','on' => 'updateFrontend'],
+            [['name','email','phone_number','pincode','address','razorpay_id','razorpay_name','street1', 'street2', 'latitude', 'longitude','city', 'area','state'], 'required','on' => 'updateFrontend'],
 
 [['phone_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
 
