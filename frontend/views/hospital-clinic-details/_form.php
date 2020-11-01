@@ -100,6 +100,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'address')->textarea(['rows' => 6]) ?>
 
+    <?= $form->field($model, 'razorpay_id')->textInput(['maxlength' => true]) ?>
+    
+    <?= $form->field($model, 'razorpay_name')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'pincode')->textInput() ?>
 
     <?= $form->field($model, 'street1')->textInput(['maxlength' => true]) ?>

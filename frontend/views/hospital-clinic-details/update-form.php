@@ -119,6 +119,16 @@ use kartik\file\FileInput;
                                         <?= $form->field($model, 'address')->textarea(['rows' => 6]) ?>
                                     </div>
                                 </div>
+                                 <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <?= $form->field($model, 'razorpay_id')->textInput(['maxlength' => true]) ?>
+                                    </div>
+                                </div>
+                                 <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <?= $form->field($model, 'razorpay_name')->textInput(['maxlength' => true]) ?>
+                                    </div>
+                                </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <?= $form->field($model, 'pincode')->textInput() ?>
