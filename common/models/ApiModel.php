@@ -931,4 +931,28 @@ class ApiModel extends \yii\db\ActiveRecord
         }
     }
 
+    public function insertVerificationStatus($idx,$data) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        switch ($idx) {
+            case 100:
+                $query = "INSERT INTO  payment_verification(razorpay_order_id,razorpay_payment_id,  razorpay_signature,status)VALUES('$data[orderId]','$data[paymentId]','$data[siganture]','$data[status]');";
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $result = $con->createCommand($query)->execute();
+            $response = ["status" => 1, "content" => $result];
+            return $response;
+            $con->close();
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
 }

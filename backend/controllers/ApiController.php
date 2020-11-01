@@ -12,6 +12,7 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use sizeg\jwt\Jwt;
 use sizeg\jwt\JwtHttpBearerAuth;
+use Razorpay\Api\Api;
 
 /**
  * ApiController For Api creaetion.
@@ -581,6 +582,40 @@ class ApiController extends \yii\rest\Controller
             }else{
                 $response['status']  = "failure";
                 $response['content'] = $getCity;
+            }
+            return $response;
+            $this->setResponseFormat(1);
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
+    public function actionPaymentVerification()
+    {  
+        try
+        {
+            $response = [];
+            ini_set('memory_limit', '-1');
+            $model = new ApiModel();
+            $rawData  = self::readData();
+            $inputData = $rawData;
+            $idx = $inputData['idx'];
+            $api = new Api($key_id='rzp_test_bTrHANOgDU4a8o', $key_secret='kIgswUqnhz1iGTA38M5hiZSN');
+            $attributes  = array('razorpay_order_id' => $inputData['orderId'],'razorpay_payment_id'  => $inputData['paymentId'] ,'razorpay_signature'=>$inputData['siganture']);
+            try {
+                $order  = $api->utility->verifyPaymentSignature($attributes);
+                if($order == "failed")
+                {
+                    $response['status']  = "Invalid signature passed";
+                    $inputData['status'] = 0;
+                }else{
+                    $response['status']  = "success";
+                    $inputData['status'] = 1;
+                }
+                $insertVerificationStatus = $model->insertVerificationStatus($idx,$inputData);
+            }catch (yii\base\ErrorException $e) {
+                $response['status']  = "error";
+                $response['message'] = $e->getMessage();
+                return $response;
             }
             return $response;
             $this->setResponseFormat(1);
