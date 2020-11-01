@@ -32,6 +32,8 @@ use kartik\file\FileInput;
     <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'address')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'razorpay_id')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'razorpay_name')->textInput(['maxlength' => true]) ?>
      <?=
     $form->field($model, 'profile_image')->widget(FileInput::classname(), [
           'pluginOptions' => ['previewFileType' => 'any',
