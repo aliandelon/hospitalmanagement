@@ -238,7 +238,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 {
                     $start = 0;
                 }else{
-                    $start = $curPage*$pageLength + 1;
+                    $start = $curPage*$pageLength;
                 }
                 if(!empty($pageLength) && isset($curPage))
                 {
