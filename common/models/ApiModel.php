@@ -263,6 +263,7 @@ class ApiModel extends \yii\db\ActiveRecord
                                 $cityVal = $result['city'];
                                 $searchCndn.= "AND city like '%$cityVal%' ";
                                 $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
+                                $countQuery = "SELECT count(user_id) as cntFROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn;";
                             }else{
                                 $response = ["status" => 2, "content" => "user city is empty"];
                                 return $response;
@@ -276,6 +277,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     {
                         $searchCndn.= "AND city like '%$city%' ";
                         $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
+                        $countQuery = "SELECT count(user_id) as cnt FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn;";
                     }else if(!empty($latitude) && !empty($longitude))
                     {
                         $query = "SELECT
@@ -301,6 +303,27 @@ class ApiModel extends \yii\db\ActiveRecord
                             ORDER BY
                                 distance
                             $limitOffset";
+                        $countQuery = "SELECT
+                                count(user_id) as cnt,
+                                (
+                                    6371 *
+                                    acos(
+                                        cos( radians( '$latitude' ) ) *
+                                        cos( radians(latitude) ) *
+                                        cos(
+                                            radians(longitude) - radians('$longitude')
+                                        ) +
+                                        sin(radians('$latitude')) *
+                                        sin(radians(latitude))
+                                    )
+                                ) distance
+                            FROM
+                                hospital_clinic_details
+                                WHERE status = 1 AND type = 1 $searchCndn 
+                            HAVING
+                                distance <= 25 
+                            ORDER BY
+                                distance";
                     }
                 }else{
                     
@@ -315,6 +338,7 @@ class ApiModel extends \yii\db\ActiveRecord
                                 $cityVal = $result['city'];
                                 $searchCndn.= "AND city like '%$cityVal%' ";
                                 $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
+                                $countQuery = "SELECT count(user_id) as cntFROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn;";
                             }else{
                                 $response = ["status" => 2, "content" => "user city is empty"];
                                 return $response;
@@ -328,6 +352,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     {
                         $searchCndn.= "AND city like '%$city%' ";
                         $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
+                        $countQuery = "SELECT count(user_id) as cnt FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
                     }else if(!empty($latitude) && !empty($longitude))
                     {
                         $query = "SELECT
@@ -353,6 +378,27 @@ class ApiModel extends \yii\db\ActiveRecord
                             ORDER BY
                                 distance
                             $limitOffset";
+                        $countQuery = "SELECT
+                                count(user_id) as cnt,
+                                (
+                                    6371 *
+                                    acos(
+                                        cos( radians( '$latitude' ) ) *
+                                        cos( radians(latitude) ) *
+                                        cos(
+                                            radians(longitude) - radians('$longitude')
+                                        ) +
+                                        sin(radians('$latitude')) *
+                                        sin(radians(latitude))
+                                    )
+                                ) distance
+                            FROM
+                                hospital_clinic_details
+                                WHERE status = 1 AND type = 2 $searchCndn 
+                            HAVING
+                                distance <= 25 
+                            ORDER BY
+                                distance;";
                     }
                 } 
                 break;
@@ -362,8 +408,15 @@ class ApiModel extends \yii\db\ActiveRecord
         }
         try { //print($query);exit;
             $result = $con->createCommand($query)->queryAll();
+            $totalRecords = $con->createCommand($countQuery)->queryOne();
+            if($totalRecords)
+            {
+                $total = $totalRecords['cnt'];
+            }else{
+                $total = '';
+            }
             $banner = $con->createCommand($bannerQuery)->queryAll();
-            $response = ["status" => 1, "data" => $result,"current_page"=>$curPage,"banner_images"=>$banner];
+            $response = ["status" => 1, "data" => $result,"current_page"=>$curPage,"total_rcords"=>$total,"banner_images"=>$banner];
             $con->close();
             return $response;
         } catch (yii\db\Exception $e) {
