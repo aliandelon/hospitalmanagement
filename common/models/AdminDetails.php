@@ -34,7 +34,7 @@ class AdminDetails extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['admin_id', 'name', 'email', 'phone_number', 'address', 'status','password'], 'required'],
+            [['admin_id', 'name', 'email', 'phone_number', 'address', 'razorpay_id', 'razorpay_name', 'status','password'], 'required'],
             ['profile_image', 'image', 'minWidth' => 100, 'maxWidth' => 610,'minHeight' => 100, 'maxHeight' => 610, 'extensions' => 'jpg, gif, png', 'maxSize' => 1024 * 1024 * 2],
             [['admin_id', 'role_id', 'status'], 'integer'],
             [['address'], 'string'],
@@ -59,6 +59,8 @@ class AdminDetails extends \yii\db\ActiveRecord
             'email' => Yii::t('app', 'Email'),
             'phone_number' => Yii::t('app', 'Phone Number'),
             'address' => Yii::t('app', 'Address'),
+            'razorpay_id' => Yii::t('app', 'Razorpay Id'),
+            'razorpay_name' => Yii::t('app', 'Razorpay Name'),
             'role_id' => Yii::t('app', 'Role'),
             'status' => Yii::t('app', 'Status'),
             'profile_image' => Yii::t('app', 'Profile Image'),
