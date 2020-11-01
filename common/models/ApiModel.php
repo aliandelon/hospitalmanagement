@@ -613,11 +613,30 @@ class ApiModel extends \yii\db\ActiveRecord
                     }else{
                         $appointmentTypeVal = 0;
                     }
-                    $totalPrice = 0;
-                    $status = "";
+                    $totalPrice = $adminTotal =  0;
+                    $status = $superAdminActntId = $superAdminActntName = $labAcntId = $labAcntName = "";
                     $resultVal = 1;
                     $bookedDuplicateArray = [];
                     $bookedArray = [];
+                    $superAdminCommision = "SELECT razorpay_id AS super_admin_account_id,razorpay_name AS super_admin_account_name FROM admin_details WHERE role_id = '10';";
+                    $commisionDetails = "SELECT commision_type, commision, razorpay_id AS lab_hospital_account_id,razorpay_name AS lab_hospital_account_name FROM hospital_clinic_details WHERE user_id='$id'; ";
+                    $superAdminCommisionResult = $con->createCommand($superAdminCommision)->queryOne();
+                    $commisionDetailsResult = $con->createCommand($commisionDetails)->queryOne();
+                    if($superAdminCommisionResult)
+                    {
+                        $superAdminActntId = $superAdminCommisionResult['super_admin_account_id'];
+                        $superAdminActntName = $superAdminCommisionResult['super_admin_account_name'];
+                        if($commisionDetailsResult)
+                        {
+                            $labAcntName = $commisionDetailsResult['lab_hospital_account_name'];
+                            $labAcntId = $commisionDetailsResult['lab_hospital_account_id'];
+                            $commisionType = $commisionDetailsResult['commision_type'];
+                            $commision = $commisionDetailsResult['commision'];
+                        }else{
+                            $commisionType = '';
+                            $commision = '';
+                        }
+                    }
                     foreach ($investigations as $key => $appointment) {
                         $checkSql = "SELECT  count(patient_id) cnt from appointments where doctor_id = '$appointment[doctorId]' AND investigation_id = '$appointment[investigation_id]' AND slot_day_time_mapping_id ='$appointment[slotId]' AND  hospital_clinic_id = '$id' AND app_date = '$appointment[date]';";
                         $count = $result = $con->createCommand($checkSql)->queryOne();
@@ -631,6 +650,12 @@ class ApiModel extends \yii\db\ActiveRecord
                             return $response;
                         }
                         $totalPrice = $totalPrice + $appointment['price'];
+                        if($commisionType == 1){
+                            $adminTotal = $adminTotal + $commision;
+                        }else{
+                            $perCentage = ($commision * $appointment['price']) /100;
+                            $adminTotal = $adminTotal + $perCentage;
+                        }
                         $appointmentQuery = "INSERT INTO appointments(patient_id,doctor_id,investigation_id, slot_day_time_mapping_id,hospital_clinic_id,app_date,app_time,appointment_type,isHomeCollection,price)VALUES('$datas[paitientId]','$appointment[doctorId]','$appointment[investigation_id]','$appointment[slotId]','$id','$appointment[date]','$appointment[time]','$appointmentTypeVal','$appointment[isHomeCollection]','$appointment[price]');";
                         $result = $con->createCommand($appointmentQuery)->execute();
                         if($result)
@@ -674,7 +699,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     }
                     if($resultVal == 1){
                         $transaction->commit();
-                        $response = ["status" => 1, "bookingId" => $bookedArray,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice];
+                        $response = ["status" => 1, "bookingId" => $bookedArray,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice,"super_admin_account_id"=>$superAdminActntId,"super_admin_account_name"=>$superAdminActntName,"super_admin_commison_amount"=>$adminTotal,"lab_hospital_account_id"=>$labAcntId,"lab_hospital_account_name"=>$labAcntName,"lab_hospital_commison_amount"=>($totalPrice - $adminTotal)];
                     }else{
                         if($resultVal == 3)
                         {

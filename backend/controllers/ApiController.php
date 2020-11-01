@@ -417,6 +417,7 @@ class ApiController extends \yii\rest\Controller
             $rawData  = self::readData();
             $inputData = $rawData;
             $getHospitalClinic = $model->bookAppointments($inputData);
+            print_r($getHospitalClinic);exit;
             if ( $getHospitalClinic && $getHospitalClinic['status'] == 1)
             {
                 try {
