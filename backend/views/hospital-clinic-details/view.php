@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
              [   
                 'attribute'=>'type',
                 'format'=>'raw',//raw,
-                'value' => $model->type == 1 ? 'Hospital' : 'Clinics'
+                'value' => $model->type == 1 ? 'Hospital' : 'Laboratory'
                  
             ],
             'phone_number',

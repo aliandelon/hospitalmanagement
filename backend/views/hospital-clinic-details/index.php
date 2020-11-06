@@ -40,13 +40,13 @@ $this->params['breadcrumbs'][] = $this->title;
             [   
                 'attribute'=>'type',
                 'format'=>'raw',//raw,
-                'filter'=>['1'=>'Hospitals','2'=>'Clinics'],
+                'filter'=>['1'=>'Hospitals','2'=>'Laboratory'],
                 'filterInputOptions' => ['class' => 'form-control', 'id' => 'type'],
                 'value'=>function($model){
                     if($model->type=="1"){
                      return Html::a('<span class="label label-success">Hospitals</span>');
                      }else{
-                    return Html::a("<span class='label label-warning'>Clinics</span>");
+                    return Html::a("<span class='label label-warning'>Laboratory</span>");
                      }    
                      
                 }
