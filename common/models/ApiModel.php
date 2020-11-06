@@ -619,7 +619,7 @@ class ApiModel extends \yii\db\ActiveRecord
                          holy1.doctor_id = slot.doctor_id AND 
                         holy1.hospital_id = slot.hospital_clinic_id AND holy1.holiday_date = '$date'
                         WHERE ap.slot_day_time_mapping_id IS NULL AND 
-                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.doctor_id = '$doctorId' AND day.day ='$date' AND day.day>='$today' AND (slot.from_time > NOW() AND slot.to_time > NOW())  ORDER BY from_time asc;";
+                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.doctor_id = '$doctorId' AND day.day ='$date' AND day.day>='$today' AND (slot.from_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T') AND slot.to_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T'))  ORDER BY from_time asc;";
                     $result = $con->createCommand($docQuery)->queryAll();
                 break;
             default :
@@ -690,6 +690,13 @@ class ApiModel extends \yii\db\ActiveRecord
                             $commision = '';
                         }
                     }
+                    $bookId = "SELECT coalesce(MAX(booking_id),0) as bookId from appointments;";
+                    $bookingResult = $result = $con->createCommand($bookId)->queryOne();
+                    if($bookingResult){
+                        $bookId = $bookingResult['bookId'] + 1;
+                    }else{
+                        $bookId = 1;
+                    }
                     foreach ($investigations as $key => $appointment) {
                         $checkSql = "SELECT  count(patient_id) cnt from appointments where doctor_id = '$appointment[doctorId]' AND investigation_id = '$appointment[investigation_id]' AND slot_day_time_mapping_id ='$appointment[slotId]' AND  hospital_clinic_id = '$id' AND app_date = '$appointment[date]';";
                         $count = $result = $con->createCommand($checkSql)->queryOne();
@@ -709,7 +716,7 @@ class ApiModel extends \yii\db\ActiveRecord
                             $perCentage = ($commision * $appointment['price']) /100;
                             $adminTotal = $adminTotal + $perCentage;
                         }
-                        $appointmentQuery = "INSERT INTO appointments(patient_id,doctor_id,investigation_id, slot_day_time_mapping_id,hospital_clinic_id,app_date,app_time,appointment_type,isHomeCollection,price)VALUES('$datas[paitientId]','$appointment[doctorId]','$appointment[investigation_id]','$appointment[slotId]','$id','$appointment[date]','$appointment[time]','$appointmentTypeVal','$appointment[isHomeCollection]','$appointment[price]');";
+                        $appointmentQuery = "INSERT INTO appointments(  booking_id,patient_id,doctor_id,investigation_id, slot_day_time_mapping_id,hospital_clinic_id,app_date,app_time,appointment_type,isHomeCollection,price)VALUES('$bookId','$datas[paitientId]','$appointment[doctorId]','$appointment[investigation_id]','$appointment[slotId]','$id','$appointment[date]','$appointment[time]','$appointmentTypeVal','$appointment[isHomeCollection]','$appointment[price]');";
                         $result = $con->createCommand($appointmentQuery)->execute();
                         if($result)
                         {   $bookingId =$con->getLastInsertId();
@@ -752,7 +759,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     }
                     if($resultVal == 1){
                         $transaction->commit();
-                        $response = ["status" => 1, "bookingId" => $bookedArray,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice,"super_admin_account_id"=>$superAdminActntId,"super_admin_account_name"=>$superAdminActntName,"super_admin_commison_amount"=>$adminTotal,"lab_hospital_account_id"=>$labAcntId,"lab_hospital_account_name"=>$labAcntName,"lab_hospital_commison_amount"=>($totalPrice - $adminTotal)];
+                        $response = ["status" => 1, "bookingId" => $bookId,"booking_status"=>"pending","total_amount_to_pay"=>$totalPrice,"super_admin_account_id"=>$superAdminActntId,"super_admin_account_name"=>$superAdminActntName,"super_admin_commison_amount"=>$adminTotal,"lab_hospital_account_id"=>$labAcntId,"lab_hospital_account_name"=>$labAcntName,"lab_hospital_commison_amount"=>($totalPrice - $adminTotal)];
                     }else{
                         if($resultVal == 3)
                         {
