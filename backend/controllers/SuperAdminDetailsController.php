@@ -70,7 +70,7 @@ class SuperAdminDetailsController extends Controller
     public function actionUpdate()
     {
         $model2 = Login::find()
-                ->where(['type' => 1])
+                ->where(['type' => 10])
                 ->one();
         $model = $this->findModel($model2->id);
         $encryptedPassword = $model2->password;     
