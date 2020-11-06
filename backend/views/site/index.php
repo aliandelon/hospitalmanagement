@@ -77,7 +77,7 @@ $topDoctor =  isset($params['topRatedDoctors']) ? $params['topRatedDoctors'] : [
                                             <div class="row">
                                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                                     <div class="caption pro-sl-hd">
-                                                        <span class="caption-subject"><b>Hospital / Clinic Analysis</b></span>
+                                                        <span class="caption-subject"><b>Hospital / Laboratories Analysis</b></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
