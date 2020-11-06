@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
      <?php
         echo $form->field($model, 'type')->dropDownList(
-            ['1' => 'Hospital', '2' => 'Clinic'],['id'=>'type']
+            ['1' => 'Hospital', '2' => 'Laboratory'],['id'=>'type']
     ); ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
