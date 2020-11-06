@@ -21,7 +21,7 @@ DashboardAsset::register($this);
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <?= Html::csrfMetaTags() ?>
                 <title>InvestiGo</title>
-
+                <link rel="icon" type="image/png" href="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png"/>
                 <script type="text/javascript">
                         var baseurl = "<?php print \yii\helpers\Url::base(); ?>";
                         var basepath = "<?php print \yii\helpers\Url::base(); ?>";
@@ -181,24 +181,26 @@ DashboardAsset::register($this);
    $imagePath=Yii::$app->request->baseUrl . '/../uploads/admin-details/' . $userDetails->id . '/' . $userDetails->id . '.' . $userDetails->profile_image;
  }                                     
 echo '<img src="' .$imagePath. '" />';
+
   ?>                   
                     <span class="admin-name"><?=Yii::$app->user->identity->email?></span>
                                                             <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
                                                 </a>
                                                 <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
-                                                    <li><a href="#"><span class="edu-icon edu-home-admin author-log-ic"></span>My Account</a>
+                                                    <!-- <li><a href="#"><span class="edu-icon edu-home-admin author-log-ic"></span>My Account</a>
+                                                    </li> -->
+                                                    <li><a href="<?=Yii::$app->request->baseUrl . 'super-admin-details/update'?>"><span class="edu-icon edu-user-rounded author-log-ic"></span>My Profile</a>
                                                     </li>
-                                                    <li><a href="#"><span class="edu-icon edu-user-rounded author-log-ic"></span>My Profile</a>
-                                                    </li>
-                                                    <li><a href="#"><span class="edu-icon edu-money author-log-ic"></span>User Billing</a>
-                                                    </li>
-                                                    <li><a href="#"><span class="edu-icon edu-settings author-log-ic"></span>Settings</a>
-                                                    </li>
+                                                    <!-- <li><a href="#"><span class="edu-icon edu-money author-log-ic"></span>User Billing</a>
+                                                    </li> -->
+                                                   <!--  <li><a href="#"><span class="edu-icon edu-settings author-log-ic"></span>Settings</a>
+                                                    </li> -->
                                                     <li><a href="<?= Yii::$app->request->baseUrl . '/site/logout' ?>" data-method="post"><span class="edu-icon edu-locked author-log-ic"></span>Log Out</a>
                                                     </li>
                                                 </ul>
                                             </li>
-                                                <li class="nav-item nav-setting-open"><a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle"><i class="educate-icon educate-menu"></i></a>
+                                                <li class="nav-item nav-setting-open">
+                                                    <!-- <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle"><i class="educate-icon educate-menu"></i></a> -->
 
                                                     <div role="menu" class="admintab-wrap menu-setting-wrap menu-setting-wrap-bg dropdown-menu animated zoomIn">
                                                         <ul class="nav nav-tabs custon-set-tab">
