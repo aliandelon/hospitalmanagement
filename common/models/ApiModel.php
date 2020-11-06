@@ -567,7 +567,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     holy1.investigation_id = slot.investigation_id AND 
                     holy1.hospital_id = slot.hospital_clinic_id AND holy1.holiday_date = '$date'
                         WHERE ap.slot_day_time_mapping_id IS NULL AND 
-                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$investigation' AND day.day ='$date' AND day.day>='$today' AND (slot.from_time > NOW() AND slot.to_time > NOW()) ORDER BY from_time asc;";
+                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$investigation' AND day.day ='$date' AND day.day>='$today' AND (slot.from_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T') AND slot.to_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T')) ORDER BY from_time asc;";
                     $result = $con->createCommand($invQuery)->queryAll();
                 break;
             default :
