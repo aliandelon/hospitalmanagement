@@ -127,10 +127,9 @@ class HospitalClinicDetailsController extends Controller
                 $model->created_by = Yii::$app->user->identity->id;
                 if($model->save())
                 {
+                    Yii::$app->mails->sendMailCandidate($model);
+                    Yii::$app->session->setFlash('success', 'New hospital/diagnostic center registered successfully..');
                     return $this->redirect(['newrequest-view', 'id' => $model->id]);
-                }else{
-                    print_r($model->getErrors()); exit;
-
                 }
             }
         } else {
@@ -236,4 +235,13 @@ public function actionRejectDetails($id)
         Yii::$app->session->setFlash('success', 'The hospital '.$model->name.' Rejected');
         return $this->redirect(['new-request-index']);
     }
+
+public function actionTest(){
+     $model = HospitalClinicDetails::find()->where(['id' => 5])->one();
+     
+     Yii::$app->mails->sendMailCandidate($model);
+}
+
+
+
 }
