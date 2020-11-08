@@ -12,6 +12,114 @@ use common\models\DoctorsDetails;
 .field-schedule-amount{
     display: none;
 }
+.lds-roller {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 40px 40px;
+}
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  margin: -4px 0 0 -4px;
+}
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.lds-roller div:nth-child(1):after {
+  top: 63px;
+  left: 63px;
+}
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.lds-roller div:nth-child(2):after {
+  top: 68px;
+  left: 56px;
+}
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.lds-roller div:nth-child(3):after {
+  top: 71px;
+  left: 48px;
+}
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.lds-roller div:nth-child(4):after {
+  top: 72px;
+  left: 40px;
+}
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.lds-roller div:nth-child(5):after {
+  top: 71px;
+  left: 32px;
+}
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.lds-roller div:nth-child(6):after {
+  top: 68px;
+  left: 24px;
+}
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+  top: 63px;
+  left: 17px;
+}
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 56px;
+  left: 12px;
+}
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loading {
+  position: fixed;
+  z-index: 1000;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.loading:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+    background: radial-gradient(rgba(20, 20, 20,.8), rgba(0, 0, 0, .8));
+
+  background: -webkit-radial-gradient(rgba(20, 20, 20,.8), rgba(0, 0, 0,.8));
+}
 </style>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -22,7 +130,7 @@ use common\models\DoctorsDetails;
 <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
 
-
+<div class="loading" style="display:none;z-index: 111 !important;"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
 
 <div class="content">
     <div class="schedule-form">
@@ -35,7 +143,8 @@ use common\models\DoctorsDetails;
     <?php endif; ?>
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->errorSummary($model) ?>
-   <?php $invaccess=\common\models\HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one()
+   <?php $invaccess=\common\models\HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
+  
    ?>
     <div class="row">
         <div class="col-md-12">
@@ -90,7 +199,9 @@ use common\models\DoctorsDetails;
             <div  id="investigation" style="display: none;">
                 <div class="row">
                     <div class="col-md-6" id="categoryList">
-                        <?php $details=Category::find()->where(["status"=>1])->orderBy(['sort_order' => SORT_ASC])->all();
+                        <?php 
+                        // $details=Category::find()->where(["status"=>1])->orderBy(['sort_order' => SORT_ASC])->all();
+                        $details=Category::find()->where(["status"=>1])->all();
                         $listData=ArrayHelper::map($details,'id','category_name');
                         echo $form->field($model, 'id')->dropDownList(
                             $listData,
@@ -168,6 +279,8 @@ $(document).ready(function(){
          $('.field-schedule-amount').css('display','none');
          $('.field-schedule-details').css('display','none');
         if(type == 1){
+          
+           $('.loading').css('display','block');        
             $('#doctor').css('display','none');                
             $('#investigation').css('display','block');
             $('#investigationList').html('');
@@ -177,8 +290,10 @@ $(document).ready(function(){
                  type:'POST',
                  success:function(data){
                     console.log('');
+                    $('.loading').css('display','none');    
                  },
                  error:function(){
+                   $('.loading').css('display','none');    
                  }
             });
             $('#schedule-id option').removeAttr('selected');
@@ -195,6 +310,7 @@ $(document).ready(function(){
     });
     $('#schedule-id').on('change',function(e){
         var selected = $(this).val();
+         $('.loading').css('display','block');    
         $.ajax({
              url:baseurl+'schedule/get-investigation-list',
              data:{'category':selected},
@@ -202,12 +318,37 @@ $(document).ready(function(){
              success:function(data){
                 $('#investigationList').html(data);
                 $('select').selectpicker();
+                 $('.loading').css('display','none');    
              },
              error:function(){
                 $('#investigationList').html('');
+                $('.loading').css('display','none');    
              }
         });
     });
+
+
+    $('#invBtn').click(function(){
+      $('.loading').css('display','block');
+         $.ajax({
+             url:baseurl+'schedule/save-investigation',
+             data:{},
+             type:'POST',
+             success:function(data){
+              $('.loading').css('display','none');
+                // $('#investigationList').html(data);
+                // $('select').selectpicker();
+             },
+             error:function(){
+               $('.loading').css('display','none');
+                // $('#investigationList').html('');
+             }
+        });
+      });
+
+
+
+
 });
 
 ");
