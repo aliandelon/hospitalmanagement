@@ -101,7 +101,12 @@ public function getOurInvestigationCount()
 
 
 
-
+public function modeleInsert($model){
+    $con = \Yii::$app->db;
+    $sql = "INSERT into hospital_investigation_mapping(investigation_id,hospital_clinic_id,amount,duration,status,isHomeCollection,details)VALUES('$model->investigation_id','$model->hospital_clinic_id','$model->amount','30','1','$model->isHomeCollection','$model->details') ON DUPLICATE KEY UPDATE  id= VALUES(id), investigation_id=VALUES(investigation_id),hospital_clinic_id=VALUES(hospital_clinic_id),amount=VALUES(amount),duration=VALUES(duration),status=VALUES(status),isHomeCollection=VALUES(isHomeCollection),details=VALUES(details);";
+        $result = $con->createCommand($sql)->execute();
+        return $result;
+}
 
     
 }
