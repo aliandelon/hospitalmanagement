@@ -109,7 +109,8 @@ if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$a
                 <li class="nav-item dropdown has-arrow">
                     <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                         <span class="user-img">
-                            <img class="rounded-circle" src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" width="24" alt="Admin">
+                            <?php $img=($selectHospitalId->hospital_clinic_image=='')? Yii::$app->request->baseUrl.'/img/user.jpg':Yii::$app->request->baseUrl.'/uploads/hospitalClinicImage/'.$selectHospitalId->id.'/'.$selectHospitalId->id.'.'.$selectHospitalId->hospital_clinic_image ?>
+                            <img  style="height: 25px !important" class="rounded-circle" src="<?= $img?>" width="24" alt="Admin">
                             <span class="status online"></span>
                         </span>
                         <span><?=Yii::$app->user->identity->email?></span>
