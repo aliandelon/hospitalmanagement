@@ -180,7 +180,7 @@ if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$a
                         </li>
 
                          <li>
-                            <a href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update2?id='.$selectHospitalId->id ?>"><i class="fa fa-cog"></i> <span>Settings</span></a>
+                            <a href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update2?id='.$selectHospitalId->id ?>"><i class="fa fa-cog"></i> <span>My Profile</span></a>
                         </li>
                         <li>
                             <a href="<?= Yii::$app->request->baseUrl . '/payment-details' ?>"><i class="fa fa-money"></i> <span>Earnings</span></a>

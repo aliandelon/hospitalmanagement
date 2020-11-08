@@ -58,7 +58,7 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
                     <img src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logosn.png" id="small" alt="" style="height: 94%;display:none" /> <img class="main-logo" src="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png" style="width: 55%;display:block" id="big" alt="" />
                 </a>
             </div>
-            <a id="toggle_btn" href="javascript:void(0);" onclick="($('#big').css('display')!='none') ? $('#big').css('display','none') : $('#big').css('display','block');($('#small').css('display')!='none') ? $('#small').css('display','none') : $('#small').css('display','block')"><i class="fa fa-bars"></i></a>
+            
             <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
             <ul class="nav user-menu float-right">
                 <li><span class='welcome'><?php echo ($selectHospitalId->name) ? 'Welcome '.$selectHospitalId->name.'&nbsp;&nbsp;|&nbsp;&nbsp;' : '';?></span></li>
@@ -108,15 +108,16 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
                 <li class="nav-item dropdown has-arrow">
                     <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                         <span class="user-img">
-                            <img class="rounded-circle" src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" width="24" alt="Admin">
+                            <?php $img=($selectHospitalId->hospital_clinic_image=='')? Yii::$app->request->baseUrl.'/img/user.jpg':Yii::$app->request->baseUrl.'/uploads/hospitalClinicImage/'.$selectHospitalId->id.'/'.$selectHospitalId->id.'.'.$selectHospitalId->hospital_clinic_image ?>
+                            <img  style="height: 25px !important" class="rounded-circle" src="<?= $img?>" width="24" alt="Admin">
                             <span class="status online"></span>
                         </span>
                         <span><?=Yii::$app->user->identity->email?></span>
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="profile.html">My Profile</a>
-                        <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
-                        <a class="dropdown-item" href="settings.html">Settings</a>
+                        <a class="dropdown-item" href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update2?id='.$selectHospitalId->id ?>">My Profile</a>
+                        <!-- <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
+                        <a class="dropdown-item" href="settings.html">Settings</a> -->
                         <a class="dropdown-item" href="<?= Yii::$app->request->baseUrl . '/site/logout' ?>" data-method="post">Logout</a>
                     </div>
                 </li>
@@ -124,10 +125,10 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
             <div class="dropdown mobile-user-menu float-right">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="profile.html">My Profile</a>
-                    <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
-                    <a class="dropdown-item" href="settings.html">Settings</a>
-                    <a class="dropdown-item" href="login.html">Logout</a>
+                    <a class="dropdown-item" href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update2?id='.$selectHospitalId->id ?>">My Profile</a>
+                    <!-- <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
+                    <a class="dropdown-item" href="settings.html">Settings</a> -->
+                    <a class="dropdown-item" href="<?= Yii::$app->request->baseUrl . '/site/logout' ?>l">Logout</a>
                 </div>
             </div>
         </div>
