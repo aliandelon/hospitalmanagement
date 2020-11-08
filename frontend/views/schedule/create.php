@@ -11,14 +11,8 @@ $this->params['breadcrumbs'][] = ['label' => 'Schedules', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row" style="background-color: #fff">
-    <div class="col-lg-7 offset-lg-2" style="padding-top: 30px;">
+    <div class="col-md-12" style="padding-top: 30px;">
         <h4 class="page-title"><?= Html::encode($this->title) ?></h4>
-    </div>
-    <div class="col-lg-2" style="padding-top: 30px;">
-        <div class="form-check form-check-inline" style="padding-top: 30px;width:100%">
-		  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-		  Same for every week
-		</div>
     </div>
 </div>
 <div class="row" style="background-color: #fff">
