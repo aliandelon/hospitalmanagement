@@ -9,7 +9,9 @@ use common\models\ScheduleSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use common\models\HospitalInvestigationMapping;
+use common\models\Category;
 use common\models\HolidayList;
 use common\models\SlotDayMapping;
 use common\models\SlotDayMappingSearch;
@@ -500,6 +502,139 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
         
     }
 
+    public function actionResetSession(){
+        $session = Yii::$app->session;
+        unset($session['arrayList']);
+        echo "reset";
+    }
 
+    public function actionSetInvestigationList(){
+        $post = Yii::$app->request->post();
+        $index = $post['trId'];
+        $checkbox = $post['checkbox'];
+        $days = $post['days'];
+        $timeSlots = $post['timeSlots'];
+        $rate = $post['rate'];
+        $package = $post['package'];
+        $session = Yii::$app->session;
+        $abc = $session['arrayList'];
+        $abc[$index]['check'] = $checkbox;
+        $abc[$index]['days'] = $days;
+        $abc[$index]['timeslot'] = $timeSlots;
+        $abc[$index]['rate'] = $rate;
+        $abc[$index]['package'] = $package;
+        $session['arrayList'] = $abc;
+        print_r($session['arrayList']);
+    }    
+
+    public function actionGetInvestigationList(){
+        $model = new Schedule();
+        $post = Yii::$app->request->post();
+        $array = $post['category'];
+        $designStr = "";
+        $abc = [];
+        $session = Yii::$app->session;
+        $session['arrayList'] = isset($session['arrayList']) ? $session['arrayList'] : [];
+        $abc = $session['arrayList'];
+        foreach ($array as $key => $value) {
+            $category = Category::find()->where(["id"=>$value])->all();
+            $listData=ArrayHelper::map($category,'id','category_name');
+            $investigationList = $model->getInvestigationList($value);
+            if(sizeof($investigationList) > 0){
+        $designStr .= '<div class="panel panel-success">
+                            <div class="panel-heading">'.$listData[$value].'</div>
+                            <div class="panel-body">
+                                <div class="table">
+                                    <div class="table-responsive">
+                                        <table class="table table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Investigations</th>
+                                                    <th>Days</th>
+                                                    <th>Time slots</th>
+                                                    <th>Rate</th>
+                                                    <th>Package Details</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+                                            foreach ($investigationList as $key => $investigation) {
+                                                $index = $value.'_'.$investigation['id'];
+                                                $xyz[$index] = isset($abc[$index]) ? $abc[$index] : [];
+                                                $checkbox = isset($xyz[$index]['check']) ? $xyz[$index]['check'] : "";
+                                                $days = isset($xyz[$index]['days']) ? $xyz[$index]['days'] : [];
+                                                $timeslot = isset($xyz[$index]['timeslot']) ? $xyz[$index]['timeslot'] : [];
+                                                $rate = isset($xyz[$index]['rate']) ? $xyz[$index]['rate'] : "";
+                                                $package = isset($xyz[$index]['package']) ? $xyz[$index]['package'] : "";
+                                                $designStr .=  '<tr id="'.$index.'">
+                                                    <td class="pt20"><input class="checkbox" type="checkbox" name="investigations" onchange="callSessionMaintain(\''.$index.'\');" value="'.$investigation['id'].'" '.$checkbox.'></td>
+                                                    <td class="pt20">'.$investigation['investigation_name'].'</td>
+                                                    <td style="max-width:200px !important;">
+                                                        <select class="form-control days" name="days" multiple data-live-search="true" onchange="callSessionMaintain(\''.$index.'\');">
+                                                            <option value="1" ';
+                                                             $designStr .= (in_array(1, $days)) ? "selected" : "";
+                                                             $designStr .='>Monday</option>
+                                                            <option value="2"  ';
+                                                             $designStr .= (in_array(2, $days)) ? "selected" : "";
+                                                             $designStr .='>Tuesday</option>
+                                                            <option value="3"  ';
+                                                             $designStr .= (in_array(3, $days)) ? "selected" : "";
+                                                             $designStr .='>Wednesday</option>
+                                                            <option value="4"  ';
+                                                             $designStr .= (in_array(4, $days)) ? "selected" : "";
+                                                             $designStr .='>Thursday</option>
+                                                            <option value="5"  ';
+                                                             $designStr .= (in_array(5, $days)) ? "selected" : "";
+                                                             $designStr .='>Friday</option>
+                                                            <option value="6"  ';
+                                                             $designStr .= (in_array(6, $days)) ? "selected" : "";
+                                                             $designStr .='>Saturday</option>
+                                                            <option value="7"  ';
+                                                             $designStr .= (in_array(7, $days)) ? "selected" : "";
+                                                             $designStr .='>Sunday</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="max-width:200px !important;">
+                                                        <select class="form-control timeslot" name="timeSlots" multiple data-live-search="true" onchange="callSessionMaintain(\''.$index.'\');">
+                                                            <option value="8:00 AM - 8:30 AM"  ';
+                                                             $designStr .= (in_array("8:00 AM - 8:30 AM", $timeslot)) ? "selected" : "";
+                                                             $designStr .='>8:00 AM - 8:30 AM</option>
+                                                            <option value="8:30 AM - 9:00 AM"  ';
+                                                             $designStr .= (in_array("8:30 AM - 9:00 AM", $timeslot)) ? "selected" : "";
+                                                             $designStr .='>8:30 AM - 9:00 AM</option>
+                                                            <option value="9:00 AM - 9:30 AM"  ';
+                                                             $designStr .= (in_array("9:00 AM - 9:30 AM", $timeslot)) ? "selected" : "";
+                                                             $designStr .='>9:00 AM - 9:30 AM</option>
+                                                            <option value="9:30 AM - 10:00 AM"  ';
+                                                             $designStr .= (in_array("9:30 AM - 10:00 AM", $timeslot)) ? "selected" : "";
+                                                             $designStr .='>9:30 AM - 10:00 AM</option>
+                                                            <option value="10:00 AM - 10:30 AM"  ';
+                                                             $designStr .= (in_array("10:00 AM - 10:30 AM", $timeslot)) ? "selected" : "";
+                                                             $designStr .='>10:00 AM - 10:30 AM</option>
+                                                            <option value="10:30 AM - 11:00 AM"  ';
+                                                             $designStr .= (in_array("10:30 AM - 11:00 AM", $timeslot)) ? "selected" : "";
+                                                             $designStr .='>10:30 AM - 11:00 AM</option>
+                                                            <option value="11:00 AM - 11:30 AM"  ';
+                                                             $designStr .= (in_array("11:00 AM - 11:30 AM", $timeslot)) ? "selected" : "";
+                                                             $designStr .='>11:00 AM - 11:30 AM</option>
+                                                            <option value="11:30 AM - 12:00 PM"  ';
+                                                             $designStr .= (in_array("11:30 AM - 12:00 PM", $timeslot)) ? "selected" : "";
+                                                             $designStr .='>11:30 AM - 12:00 PM</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="max-width:100px"><input class="form-control rate" value="'.$rate.'" type="text" name="rate" placeholder="Rate" onchange="callSessionMaintain(\''.$index.'\');"></td>
+                                                    <td><textarea class="form-control package" name="package" onchange="callSessionMaintain(\''.$index.'\');">'.$package.'</textarea></td>
+                                                </tr>';
+                                            }
+                                            $designStr .= '</tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>';
+                    }}
+                    $session['arrayList'] = $xyz;
+                    echo $designStr;
+    }
 
 }
