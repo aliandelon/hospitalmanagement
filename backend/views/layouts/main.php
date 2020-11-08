@@ -22,6 +22,7 @@ DashboardAsset::register($this);
                 <?= Html::csrfMetaTags() ?>
                 <title>InvestiGo</title>
                 <link rel="icon" type="image/png" href="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png"/>
+         
                 <script type="text/javascript">
                         var baseurl = "<?php print \yii\helpers\Url::base(); ?>";
                         var basepath = "<?php print \yii\helpers\Url::base(); ?>";

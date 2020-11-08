@@ -21,7 +21,7 @@ backend\assets\VideoAsset::register($this);
         <link rel="icon" type="image/png" href="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png"/>
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
-
+<link rel="icon" type="image/png" href="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png"/>
         <script type="text/javascript">
                 var baseurl = "<?php print \yii\helpers\Url::base(); ?>";
                 var basepath = "<?php print \yii\helpers\Url::base(); ?>";
