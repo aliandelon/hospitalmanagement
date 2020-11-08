@@ -115,9 +115,9 @@ if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$a
                         <span><?=Yii::$app->user->identity->email?></span>
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="profile.html">My Profile</a>
-                        <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
-                        <a class="dropdown-item" href="settings.html">Settings</a>
+                        <a class="dropdown-item" href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update2?id='.$selectHospitalId->id ?>">My Profile</a>
+                       <!--  <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
+                        <a class="dropdown-item" href="settings.html">Settings</a> -->
                         <a class="dropdown-item" href="<?= Yii::$app->request->baseUrl . '/site/logout' ?>" data-method="post">Logout</a>
                     </div>
                 </li>
@@ -125,9 +125,9 @@ if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$a
             <div class="dropdown mobile-user-menu float-right">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="profile.html">My Profile</a>
-                    <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
-                    <a class="dropdown-item" href="settings.html">Settings</a>
+                    <a class="dropdown-item" href="<?= Yii::$app->request->baseUrl . '/hospital-clinic-details/update2?id='.$selectHospitalId->id ?>">My Profile</a>
+                    <!-- <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
+                    <a class="dropdown-item" href="settings.html">Settings</a> -->
                     <a class="dropdown-item" href="login.html">Logout</a>
                 </div>
             </div>
