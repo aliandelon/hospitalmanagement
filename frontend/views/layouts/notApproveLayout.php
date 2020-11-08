@@ -87,7 +87,7 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
                                                 <img alt="John Doe" src="<?= Yii::$app->request->baseUrl; ?>/img/user.jpg" class="img-fluid">
                                             </span>
                                             <div class="media-body">
-                                                <p class="noti-details"><span class="noti-title">John Doe</span> added new task <span class="noti-title">Patient appointment booking</span></p>
+                                                <p class="noti-details"><span class="noti-title">John Doe</span> added newpub task <span class="noti-title">Patient appointment booking</span></p>
                                                 <p class="noti-time"><span class="notification-time">4 mins ago</span></p>
                                             </div>
                                         </div>
@@ -190,6 +190,8 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
     $("#publish").change(function(){
         var hospId = $("#hospId").val();
         var flag = ($("#publish"). is(":checked") != false) ? 1 : 0
+        var baseurl = "<?php print \yii\helpers\Url::base() . "/"; ?>";
+       
         $.ajax({
              url:baseurl+'site/publish',
              data:{'hospital':hospId,'publishFlag':flag},
