@@ -8,7 +8,7 @@ use yii\helpers\Html;
 Login3Asset::register($this);
 ?>
 <?php $this->head() ?>
-
+<link rel="icon" type="image/png" href="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png"/>
 <?php $this->beginPage() ?>
 <body>
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" >

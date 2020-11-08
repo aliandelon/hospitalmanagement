@@ -26,6 +26,7 @@ $publishFlag = ($selectHospitalId['publish_flag'] != 0 && $publishData != 0) ? '
                 <?= Html::csrfMetaTags() ?>
                 <title><?= Html::encode($this->title) ?></title>
                 <?php $this->head() ?>
+                <link rel="icon" type="image/png" href="<?= Yii::$app->request->baseUrl; ?>/img/logo/logo.png"/>
                 <?php $actionArray = ['site'];$pageArray = ['index'];if (in_array(Yii::$app->controller->action->id , $pageArray) && in_array(Yii::$app->controller->id , $actionArray)) {
 ?>
 <style>
