@@ -98,7 +98,7 @@ use kartik\file\FileInput;
                                     // 'showRemove' => true,
                                     // 'showUpload' => true
                                     ],
-                            ])->label(false);
+                            ])->label("Hospital Image (400 X 400)");
                             ?>
                                 
                                  </div>
