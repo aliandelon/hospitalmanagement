@@ -30,8 +30,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'label' => 'User Email',
             'filter'=>false,
             'value' => function($model){
-                 $data = common\models\Login::find()->where(['id'=>$model->user_id])->one();
-                 return $data->email;
+                if($model->user_type=="3"){
+                $data = common\models\Login::find()->where(['id'=>$model->user_id])->one();  
+                $rvalue=$data->email;
+               }else{
+                $data = common\models\PatientDetails::find()->where(['id'=>$model->user_id])->one();  
+                $rvalue=$data->first_name.' '.$data->last_name;
+               }
+                
+                 return $rvalue;
                
             }
             ],
@@ -59,25 +66,33 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'message:ntext',
             // 'rating',
-            ['attribute'=>'rating',
-            'label' => 'Ratings',
-            'format' => 'html',
-            'filter'=>false,
-            'value' => function($model){
-                $data = '';
-                 for($i=0;$i < 5; $i++){
-                    if($i < $model->rating){
-                        $data .= "<i class='fa fa-star' style='color:#05ab9e' aria-hidden='true'></i>";
-                    }
-                    else{
-                        $data .= "<i class='fa fa-star-o' style='color:#05ab9e'  aria-hidden='true'></i>";
-                    }
-                 }
-                 return $data;
+            // ['attribute'=>'rating',
+            // 'label' => 'Ratings',
+            // 'format' => 'html',
+            // 'filter'=>false,
+            // 'value' => function($model){
+            //     $data = '';
+            //      for($i=0;$i < 5; $i++){
+            //         if($i < $model->rating){
+            //             $data .= "<i class='fa fa-star' style='color:#05ab9e' aria-hidden='true'></i>";
+            //         }
+            //         else{
+            //             $data .= "<i class='fa fa-star-o' style='color:#05ab9e'  aria-hidden='true'></i>";
+            //         }
+            //      }
+            //      return $data;
                
-            }
-            ], 
-            // 'submit_date',
+            // }
+            // ], 
+            
+            [
+                'attribute'=>'submit_date',
+                'label'=>'Submit Date',
+                'value'=>function($model){
+                 $date=date_create($model->submit_date);
+                 return date_format($date,"d-m-Y");   
+                }
+            ]
 
             // ['class' => 'yii\grid\ActionColumn'],
         ],
