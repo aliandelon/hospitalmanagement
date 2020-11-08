@@ -17,6 +17,8 @@ use common\models\SlotDayMapping;
 use common\models\SlotDayMappingSearch;
 use common\models\SlotDayTimeMapping;
 use common\models\DoctorScheduleMapping;
+use common\models\HospitalInvestigationDayMapping;
+use common\models\SloatTimeMapping;
 /**
  * ScheduleController implements the CRUD actions for Schedule model.
  */
@@ -525,7 +527,73 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
         $abc[$index]['package'] = $package;
         $session['arrayList'] = $abc;
         print_r($session['arrayList']);
-    }    
+    } 
+
+
+    public function actionSaveInvestigation(){
+         $session = Yii::$app->session;
+            if(isset($session['arrayList'])){
+                   foreach ($session['arrayList'] as $key => $value) {
+                    if(!empty($value)){
+                      $category_inv=explode('_', $key);
+                      $category=$category_inv[0];
+                      $investigation=$category_inv[1];
+                      $days=($value['days'])?$value['days']:'';
+
+                      $timeslot=$value['timeslot'];
+                        if(!empty($days)){
+                             $model3=new HospitalInvestigationMapping();
+                             $model3->investigation_id=$investigation;
+                             $model3->hospital_clinic_id=Yii::$app->user->identity->id;
+                             $model3->amount =($value['rate'])?$value['rate']:0;
+                             $model3->isHomeCollection=1;
+                             $model3->details=($value['package'])?$value['package']:'';
+                             $model3->modeleInsert($model3);
+                            $this->saveDaysTime($days,$timeslot,$investigation,$category);
+                        }
+
+                    }
+
+                       
+                   }
+            }
+    }
+
+    protected function saveDaysTime($days,$timeSlots,$investigation,$category){
+       
+        
+            foreach ($days as $key => $value) {
+                    $model = new HospitalInvestigationDayMapping();
+                    $model->hospital_id=Yii::$app->user->identity->id;
+                    $model->investigation_id=$investigation;
+                    $model->category_id=$category;
+                    $model->day_id=$value;
+                    $lstId = $model->daySave($model);
+                    if($lstId){
+                        // print_r($linsertID);exit;
+                         foreach ($timeSlots as $key2 => $value2) {
+                            $model2 = new SloatTimeMapping();
+                             $model2->master_id=  $lstId;
+                             $model2->slot_time =$value2;
+                            if($model2->timeSave($model2)){
+
+                            }else{
+                            print_r($model2->getErrors());exit;
+                            };
+                        }   
+                    }else{
+                            print_r($model->getErrors());exit;
+                        }
+                    
+
+            }
+       
+    }
+   
+
+
+
+
 
     public function actionGetInvestigationList(){
         $model = new Schedule();
