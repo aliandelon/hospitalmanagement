@@ -73,7 +73,7 @@ use kartik\file\FileInput;
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                                <?= $form->field($model, 'email')->textInput(['maxlength' => true,'readonly'=> true]) ?>
                                     </div>
                                 </div>
                                   <div class="col-sm-12">
@@ -193,19 +193,22 @@ use kartik\file\FileInput;
 
  <div class="row">
                  <div class="addional-details col-md-12" style="<?=$displayVal?>">
+                    <div class="col-md-12" style="background: #05ab9e;margin-bottom: 30px;margin-top: 30px;">
+                    <h4 style="color: #fff;">Diagnostic Centre Details</h4>
+                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                         <?= $form->field($model, 'lab_name')->textInput() ?>
+                                         <?= $form->field($model, 'lab_name')->textInput()->label('Name') ?>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                         <?= $form->field($model, 'lab_phone_number')->textInput() ?>
+                                         <?= $form->field($model, 'lab_phone_number')->textInput()->label('Phone Number') ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                         <?= $form->field($model, 'lab_email')->textInput() ?>
+                                         <?= $form->field($model, 'lab_email')->textInput()->label('Email') ?>
                                         </div>
                                     </div>
 
@@ -215,32 +218,32 @@ use kartik\file\FileInput;
 
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                         <?= $form->field($model, 'lab_address')->textInput() ?>
+                                         <?= $form->field($model, 'lab_address')->textInput()->label('Address') ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                         <?= $form->field($model, 'lab_pincode')->textInput() ?>
+                                         <?= $form->field($model, 'lab_pincode')->textInput()->label('Pincode') ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                         <?= $form->field($model, 'lab_street1')->textInput() ?>
+                                         <?= $form->field($model, 'lab_street1')->textInput()->label('Street1') ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                         <?= $form->field($model, 'lab_street2')->textInput() ?>
+                                         <?= $form->field($model, 'lab_street2')->textInput()->label('Street2') ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                         <?= $form->field($model, 'lab_city')->textInput() ?>
+                                         <?= $form->field($model, 'lab_city')->textInput()->label('City') ?>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                         <?= $form->field($model, 'lab_area')->textInput() ?>
+                                         <?= $form->field($model, 'lab_area')->textInput()->label('Area') ?>
                                         </div>
                                     </div>
                                     
