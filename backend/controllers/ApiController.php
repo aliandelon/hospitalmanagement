@@ -622,4 +622,32 @@ class ApiController extends \yii\rest\Controller
             return $e;
         }
     }
+    public function actionGetAppointmentList($idx,$userId,$stage)
+    {  
+        try
+        {
+            $response = [];
+            ini_set('memory_limit', '-1');
+            $model = new ApiModel();
+            $getAppointmentList = $model->getAppointmentList($idx,$userId,$stage);
+            if ( $getAppointmentList && $getAppointmentList['status'] == 1)
+            {
+                try {
+                    $response['status']  = "success";
+                    $response['content'] = $getAppointmentList;
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return $response;
+                }
+            }else{
+                $response['status']  = "failure";
+                $response['content'] = $getAppointmentList;
+            }
+            return $response;
+            $this->setResponseFormat(1);
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
 }

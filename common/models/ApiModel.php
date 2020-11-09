@@ -962,4 +962,48 @@ class ApiModel extends \yii\db\ActiveRecord
         }
     }
 
+    public function getAppointmentList($idx,$userId,$stage) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        switch ($idx) {
+            case 100:
+                $whereCndn = "";
+                $images = 'http://investigohealth.com/uploads/';
+                $today = date('Y-m-d');
+                if($stage == 'upcoming'){
+                    $whereCndn = " AND  app_date >= '$today' ";
+                }else{
+                    $whereCndn = " AND  app_date < '$today' ";
+                }
+                echo $query = "SELECT ap.id as appointmentId,ap.booking_id as bookingId,ap.app_date as appointmentDate,ap.app_time as appTime,hosp.user_id as hospId,hosp.name as hospName,hosp.city as city,case when hosp.hospital_clinic_image <> '' then concat('$images','hosp.hospitalClinicImage/',hosp.id,'/',hosp.id,'.',hosp.hospital_clinic_image) else '' end
+                    as hospImage,
+                    CASE WHEN ap.investigation_id = 0 then '' else inv.investigation_name end as invName,
+                    ap.doctor_id as docId ,CASE WHEN ap.doctor_id  = 0 then '' else doc.name end as docName,
+                    CASE WHEN ap.doctor_id  = 0 then '' else docspec.name end as docSpeciality,
+                    CASE WHEN ap.doctor_id  = 0 then '' else doc.   experience end as docExperience,CASE when doc.profile_image <> '' then 
+                    concat('$images','doctors/',doc.id,'/',doc.id,'.',doc.profile_image) else concat('$images','doctors/default.png') end as doctorImage
+                    from appointments ap
+                    JOIN hospital_clinic_details hosp ON hosp.user_id = ap.hospital_clinic_id
+                    LEFT JOIN doctors_details doc ON doc.id = ap.doctor_id
+                    LEFT JOIN  doctor_specialty_mst docspec ON docspec.id = doc.id and docspec.status = 1
+                    LEFT JOIN  investigations inv ON inv.id = ap.investigation_id
+                    WHERE patient_id = '$userId' $whereCndn;";exit;
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $result = $con->createCommand($query)->queryAll();
+            $response = ["status" => 1, "content" => $result];
+            return $response;
+            $con->close();
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
 }
