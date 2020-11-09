@@ -976,7 +976,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 }else{
                     $whereCndn = " AND  app_date < '$today' ";
                 }
-                echo $query = "SELECT ap.id as appointmentId,ap.booking_id as bookingId,ap.app_date as appointmentDate,ap.app_time as appTime,hosp.user_id as hospId,hosp.name as hospName,hosp.city as city,case when hosp.hospital_clinic_image <> '' then concat('$images','hosp.hospitalClinicImage/',hosp.id,'/',hosp.id,'.',hosp.hospital_clinic_image) else '' end
+                $query = "SELECT ap.id as appointmentId,ap.booking_id as bookingId,ap.app_date as appointmentDate,ap.app_time as appTime,hosp.user_id as hospId,hosp.name as hospName,hosp.city as city,case when hosp.hospital_clinic_image <> '' then concat('$images','hosp.hospitalClinicImage/',hosp.id,'/',hosp.id,'.',hosp.hospital_clinic_image) else '' end
                     as hospImage,
                     CASE WHEN ap.investigation_id = 0 then '' else inv.investigation_name end as invName,
                     ap.doctor_id as docId ,CASE WHEN ap.doctor_id  = 0 then '' else doc.name end as docName,
@@ -988,7 +988,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     LEFT JOIN doctors_details doc ON doc.id = ap.doctor_id
                     LEFT JOIN  doctor_specialty_mst docspec ON docspec.id = doc.id and docspec.status = 1
                     LEFT JOIN  investigations inv ON inv.id = ap.investigation_id
-                    WHERE patient_id = '$userId' $whereCndn;";exit;
+                    WHERE patient_id = '$userId' $whereCndn;";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
