@@ -63,8 +63,7 @@ class CategorySearch extends Category
             'created_by' => $this->created_by,
         ]);
 
-        $query->andFilterWhere(['like', 'category_name', $this->category_name]);
-
+        $query->andFilterWhere(['=', 'id', $this->category_name]);
         return $dataProvider;
     }
 }

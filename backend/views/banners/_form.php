@@ -40,7 +40,7 @@ use yii\helpers\ArrayHelper;
         <div class="col-sm-12">
             <?php
             if ($model->id != "") {
-                echo '<div class="col-md-2" style="background-color:#ccc;margin-right:5px"><img width="125" style="border: 2px solid #d2d2d2;margin-right:.5em;" src="' . Yii::$app->request->baseUrl . '/../uploads/banners/'. $model->id.'/banner'.$model->id.'.'.$model->image.'" /></div>';
+                echo '<div class="col-md-2" style="background-color:#ccc;margin-right:5px"><img width="125" style="border: 2px solid #d2d2d2;margin-right:.5em;" src="' . Yii::$app->request->baseUrl . '/../uploads/banners/'. $model->id.'/'.$model->id.'.'.$model->image.'" /></div>';
                 ?>
                 <br>
                 <br>

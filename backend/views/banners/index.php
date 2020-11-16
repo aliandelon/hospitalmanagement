@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'value' => function($model) {
 
     if ($model->image != '' && $model->id != "") {
-         return '<img width="100" style="border: 2px solid #d2d2d2;margin-right:.5em;" src="' . Yii::$app->request->baseUrl . '/../uploads/banners/'. $model->id.'/banner'.$model->id.'.'.$model->image . '" />';
+         return '<img width="100" style="border: 2px solid #d2d2d2;margin-right:.5em;" src="' . Yii::$app->request->baseUrl . '/../uploads/banners/'. $model->id.'/'.$model->id.'.'.$model->image . '" />';
                                            
                                         }else{
                                             return '';
