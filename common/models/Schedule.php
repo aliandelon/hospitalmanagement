@@ -77,13 +77,61 @@ class Schedule extends \yii\db\ActiveRecord
         return $this->hasOne(Investigations::class, ['id' => 'investigation_id']);
     }
 
-    public function getInvestigationList($category)
+    // public function getInvestigationList($category)
+    // {
+    //     $con = \Yii::$app->db;
+    //     $query = "SELECT inv.id,inv.investigation_name FROM investigations inv RIGHT JOIN hospital_investigation_mapping hos ON inv.id = hos.investigation_id WHERE inv.mst_id = '$category' AND inv.status =1;";
+    //     $result = $con->createCommand($query)->queryAll();
+    //     return $result;
+    // }
+     public function getInvestigationList($category)
     {
         $con = \Yii::$app->db;
-        $query = "SELECT inv.id,inv.investigation_name FROM investigations inv LEFT JOIN hospital_investigation_mapping hos ON inv.id = hos.investigation_id WHERE inv.mst_id = '$category' AND inv.status =1;";
+        $query = "SELECT inv.id,inv.investigation_name FROM investigations inv WHERE inv.mst_id = '$category' AND inv.status =1;";
         $result = $con->createCommand($query)->queryAll();
         return $result;
     }
+    public function getPreviusInvestigationList($category){
+         $con = \Yii::$app->db;
+         $userId=Yii::$app->user->identity->id;
+         $query = "SELECT inv.id FROM investigations inv 
+                    JOIN category_mst cm 
+                    ON cm.id=inv.mst_id
+                    JOIN hospital_investigation_mapping hos
+                    ON inv.id=hos.investigation_id
+                    WHERE inv.mst_id = '$category' AND inv.status =1 AND hospital_clinic_id='$userId';";
+    
+        $result = $con->createCommand($query)->queryAll();
+        if(!empty($result)){
+            foreach ($result as $idx=>$value) {
+               $result1[$idx]=$value['id'];
+            }
+        }
+        return $result1;
+    }
+
+    public function getPredays($invId){
+        $con = \Yii::$app->db;
+         $userId=Yii::$app->user->identity->id;
+         $query = "SELECT id,day_id FROM hospital_investigation_day_mapping
+                    WHERE investigation_id = '$invId' AND hospital_id='$userId' ORDER BY day_id ASC;";
+    
+        $result = $con->createCommand($query)->queryAll();
+      
+        return $result;
+    }
+
+ public function getPreTimeslot($dayMstID){
+        $con = \Yii::$app->db;
+         $userId=Yii::$app->user->identity->id;
+         $query = "SELECT slot_time FROM sloat_time_mapping
+                    WHERE master_id = '$dayMstID' ORDER BY id ASC;";
+    
+        $result = $con->createCommand($query)->queryAll();
+      
+        return $result;
+    }
+
 
     public function checkScheduleExist($con, $model)
     {
