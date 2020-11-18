@@ -96,6 +96,7 @@ class HospitalClinicDetailsController extends Controller
 
  public function actionUpdate2($id)
     {
+        $model = $this->findModel($id);
         $permission=HospitalClinicDetails::find()->where(['user_id'=>Yii::$app->user->identity->id])->one();
             if(!empty($permission)){
                 if($permission->status=="4"){
@@ -106,8 +107,13 @@ class HospitalClinicDetailsController extends Controller
                 }else if($permission->status=="2"){
                   $this->layout = 'notApproveLayout';  
                 }
+                if($permission['id'] != $id)
+                {
+                   return $this->render('error-form', [
+                        'model' => $model,
+                    ]); 
+                }
             }
-        $model = $this->findModel($id);
 
         $model->scenario = 'updateFrontend';
         $images = $model->hospital_clinic_image;

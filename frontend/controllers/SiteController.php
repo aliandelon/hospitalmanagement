@@ -101,7 +101,7 @@ class SiteController extends Controller {
                 if ($model->load(Yii::$app->request->post()) && $model->login()) {
                    
                     return $this->goBack();
-                } else {
+                } else { 
                         return $this->render('login-latest', [
                                     'model' => $model,
                         ]);
