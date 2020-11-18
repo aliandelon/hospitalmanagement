@@ -570,7 +570,7 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                     $model->day_id=$value;
                     $lstId = $model->daySave($model);
                     if($lstId){
-                        // print_r($linsertID);exit;
+                        
                          foreach ($timeSlots as $key2 => $value2) {
                             $model2 = new SloatTimeMapping();
                              $model2->master_id=  $lstId;
@@ -599,6 +599,8 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
         $model = new Schedule();
         $post = Yii::$app->request->post();
         $array = $post['category'];
+        // echo '<pre>';
+        // print_r($array);exit;
         $designStr = "";
         $abc = [];
         $session = Yii::$app->session;
@@ -609,7 +611,11 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
             $listData=ArrayHelper::map($category,'id','category_name');
             $investigationList = $model->getInvestigationList($value);
             if(sizeof($investigationList) > 0){
-        $designStr .= '<div class="panel panel-success">
+
+            $previusInvestigationList = $model->getPreviusInvestigationList($value); 
+            // echo '<pre>';
+            // print_r($previusInvestigationList);exit;
+            $designStr .= '<div class="panel panel-success">
                             <div class="panel-heading">'.$listData[$value].'</div>
                             <div class="panel-body">
                                 <div class="table">
@@ -626,14 +632,52 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                                                 </tr>
                                             </thead>
                                             <tbody>';
-                                            foreach ($investigationList as $key => $investigation) {
-                                                $index = $value.'_'.$investigation['id'];
-                                                $xyz[$index] = isset($abc[$index]) ? $abc[$index] : [];
+            foreach ($investigationList as $key => $investigation) {
+               
+                // echo $investigation['id'].'===';
+                // echo '<pre>';
+                // print_r($previusInvestigationList);
+                // echo '<br>';
+                $xyz[$index]['days']=[];
+                $abc[$index]='';
+                $index = $value.'_'.$investigation['id'];
+                     if(in_array($investigation['id'], $previusInvestigationList)){
+                        // echo "reach";exit;
+                        $xyz[$index]['days']=$model->getPredays($investigation['id']);
+                        
+                       
+                        if(!empty($xyz[$index]['days'])){
+                            foreach($xyz[$index]['days'] as $ind=>$dayMstID){
+                                $arr[$ind]=$model->getPreTimeslot($dayMstID['id']); 
+                                $dayArr[$ind]=$dayMstID['day_id'];
+                            }
+                            $xyz[$index]['days']= $dayArr;
+                            $xyz[$index]['timeslot']=$arr; 
+                        }
+                                
+                    // $himapping=$model->himapping($investigation['id']);
+                    //   $xyz[$index]['rate']=
+                    //   $xyz[$index]['package']=
+                    //   $xyz[$index]['check']="true";
+
+                    }
+                   
+                    // echo "reach2";exit;
+
+                           
+                             $xyz[$index] = isset($abc[$index]) ? $abc[$index] : [];
                                                 $checkbox = isset($xyz[$index]['check']) ? $xyz[$index]['check'] : "";
+                                   echo '<pre>';
+                                   print_r($xyz[$index]['days']);exit;              
                                                 $days = isset($xyz[$index]['days']) ? $xyz[$index]['days'] : [];
                                                 $timeslot = isset($xyz[$index]['timeslot']) ? $xyz[$index]['timeslot'] : [];
                                                 $rate = isset($xyz[$index]['rate']) ? $xyz[$index]['rate'] : "";
                                                 $package = isset($xyz[$index]['package']) ? $xyz[$index]['package'] : "";
+                                              
+
+
+
+
                                                 $designStr .=  '<tr id="'.$index.'">
                                                     <td class="pt20"><input class="checkbox" type="checkbox" name="investigations" onchange="callSessionMaintain(\''.$index.'\');" value="'.$investigation['id'].'" '.$checkbox.'></td>
                                                     <td class="pt20">'.$investigation['investigation_name'].'</td>

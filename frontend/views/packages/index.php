@@ -93,6 +93,7 @@ function test(apiKey,amount,name,description,images,email,mobile,address){
     "description": description,
     "image": images,
     "handler": function (response){
+        console.log(response);
         if(response)
        $('#modalBtn').click()
     },

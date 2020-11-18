@@ -275,9 +275,11 @@ $(document).ready(function(){
     $('#schedule-investigation_id').selectpicker();
     $('#schedule-doctor_id').selectpicker();
     $('.testDose').on('change',function(e){
+
         var type = $('#type').val();
          $('.field-schedule-amount').css('display','none');
          $('.field-schedule-details').css('display','none');
+
         if(type == 1){
           
            $('.loading').css('display','block');        
@@ -308,6 +310,8 @@ $(document).ready(function(){
         }
 
     });
+
+    
     $('#schedule-id').on('change',function(e){
         var selected = $(this).val();
          $('.loading').css('display','block');    
