@@ -78,10 +78,10 @@ DashboardAsset::register($this);
                                     
                                 ],],    
 
-                                 ['label' => '<span class="fa fa-plus icon-wrap"></span>&nbsp;<span class="menulist">New Hospital & Labs</span>', 
+                                 ['label' => '<span class="fa fa-plus icon-wrap"></span>&nbsp;<span class="menulist">New Hospital & Diagnostic Centre</span>', 
                                     'url' => ['hospital-clinic-details/new-request-index'],
                                     ],
-                                      ['label' => '<span class="fa fa-user-md  icon-wrap"></span>&nbsp;<span class="menulist"> Hospitals & Labs</span>', 
+                                      ['label' => '<span class="fa fa-user-md  icon-wrap"></span>&nbsp;<span class="menulist"> Hospitals & Diagnostic Centre</span>', 
                                     'url' => ['hospital-clinic-details/verified-users-index'],
                                     ],
 

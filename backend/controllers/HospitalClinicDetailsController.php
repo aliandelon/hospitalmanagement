@@ -117,7 +117,7 @@ class HospitalClinicDetailsController extends Controller
         $model2 = new Login();
         $model->scenario = 'newrequest';
         if ($model->load(Yii::$app->request->post())) {
-            $model2->email = $model->email;
+            $model2->mobile = $model->mobile;
             $model2->auth_key = '123';
             $model2->password = Yii::$app->getSecurity()->hashData($model->password, $model2->auth_key);
             $model2->type = 3;

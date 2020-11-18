@@ -36,7 +36,7 @@ class PatientDetailsController extends Controller
     public function actionIndex()
     {
         $searchModel = new PatientDetailsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search1(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
