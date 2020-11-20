@@ -131,7 +131,7 @@ use common\models\DoctorsDetails;
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
 
 <div class="loading" style="display:none;z-index: 111 !important;"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
-<?php $days = array(1=>"Monday",2=>"Tuesday",3=>"Wednesday",4=>"Thursday",5=>"Friday",6=>"Saturday",7=>"Sunday");?>
+<?php $days = array(0=>"Monday",1=>"Tuesday",2=>"Wednesday",3=>"Thursday",4=>"Friday",5=>"Saturday",6=>"Sunday");?>
 <div class="content">
     <div class="schedule-form">
     <?php if (Yii::$app->session->hasFlash('error')): ?>
@@ -175,25 +175,12 @@ use common\models\DoctorsDetails;
                     ['prompt'=>'Select Doctor','data-live-search'=>'true']
                     )->label('Doctor');
                     ?>
-                    <?php foreach ($days as $key => $value) {?>
-                    <div class="col-md-6">
-                      <input type="hidden" name="<?=$value?>" value="<?=$value?>" id="day_<?=$key?>">&nbsp;<?=$value?>
-                      <select class="form-control" id='docTimeslot_<?=$key?>' name="<?=$key?>timeSlots[]" multiple="multiple">
-                          <option value="8:00 AM - 8:30 AM">8:00 AM - 8:30 AM</option>
-                          <option value="8:30 AM - 9:00 AM">8:30 AM - 9:00 AM</option>
-                          <option value="9:00 AM - 9:30 AM">9:00 AM - 9:30 AM</option>
-                          <option value="9:30 AM - 10:00 AM">9:30 AM - 10:00 AM</option>
-                          <option value="10:00 AM - 10:30 AM">10:00 AM - 10:30 AM</option>
-                          <option value="10:30 AM - 11:00 AM">10:30 AM - 11:00 AM</option>
-                          <option value="11:00 AM - 11:30 AM">11:00 AM - 11:30 AM</option>
-                          <option value="11:30 AM - 12:00 PM">11:30 AM - 12:00 PM</option>
-                          <option value="12:00 PM - 12:30 PM">12:00 PM - 12:30 PM</option>
-                          <option value="12:30 PM - 01:00 PM">12:30 PM - 01:00 PM</option>
-                          <option value="01:00 PM - 01:30 PM">01:00 PM - 01:30 PM</option>
-                      </select>
+                    <div class="row" id="slotArea">
+                      
                     </div>
-                  <?php } ?>
-                    <div class="col-md-12 text-center"><button type="button" class="btn btn-primary" id="docBtn"> Add Schedule</button></div>
+                    <br>
+                      <input class="form-control" type="text" name="docRate" id = "docRate" placeholder="Amount">
+                    <div class="col-md-12 text-center"><br/><br/><button type="button" class="btn btn-primary" id="docBtn"> Add Schedule</button></div>
             </div>
             <div  id="investigation" style="display: none;">
                 <div class="row">
@@ -262,6 +249,7 @@ use common\models\DoctorsDetails;
         });
 
     }
+
     
 
 </script>
@@ -350,6 +338,23 @@ $(document).ready(function(){
 
 
 });
+  $('#schedule-doctor_id').change(function(){
+    $('.loading').css('display','block');
+    var docId = $(this).val();
+         $.ajax({
+             url:baseurl+'schedule/get-doctor-details',
+             data:{docId:docId},
+             type:'POST',
+             success:function(data){
+              $('.loading').css('display','none');
+              $('#slotArea').html(data);
+              $('select').selectpicker();
+             },
+             error:function(){
+               $('.loading').css('display','none');
+             }
+        });
+  });
 
 ");
         ?>
