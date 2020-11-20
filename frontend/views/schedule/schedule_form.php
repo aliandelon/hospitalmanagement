@@ -131,7 +131,7 @@ use common\models\DoctorsDetails;
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
 
 <div class="loading" style="display:none;z-index: 111 !important;"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
-
+<?php $days = array(1=>"Monday",2=>"Tuesday",3=>"Wednesday",4=>"Thursday",5=>"Friday",6=>"Saturday",7=>"Sunday");?>
 <div class="content">
     <div class="schedule-form">
     <?php if (Yii::$app->session->hasFlash('error')): ?>
@@ -175,25 +175,24 @@ use common\models\DoctorsDetails;
                     ['prompt'=>'Select Doctor','data-live-search'=>'true']
                     )->label('Doctor');
                     ?>
-                    <select class="form-control" id='docDays' name="'.$value.'days[]" multiple data-live-search="true">
-                        <option value="1">Monday</option>
-                        <option value="2">Tuesday</option>
-                        <option value="3">Wednesday</option>
-                        <option value="4">Thursday</option>
-                        <option value="5">Friday</option>
-                        <option value="6">Saturday</option>
-                        <option value="7">Sunday</option>
-                    </select><br/><br/>
-                    <select class="form-control" id='docTimeslot' name="'.$value.'timeSlots[]" multiple data-live-search="true">
-                        <option value="8:00 AM - 8:30 AM">8:00 AM - 8:30 AM</option>
-                        <option value="8:30 AM - 9:00 AM">8:30 AM - 9:00 AM</option>
-                        <option value="9:00 AM - 9:30 AM">9:00 AM - 9:30 AM</option>
-                        <option value="9:30 AM - 10:00 AM">9:30 AM - 10:00 AM</option>
-                        <option value="10:00 AM - 10:30 AM">10:00 AM - 10:30 AM</option>
-                        <option value="10:30 AM - 11:00 AM">10:30 AM - 11:00 AM</option>
-                        <option value="11:00 AM - 11:30 AM">11:00 AM - 11:30 AM</option>
-                        <option value="11:30 AM - 12:00 PM">11:30 AM - 12:00 PM</option>
-                    </select><br/><br/>
+                    <?php foreach ($days as $key => $value) {?>
+                    <div class="col-md-6">
+                      <input type="hidden" name="<?=$value?>" value="<?=$value?>" id="day_<?=$key?>">&nbsp;<?=$value?>
+                      <select class="form-control" id='docTimeslot_<?=$key?>' name="<?=$key?>timeSlots[]" multiple="multiple">
+                          <option value="8:00 AM - 8:30 AM">8:00 AM - 8:30 AM</option>
+                          <option value="8:30 AM - 9:00 AM">8:30 AM - 9:00 AM</option>
+                          <option value="9:00 AM - 9:30 AM">9:00 AM - 9:30 AM</option>
+                          <option value="9:30 AM - 10:00 AM">9:30 AM - 10:00 AM</option>
+                          <option value="10:00 AM - 10:30 AM">10:00 AM - 10:30 AM</option>
+                          <option value="10:30 AM - 11:00 AM">10:30 AM - 11:00 AM</option>
+                          <option value="11:00 AM - 11:30 AM">11:00 AM - 11:30 AM</option>
+                          <option value="11:30 AM - 12:00 PM">11:30 AM - 12:00 PM</option>
+                          <option value="12:00 PM - 12:30 PM">12:00 PM - 12:30 PM</option>
+                          <option value="12:30 PM - 01:00 PM">12:30 PM - 01:00 PM</option>
+                          <option value="01:00 PM - 01:30 PM">01:00 PM - 01:30 PM</option>
+                      </select>
+                    </div>
+                  <?php } ?>
                     <div class="col-md-12 text-center"><button type="button" class="btn btn-primary" id="docBtn"> Add Schedule</button></div>
             </div>
             <div  id="investigation" style="display: none;">
@@ -205,7 +204,7 @@ use common\models\DoctorsDetails;
                         $listData=ArrayHelper::map($details,'id','category_name');
                         echo $form->field($model, 'id')->dropDownList(
                             $listData,
-                            ['multiple'=>'true','size'=>'5','data-live-search'=>'true']
+                            [/*'multiple'=>'true',*/'size'=>'5','data-live-search'=>'true']
                             )->label('Investigation Category');
                             ?>
                     </div>
@@ -239,20 +238,21 @@ use common\models\DoctorsDetails;
     function callSessionMaintain(trId){
         checkbox = ($("#"+trId+" td input[name^='investigations']").prop('checked') == true) ? "checked" : "";
         if(checkbox!=""){
-            days = $("#"+trId+" td select[name^='days']").val();
-            timeSlots = $("#"+trId+" td select[name^='timeSlots']").val();
+            days = [];
+            $("#"+trId+" td select[name^='timeSlots']").each(function(){
+              days.push($(this).val());
+            });
             rate = $("#"+trId+" td input[name^='rate']").val();
             package = $("#"+trId+" td textarea[name^='package']").val();
         }else{
             days = "";
-            timeSlots = "";
             rate = "";
             package="";
         }
 
         $.ajax({
              url:baseurl+'schedule/set-investigation-list',
-             data:{'trId':trId,'checkbox':checkbox,'days':days,'timeSlots':timeSlots,'rate':rate,'package':package},
+             data:{'trId':trId,'checkbox':checkbox,'days':days,'rate':rate,'package':package},
              type:'POST',
              success:function(data){
                 console.log(data);
@@ -275,11 +275,9 @@ $(document).ready(function(){
     $('#schedule-investigation_id').selectpicker();
     $('#schedule-doctor_id').selectpicker();
     $('.testDose').on('change',function(e){
-
         var type = $('#type').val();
          $('.field-schedule-amount').css('display','none');
          $('.field-schedule-details').css('display','none');
-
         if(type == 1){
           
            $('.loading').css('display','block');        
@@ -310,8 +308,6 @@ $(document).ready(function(){
         }
 
     });
-
-    
     $('#schedule-id').on('change',function(e){
         var selected = $(this).val();
          $('.loading').css('display','block');    
