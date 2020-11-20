@@ -515,14 +515,14 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
         $index = $post['trId'];
         $checkbox = $post['checkbox'];
         $days = $post['days'];
-        $timeSlots = $post['timeSlots'];
+        // $timeSlots = $post['timeSlots'];
         $rate = $post['rate'];
         $package = $post['package'];
         $session = Yii::$app->session;
         $abc = $session['arrayList'];
         $abc[$index]['check'] = $checkbox;
         $abc[$index]['days'] = $days;
-        $abc[$index]['timeslot'] = $timeSlots;
+        // $abc[$index]['timeslot'] = $timeSlots;
         $abc[$index]['rate'] = $rate;
         $abc[$index]['package'] = $package;
         $session['arrayList'] = $abc;
@@ -540,7 +540,7 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                       $investigation=$category_inv[1];
                       $days=($value['days'])?$value['days']:'';
 
-                      $timeslot=$value['timeslot'];
+                      // $timeslot=$value['timeslot'];
                         if(!empty($days)){
                              $model3=new HospitalInvestigationMapping();
                              $model3->investigation_id=$investigation;
@@ -549,7 +549,7 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                              $model3->isHomeCollection=1;
                              $model3->details=($value['package'])?$value['package']:'';
                              $model3->modeleInsert($model3);
-                            $this->saveDaysTime($days,$timeslot,$investigation,$category);
+                             $this->saveDaysTime($days,$investigation,$category);
                         }
 
                     }
@@ -559,7 +559,7 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
             }
     }
 
-    protected function saveDaysTime($days,$timeSlots,$investigation,$category){
+    protected function saveDaysTime($days,$investigation,$category){
        
         
             foreach ($days as $key => $value) {
@@ -567,13 +567,15 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                     $model->hospital_id=Yii::$app->user->identity->id;
                     $model->investigation_id=$investigation;
                     $model->category_id=$category;
-                    $model->day_id=$value;
+                    $model->day_id=$key;
                     $lstId = $model->daySave($model);
+                    $timeSlots  = $value;
                     if($lstId){
-                        
+                        // print_r($linsertID);exit;
                          foreach ($timeSlots as $key2 => $value2) {
-                            $model2 = new SloatTimeMapping();
-                             $model2->master_id=  $lstId;
+                             $model2 = new SloatTimeMapping();
+                             $model2->hospital_id=Yii::$app->user->identity->id;
+                             $model2->investigation_mapping_id=  $lstId;
                              $model2->slot_time =$value2;
                             if($model2->timeSave($model2)){
 
@@ -598,25 +600,20 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
     public function actionGetInvestigationList(){
         $model = new Schedule();
         $post = Yii::$app->request->post();
-        $array = $post['category'];
-        // echo '<pre>';
-        // print_r($array);exit;
+        $categoryId = $post['category'];
         $designStr = "";
         $abc = [];
         $session = Yii::$app->session;
         $session['arrayList'] = isset($session['arrayList']) ? $session['arrayList'] : [];
         $abc = $session['arrayList'];
-        foreach ($array as $key => $value) {
-            $category = Category::find()->where(["id"=>$value])->all();
+        // foreach ($array as $key => $value) {
+            $category = Category::find()->where(["id"=>$categoryId])->all();
             $listData=ArrayHelper::map($category,'id','category_name');
-            $investigationList = $model->getInvestigationList($value);
+            $investigationList = $model->getInvestigationList($categoryId);
+            
             if(sizeof($investigationList) > 0){
-
-            $previusInvestigationList = $model->getPreviusInvestigationList($value); 
-            // echo '<pre>';
-            // print_r($previusInvestigationList);exit;
-            $designStr .= '<div class="panel panel-success">
-                            <div class="panel-heading">'.$listData[$value].'</div>
+        $designStr .= '<div class="panel panel-success">
+                            <div class="panel-heading">'.$listData[$categoryId].'</div>
                             <div class="panel-body">
                                 <div class="table">
                                     <div class="table-responsive">
@@ -625,115 +622,69 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                                                 <tr>
                                                     <th></th>
                                                     <th>Investigations</th>
-                                                    <th>Days</th>
-                                                    <th>Time slots</th>
+                                                    <th>Day &amp; Time slots</th>
                                                     <th>Rate</th>
                                                     <th>Package Details</th>
                                                 </tr>
                                             </thead>
                                             <tbody>';
-            foreach ($investigationList as $key => $investigation) {
-               
-                // echo $investigation['id'].'===';
-                // echo '<pre>';
-                // print_r($previusInvestigationList);
-                // echo '<br>';
-                $xyz[$index]['days']=[];
-                $abc[$index]='';
-                $index = $value.'_'.$investigation['id'];
-                     if(in_array($investigation['id'], $previusInvestigationList)){
-                        // echo "reach";exit;
-                        $xyz[$index]['days']=$model->getPredays($investigation['id']);
-                        
-                       
-                        if(!empty($xyz[$index]['days'])){
-                            foreach($xyz[$index]['days'] as $ind=>$dayMstID){
-                                $arr[$ind]=$model->getPreTimeslot($dayMstID['id']); 
-                                $dayArr[$ind]=$dayMstID['day_id'];
-                            }
-                            $xyz[$index]['days']= $dayArr;
-                            $xyz[$index]['timeslot']=$arr; 
-                        }
-                                
-                    // $himapping=$model->himapping($investigation['id']);
-                    //   $xyz[$index]['rate']=
-                    //   $xyz[$index]['package']=
-                    //   $xyz[$index]['check']="true";
-
-                    }
-                   
-                    // echo "reach2";exit;
-
-                           
-                             $xyz[$index] = isset($abc[$index]) ? $abc[$index] : [];
-                                                $checkbox = isset($xyz[$index]['check']) ? $xyz[$index]['check'] : "";
-                                   echo '<pre>';
-                                   print_r($xyz[$index]['days']);exit;              
-                                                $days = isset($xyz[$index]['days']) ? $xyz[$index]['days'] : [];
-                                                $timeslot = isset($xyz[$index]['timeslot']) ? $xyz[$index]['timeslot'] : [];
-                                                $rate = isset($xyz[$index]['rate']) ? $xyz[$index]['rate'] : "";
-                                                $package = isset($xyz[$index]['package']) ? $xyz[$index]['package'] : "";
-                                              
-
-
-
-
+                                            foreach ($investigationList as $key => $investigation) {
+                                                $invDetails = $model->getInvestigationDaySlotDetails($investigation['id']);
+                                                // echo "<pre>";print_r($invDetails);exit;
+                                                $index = $categoryId.'_'.$investigation['id'];
+                                                // $xyz[$index] = isset($abc[$index]) ? $abc[$index] : [];
+                                                // $checkbox = isset($xyz[$index]['check']) ? $xyz[$index]['check'] : "";
+                                                // $days = isset($xyz[$index]['days']) ? $xyz[$index]['days'] : [];
+                                                // $timeslot = isset($xyz[$index]['timeslot']) ? $xyz[$index]['timeslot'] : [];
+                                                // $rate = isset($xyz[$index]['rate']) ? $xyz[$index]['rate'] : "";
+                                                // $package = isset($xyz[$index]['package']) ? $xyz[$index]['package'] : "";
+                                                
+                                                $rate = $investigation['amount'];
+                                                $package = $investigation['details'];
+                                                $days = $timeslot = [];
+                                                $dayId = "";
+                                                foreach($invDetails as $invValue){
+                                                    // if(!in_array($invValue['day_id'], $days)){
+                                                    //     array_push($days,$invValue['day_id']);    
+                                                    // }
+                                                    // if(!in_array($invValue['slot_time'], $timeslot)){
+                                                    //     array_push($timeslot,$invValue['slot_time']);
+                                                    // }
+                                                    if($dayId != $invValue['day_id']){
+                                                        $dayId = $invValue['day_id'];
+                                                        $timeSlotval = [];
+                                                        array_push($timeSlotval, $invValue['slot_time']);
+                                                    }else{
+                                                        array_push($timeSlotval, $invValue['slot_time']);
+                                                    }
+                                                    $days[$dayId] = $timeSlotval;
+                                                    
+                                                }
+                                                $checkbox = '';
+                                                if(!empty($days)){
+                                                    $checkbox = 'checked';
+                                                }
+                                                
+                                                // $abc[$index]['timeslot'] = $timeslot;
+                                                $abc[$index]['days'] = $days;
+                                                $abc[$index]['rate'] = $rate;
+                                                $abc[$index]['package'] = $package;
+                                                $abc[$index]['check'] = 1;
+                                                
+                                                $session['arrayList'] = $abc;
+                                                
                                                 $designStr .=  '<tr id="'.$index.'">
                                                     <td class="pt20"><input class="checkbox" type="checkbox" name="investigations" onchange="callSessionMaintain(\''.$index.'\');" value="'.$investigation['id'].'" '.$checkbox.'></td>
                                                     <td class="pt20">'.$investigation['investigation_name'].'</td>
-                                                    <td style="max-width:200px !important;">
-                                                        <select class="form-control days" name="days" multiple data-live-search="true" onchange="callSessionMaintain(\''.$index.'\');">
-                                                            <option value="1" ';
-                                                             $designStr .= (in_array(1, $days)) ? "selected" : "";
-                                                             $designStr .='>Monday</option>
-                                                            <option value="2"  ';
-                                                             $designStr .= (in_array(2, $days)) ? "selected" : "";
-                                                             $designStr .='>Tuesday</option>
-                                                            <option value="3"  ';
-                                                             $designStr .= (in_array(3, $days)) ? "selected" : "";
-                                                             $designStr .='>Wednesday</option>
-                                                            <option value="4"  ';
-                                                             $designStr .= (in_array(4, $days)) ? "selected" : "";
-                                                             $designStr .='>Thursday</option>
-                                                            <option value="5"  ';
-                                                             $designStr .= (in_array(5, $days)) ? "selected" : "";
-                                                             $designStr .='>Friday</option>
-                                                            <option value="6"  ';
-                                                             $designStr .= (in_array(6, $days)) ? "selected" : "";
-                                                             $designStr .='>Saturday</option>
-                                                            <option value="7"  ';
-                                                             $designStr .= (in_array(7, $days)) ? "selected" : "";
-                                                             $designStr .='>Sunday</option>
-                                                        </select>
-                                                    </td>
-                                                    <td style="max-width:200px !important;">
-                                                        <select class="form-control timeslot" name="timeSlots" multiple data-live-search="true" onchange="callSessionMaintain(\''.$index.'\');">
-                                                            <option value="8:00 AM - 8:30 AM"  ';
-                                                             $designStr .= (in_array("8:00 AM - 8:30 AM", $timeslot)) ? "selected" : "";
-                                                             $designStr .='>8:00 AM - 8:30 AM</option>
-                                                            <option value="8:30 AM - 9:00 AM"  ';
-                                                             $designStr .= (in_array("8:30 AM - 9:00 AM", $timeslot)) ? "selected" : "";
-                                                             $designStr .='>8:30 AM - 9:00 AM</option>
-                                                            <option value="9:00 AM - 9:30 AM"  ';
-                                                             $designStr .= (in_array("9:00 AM - 9:30 AM", $timeslot)) ? "selected" : "";
-                                                             $designStr .='>9:00 AM - 9:30 AM</option>
-                                                            <option value="9:30 AM - 10:00 AM"  ';
-                                                             $designStr .= (in_array("9:30 AM - 10:00 AM", $timeslot)) ? "selected" : "";
-                                                             $designStr .='>9:30 AM - 10:00 AM</option>
-                                                            <option value="10:00 AM - 10:30 AM"  ';
-                                                             $designStr .= (in_array("10:00 AM - 10:30 AM", $timeslot)) ? "selected" : "";
-                                                             $designStr .='>10:00 AM - 10:30 AM</option>
-                                                            <option value="10:30 AM - 11:00 AM"  ';
-                                                             $designStr .= (in_array("10:30 AM - 11:00 AM", $timeslot)) ? "selected" : "";
-                                                             $designStr .='>10:30 AM - 11:00 AM</option>
-                                                            <option value="11:00 AM - 11:30 AM"  ';
-                                                             $designStr .= (in_array("11:00 AM - 11:30 AM", $timeslot)) ? "selected" : "";
-                                                             $designStr .='>11:00 AM - 11:30 AM</option>
-                                                            <option value="11:30 AM - 12:00 PM"  ';
-                                                             $designStr .= (in_array("11:30 AM - 12:00 PM", $timeslot)) ? "selected" : "";
-                                                             $designStr .='>11:30 AM - 12:00 PM</option>
-                                                        </select>
-                                                    </td>
+                                                    <td style="max-width:500px !important;"><div class="col-md-12">';
+                                                    $daysArray = array(0=>"Monday",1=>"Tuesday",2=>"Wednesday",3=>"Thursday",4=>"Friday",5=>"Saturday",6=>"Sunday");
+                                                    foreach ($daysArray as $key => $value) {  
+                                                        $designStr .= '<div class="col-md-6"><p>'.$value.'</p><select class="form-control timeslot" id="'.$index.'_'.$value.'" name="timeSlots" multiple onchange="callSessionMaintain(\''.$index.'\');">';
+                                                        $chekValue = !empty($days) ? $days[$key] :  [];
+                                                        $designStr .= $this->getTimeSlotOptions($chekValue);    
+                                                        $designStr .=  '</select></div>';
+                                                    }
+                                                    $designStr .=  '</div></td>
                                                     <td style="max-width:100px"><input class="form-control rate" value="'.$rate.'" type="text" name="rate" placeholder="Rate" onchange="callSessionMaintain(\''.$index.'\');"></td>
                                                     <td><textarea class="form-control package" name="package" onchange="callSessionMaintain(\''.$index.'\');">'.$package.'</textarea></td>
                                                 </tr>';
@@ -744,9 +695,23 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                                 </div>
                             </div>
                         </div>';
-                    }}
-                    $session['arrayList'] = $xyz;
+                    }//}
+                    // $session['arrayList'] = $xyz;
                     echo $designStr;
+    }
+
+    public function getTimeSlotOptions($checkVal){
+        $model = new Schedule();
+        $string = "";
+        $timeSlots = $model->getTimeSlotOptions();
+        foreach ($timeSlots as $key => $value) {
+            $checked = '';
+            if(in_array($value['tmeSlot'], $checkVal)){
+                $checked = 'selected';
+            }
+            $string .= '<option value="'.$value['tmeSlot'].'"'.$checked.'>'.$value['tmeSlot'].'</option>';
+        }
+        return $string;
     }
 
 }
