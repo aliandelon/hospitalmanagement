@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "sloat_time_mapping".
  *
  * @property integer $id
- * @property integer $master_id
+ * @property integer $investigation_mapping_id
  * @property string $slot_time
  */
 class SloatTimeMapping extends \yii\db\ActiveRecord
@@ -27,8 +27,8 @@ class SloatTimeMapping extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['master_id', 'slot_time'], 'required'],
-            [['master_id'], 'integer'],
+            [['investigation_mapping_id', 'slot_time'], 'required'],
+            [['investigation_mapping_id'], 'integer'],
             [['slot_time'], 'string', 'max' => 150],
         ];
     }
@@ -40,14 +40,14 @@ class SloatTimeMapping extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'master_id' => 'Master ID',
+            'investigation_mapping_id' => 'Master ID',
             'slot_time' => 'Slot Time',
         ];
     }
     public function timeSave($model){
 
     $con = \Yii::$app->db;
-    $sql = "INSERT into sloat_time_mapping(master_id,slot_time)VALUES('$model->master_id','$model->slot_time') ON DUPLICATE KEY UPDATE  id= VALUES(id), master_id=VALUES(master_id),slot_time=VALUES(slot_time);";
+    $sql = "INSERT into sloat_time_mapping(investigation_mapping_id,slot_time)VALUES('$model->investigation_mapping_id','$model->slot_time') ON DUPLICATE KEY UPDATE  id= VALUES(id), investigation_mapping_id=VALUES(investigation_mapping_id),slot_time=VALUES(slot_time);";
         $result = $con->createCommand($sql)->execute();
         return $result;
 }
