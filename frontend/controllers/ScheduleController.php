@@ -714,4 +714,35 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
         return $string;
     }
 
+    public function getDocTimeSlotOptions($checkVal){
+        $model = new Schedule();
+        $string = "";
+        $timeSlots = $model->getTimeSlotOptions();
+        foreach ($timeSlots as $key => $value) {
+            $checked = '';
+            if(in_array($value['tmeSlot'], $checkVal)){
+                $checked = 'selected';
+            }
+            $string .= '<option value="'.$value['tmeSlot'].'"'.$checked.'>'.$value['tmeSlot'].'</option>';
+        }
+        return $string;
+    }
+
+    public function actionGetDoctorDetails(){
+        $model = new Schedule();
+        $post = Yii::$app->request->post();
+        $docId = $post['docId'];
+        $days = [];
+        $designStr = '<div class="col-md-12">';
+        $daysArray = array(0=>"Monday",1=>"Tuesday",2=>"Wednesday",3=>"Thursday",4=>"Friday",5=>"Saturday",6=>"Sunday");
+        foreach ($daysArray as $key => $value) {  
+            $designStr .= '<div class="col-md-6"><p>'.$value.'</p><select class="form-control doctimeslot" id="'.$docId.'_'.$value.'" name="timeSlots" multiple onchange="callSessionMaintain(\''.$docId.'\');">';
+            $chekValue = !empty($days) ? $days[$key] :  [];
+            $designStr .= $this->getDocTimeSlotOptions($chekValue);    
+            $designStr .=  '</select></div>';
+        }
+        $designStr .=  '</div>';
+        print_r($designStr);
+    }
+
 }
