@@ -518,11 +518,12 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
         // $timeSlots = $post['timeSlots'];
         $rate = $post['rate'];
         $package = $post['package'];
+        $ishome = $post['ishome'];
         $session = Yii::$app->session;
         $abc = $session['arrayList'];
         $abc[$index]['check'] = $checkbox;
         $abc[$index]['days'] = $days;
-        // $abc[$index]['timeslot'] = $timeSlots;
+        $abc[$index]['ishome'] = $ishome;
         $abc[$index]['rate'] = $rate;
         $abc[$index]['package'] = $package;
         $session['arrayList'] = $abc;
@@ -539,14 +540,13 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                       $category=$category_inv[0];
                       $investigation=$category_inv[1];
                       $days=($value['days'])?$value['days']:'';
-
                       // $timeslot=$value['timeslot'];
                         if(!empty($days)){
                              $model3=new HospitalInvestigationMapping();
                              $model3->investigation_id=$investigation;
                              $model3->hospital_clinic_id=Yii::$app->user->identity->id;
                              $model3->amount =($value['rate'])?$value['rate']:0;
-                             $model3->isHomeCollection=1;
+                             $model3->isHomeCollection=($value['ishome'])?$value['ishome']:0;
                              $model3->details=($value['package'])?$value['package']:'';
                              $model3->modeleInsert($model3);
                              $this->saveDaysTime($days,$investigation,$category);
@@ -572,19 +572,21 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                     $timeSlots  = $value;
                     if($lstId){
                         // print_r($linsertID);exit;
-                         foreach ($timeSlots as $key2 => $value2) {
-                             $model2 = new SloatTimeMapping();
-                             $model2->hospital_id=Yii::$app->user->identity->id;
-                             $model2->investigation_mapping_id=  $lstId;
-                             $model2->slot_time =$value2;
-                            if($model2->timeSave($model2)){
-
-                            }else{
-                            print_r($model2->getErrors());exit;
-                            };
-                        }   
+                        if(!empty($value)){
+                            foreach ($value as $key2 => $value2) {
+                                 $model2 = new SloatTimeMapping();
+                                 $model2->hospital_id=Yii::$app->user->identity->id;
+                                 $model2->investigation_mapping_id=  $lstId;
+                                 $model2->slot_time =$value2;
+                                if($model2->timeSave($model2)){
+                                    // continue;
+                                }else{
+                                print_r($model2->getErrors());
+                                };
+                            } 
+                        } 
                     }else{
-                            print_r($model->getErrors());exit;
+                            print_r($model->getErrors());
                         }
                     
 
@@ -625,31 +627,19 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                                                     <th>Day &amp; Time slots</th>
                                                     <th>Rate</th>
                                                     <th>Package Details</th>
+                                                    <th style="text-align:center">Is home Collection</th>
                                                 </tr>
                                             </thead>
                                             <tbody>';
                                             foreach ($investigationList as $key => $investigation) {
                                                 $invDetails = $model->getInvestigationDaySlotDetails($investigation['id']);
-                                                // echo "<pre>";print_r($invDetails);exit;
                                                 $index = $categoryId.'_'.$investigation['id'];
-                                                // $xyz[$index] = isset($abc[$index]) ? $abc[$index] : [];
-                                                // $checkbox = isset($xyz[$index]['check']) ? $xyz[$index]['check'] : "";
-                                                // $days = isset($xyz[$index]['days']) ? $xyz[$index]['days'] : [];
-                                                // $timeslot = isset($xyz[$index]['timeslot']) ? $xyz[$index]['timeslot'] : [];
-                                                // $rate = isset($xyz[$index]['rate']) ? $xyz[$index]['rate'] : "";
-                                                // $package = isset($xyz[$index]['package']) ? $xyz[$index]['package'] : "";
-                                                
                                                 $rate = $investigation['amount'];
+                                                $ishome = ($investigation['isHomeCollection'] == 1) ? "checked='true'" : "";
                                                 $package = $investigation['details'];
                                                 $days = $timeslot = [];
                                                 $dayId = "";
                                                 foreach($invDetails as $invValue){
-                                                    // if(!in_array($invValue['day_id'], $days)){
-                                                    //     array_push($days,$invValue['day_id']);    
-                                                    // }
-                                                    // if(!in_array($invValue['slot_time'], $timeslot)){
-                                                    //     array_push($timeslot,$invValue['slot_time']);
-                                                    // }
                                                     if($dayId != $invValue['day_id']){
                                                         $dayId = $invValue['day_id'];
                                                         $timeSlotval = [];
@@ -665,11 +655,11 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                                                     $checkbox = 'checked';
                                                 }
                                                 
-                                                // $abc[$index]['timeslot'] = $timeslot;
                                                 $abc[$index]['days'] = $days;
                                                 $abc[$index]['rate'] = $rate;
                                                 $abc[$index]['package'] = $package;
                                                 $abc[$index]['check'] = 1;
+                                                $abc[$index]['ishome'] = 1;
                                                 
                                                 $session['arrayList'] = $abc;
                                                 
@@ -680,13 +670,14 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
                                                     $daysArray = array(0=>"Monday",1=>"Tuesday",2=>"Wednesday",3=>"Thursday",4=>"Friday",5=>"Saturday",6=>"Sunday");
                                                     foreach ($daysArray as $key => $value) {  
                                                         $designStr .= '<div class="col-md-6"><p>'.$value.'</p><select class="form-control timeslot" id="'.$index.'_'.$value.'" name="timeSlots" multiple onchange="callSessionMaintain(\''.$index.'\');">';
-                                                        $chekValue = !empty($days) ? $days[$key] :  [];
+                                                        $chekValue = !empty($days[$key]) ? $days[$key] :  [];
                                                         $designStr .= $this->getTimeSlotOptions($chekValue);    
                                                         $designStr .=  '</select></div>';
                                                     }
                                                     $designStr .=  '</div></td>
-                                                    <td style="max-width:100px"><input class="form-control rate" value="'.$rate.'" type="text" name="rate" placeholder="Rate" onchange="callSessionMaintain(\''.$index.'\');"></td>
+                                                    <td style="max-width:100px"><input class="form-control rate" value="'.$rate.'" type="text" name="rate" placeholder="Rate" onkeypress="return isNumberKey(event)" onchange="callSessionMaintain(\''.$index.'\');"></td>
                                                     <td><textarea class="form-control package" name="package" onchange="callSessionMaintain(\''.$index.'\');">'.$package.'</textarea></td>
+                                                    <td style="text-align:center"><input class="ishome" '.$ishome.' type="checkbox" name="ishome" onchange="callSessionMaintain(\''.$index.'\');"></td>
                                                 </tr>';
                                             }
                                             $designStr .= '</tbody>
@@ -739,9 +730,11 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
             $designStr .= '<div class="col-md-6"><p>'.$value.'</p><select class="form-control doctimeslot" id="'.$docId.'_'.$value.'" name="timeSlots" multiple onchange="callSessionMaintain(\''.$docId.'\');">';
             $chekValue = !empty($days) ? $days[$key] :  [];
             $designStr .= $this->getDocTimeSlotOptions($chekValue);    
-            $designStr .=  '</select></div>';
+            $designStr .=  '</select> </div>';
         }
-        $designStr .=  '</div>';
+        $designStr .=  '<div class="col-md-12">
+                        <label>Amount</label>
+                      <input class="form-control" type="text" name="docRate" onkeypress="return isNumberKey(event)" id = "docRate" placeholder="Amount"></div></div>';
         print_r($designStr);
     }
 
