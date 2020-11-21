@@ -150,10 +150,10 @@ use common\models\DoctorsDetails;
         <div class="col-md-12">
             <div class="form-group field-schedule-type has-success">
                 <label class="control-label" for="type">Choose a Type:&nbsp;&nbsp;</label>
-                <input type="radio" class="testDose" name="radio1" value="2" checked="true" onchange="$('#type').val($(this).val());"> Doctor AppointMent
+                <input type="radio" class="testDose" name="radio1" value="2" checked="true" onchange="$('#type').val($(this).val());"> Doctor's Schedule
                 <?php if($invaccess->have_diagnostic_center=='1'){ ?>
                 &nbsp;&nbsp;&nbsp;
-                <input type="radio" class="testDose" name="radio1" value="1" onchange="$('#type').val($(this).val());"> Investigation
+                <input type="radio" class="testDose" name="radio1" value="1" onchange="$('#type').val($(this).val());"> Investigations
                 <?php } ?>
                 <input type="hidden" name="type" id="type">
                 <!-- <select name="type" id="type" class="form-control">
@@ -178,8 +178,6 @@ use common\models\DoctorsDetails;
                     <div class="row" id="slotArea">
                       
                     </div>
-                    <br>
-                      <input class="form-control" type="text" name="docRate" id = "docRate" placeholder="Amount">
                     <div class="col-md-12 text-center"><br/><br/><button type="button" class="btn btn-primary" id="docBtn"> Add Schedule</button></div>
             </div>
             <div  id="investigation" style="display: none;">
@@ -221,6 +219,15 @@ use common\models\DoctorsDetails;
     var baseurl = "<?php print \yii\helpers\Url::base() . "/"; ?>";
     var basepath = "<?php print \yii\helpers\Url::base(); ?>";
     var curl = "<?php print Yii::$app->request->absoluteUrl; ?>";
+    function isNumberKey(evt)
+    {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
 
     function callSessionMaintain(trId){
         checkbox = ($("#"+trId+" td input[name^='investigations']").prop('checked') == true) ? "checked" : "";
@@ -231,15 +238,17 @@ use common\models\DoctorsDetails;
             });
             rate = $("#"+trId+" td input[name^='rate']").val();
             package = $("#"+trId+" td textarea[name^='package']").val();
+            ishome = ($("#"+trId+" td input[name^='ishome']").prop('checked') == true) ? 1 : 0;
         }else{
             days = "";
             rate = "";
             package="";
+            ishome=0;
         }
 
         $.ajax({
              url:baseurl+'schedule/set-investigation-list',
-             data:{'trId':trId,'checkbox':checkbox,'days':days,'rate':rate,'package':package},
+             data:{'trId':trId,'checkbox':checkbox,'days':days,'rate':rate,'package':package,'ishome':ishome},
              type:'POST',
              success:function(data){
                 console.log(data);
@@ -285,13 +294,15 @@ $(document).ready(function(){
                  }
             });
             $('#schedule-id option').removeAttr('selected');
+            $('select[name^=\"Schedule\"]').val('');
             $('select').selectpicker();
         }else{
             $('#doctor').css('display','block');              
             $('#investigation').css('display','none');
+            $('#schedule-doctor_id').val('');
+            $('#slotArea').html('');
             $('select').selectpicker();
             $('#investigationList').html('');
-            $('#schedule-id').multiselect( 'refresh' );
             $('select').selectpicker();
         }
 
@@ -324,6 +335,7 @@ $(document).ready(function(){
              type:'POST',
              success:function(data){
               $('.loading').css('display','none');
+              swal('Success!', 'Investigations Scheduled succesfully', 'success');
                 // $('#investigationList').html(data);
                 // $('select').selectpicker();
              },
@@ -341,6 +353,7 @@ $(document).ready(function(){
   $('#schedule-doctor_id').change(function(){
     $('.loading').css('display','block');
     var docId = $(this).val();
+    if(docId){
          $.ajax({
              url:baseurl+'schedule/get-doctor-details',
              data:{docId:docId},
@@ -354,6 +367,7 @@ $(document).ready(function(){
                $('.loading').css('display','none');
              }
         });
+      }
   });
 
 ");
