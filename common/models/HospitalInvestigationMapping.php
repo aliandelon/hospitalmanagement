@@ -110,7 +110,6 @@ public function modeleInsert($model){
     }else{
         $sql = "INSERT into hospital_investigation_mapping(investigation_id,hospital_clinic_id,amount,duration,status,isHomeCollection,details)VALUES('$model->investigation_id','$model->hospital_clinic_id','$model->amount','30','1','$model->isHomeCollection','$model->details');";
     }
-    
         $result = $con->createCommand($sql)->execute();
         return $result;
 }

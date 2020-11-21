@@ -46,9 +46,21 @@ class SloatTimeMapping extends \yii\db\ActiveRecord
     }
     public function timeSave($model){
 
-    $con = \Yii::$app->db;
-    $sql = "INSERT into sloat_time_mapping(investigation_mapping_id,slot_time)VALUES('$model->investigation_mapping_id','$model->slot_time') ON DUPLICATE KEY UPDATE  id= VALUES(id), investigation_mapping_id=VALUES(investigation_mapping_id),slot_time=VALUES(slot_time);";
-        $result = $con->createCommand($sql)->execute();
-        return $result;
+        $con = \Yii::$app->db;
+        $sql1 = "SELECT * FROM sloat_time_mapping WHERE investigation_mapping_id = '$model->investigation_mapping_id' AND slot_time = '$model->slot_time'";
+        $result = $con->createCommand($sql1)->queryAll();
+        if(empty($result)){
+            $sql = "INSERT into sloat_time_mapping(investigation_mapping_id,slot_time)VALUES('$model->investigation_mapping_id','$model->slot_time');";
+            $result = $con->createCommand($sql)->execute();
+            return sizeof($result);
+        }else{
+            return 0;
+        }
+
+
+    // $con = \Yii::$app->db;
+    // $sql = "INSERT into sloat_time_mapping(investigation_mapping_id,slot_time)VALUES('$model->investigation_mapping_id','$model->slot_time') ON DUPLICATE KEY UPDATE  id= VALUES(id), investigation_mapping_id=VALUES(investigation_mapping_id),slot_time=VALUES(slot_time);";
+    //     $result = $con->createCommand($sql)->execute();
+        
 }
 }

@@ -80,7 +80,7 @@ class Schedule extends \yii\db\ActiveRecord
     public function getInvestigationList($category)
     {
         $con = \Yii::$app->db;
-        $query = "SELECT inv.id,inv.investigation_name,hos.amount,hos.details FROM investigations inv LEFT JOIN hospital_investigation_mapping hos ON inv.id = hos.investigation_id WHERE inv.mst_id = '$category' AND inv.status =1;";
+        $query = "SELECT inv.id,inv.investigation_name,hos.amount,hos.details,hos.isHomeCollection FROM investigations inv LEFT JOIN hospital_investigation_mapping hos ON inv.id = hos.investigation_id WHERE inv.mst_id = '$category' AND inv.status =1;";
         $result = $con->createCommand($query)->queryAll();
         return $result;
     }

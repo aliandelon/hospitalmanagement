@@ -50,10 +50,25 @@ class HospitalInvestigationDayMapping extends \yii\db\ActiveRecord
 
 public function daySave($model){
     $con = \Yii::$app->db;
-    $sql = "INSERT into hospital_investigation_day_mapping(hospital_id,investigation_id,category_id,day_id)VALUES('$model->hospital_id','$model->investigation_id','$model->category_id','$model->day_id') ON DUPLICATE KEY UPDATE id= VALUES(id), hospital_id=VALUES(hospital_id),investigation_id=VALUES(investigation_id),category_id=VALUES(category_id),day_id=VALUES(day_id);";
+     $sql1 = "SELECT * FROM hospital_investigation_day_mapping WHERE investigation_id = '$model->investigation_id' AND hospital_id = '$model->hospital_id' AND day_id = '$model->day_id'";
+    $result = $con->createCommand($sql1)->queryAll();
+    if(empty($result)){
+        $sql = "INSERT into hospital_investigation_day_mapping(hospital_id,investigation_id,category_id,day_id)VALUES('$model->hospital_id','$model->investigation_id','$model->category_id','$model->day_id');";
         $result = $con->createCommand($sql)->execute();
         $id = Yii::$app->db->getLastInsertID();
-        return $id;
+    }else{
+        $id = $result[0]['id'];
+        $sql = "UPDATE hospital_investigation_day_mapping SET day_id = '$model->day_id', category_id = '$model->category_id' WHERE hospital_id = '$model->hospital_id' AND investigation_id = '$model->investigation_id' AND day_id = '$model->day_id'";
+        $result = $con->createCommand($sql)->execute();
+    }
+    return $id;
+    
+    //     $result = $con->createCommand($sql)->execute();
+    //     return $result;
+    // $sql = "INSERT into hospital_investigation_day_mapping(hospital_id,investigation_id,category_id,day_id)VALUES('$model->hospital_id','$model->investigation_id','$model->category_id','$model->day_id') ON DUPLICATE KEY UPDATE id= VALUES(id), hospital_id=VALUES(hospital_id),investigation_id=VALUES(investigation_id),category_id=VALUES(category_id),day_id=VALUES(day_id);";
+    //     $result = $con->createCommand($sql)->execute();
+    //     $id = Yii::$app->db->getLastInsertID();
+    //     return $id;
     }
 
 
