@@ -328,24 +328,61 @@ $(document).ready(function(){
 
 
     $('#invBtn').click(function(){
-      $('.loading').css('display','block');
-         $.ajax({
-             url:baseurl+'schedule/save-investigation',
-             data:{},
-             type:'POST',
-             success:function(data){
-              $('.loading').css('display','none');
-              swal('Success!', 'Investigations Scheduled succesfully', 'success');
-                // $('#investigationList').html(data);
-                // $('select').selectpicker();
-             },
-             error:function(){
-               $('.loading').css('display','none');
-                // $('#investigationList').html('');
-             }
-        });
+      if($('#investigationList').html() != ''){
+        $('.loading').css('display','block');
+           $.ajax({
+               url:baseurl+'schedule/save-investigation',
+               data:{},
+               type:'POST',
+               success:function(data){
+                $('.loading').css('display','none');
+                swal('Success!', 'Investigations Scheduled succesfully', 'success');
+                  // $('#investigationList').html(data);
+                  // $('select').selectpicker();
+               },
+               error:function(){
+                 $('.loading').css('display','none');
+                  // $('#investigationList').html('');
+               }
+          });
+      }else{
+        swal('Error!', 'Please select any investigations', 'error');
+      }
       });
 
+
+      $('#docBtn').click(function(){
+        var doctor = $('#schedule-doctor_id').val();
+        var days = [];
+        if(doctor){
+          $('.loading').css('display','block');
+          days.push($('#'+doctor+'_Monday').val());
+          days.push($('#'+doctor+'_Tuesday').val());
+          days.push($('#'+doctor+'_Wednesday').val());
+          days.push($('#'+doctor+'_Thursday').val());
+          days.push($('#'+doctor+'_Friday').val());
+          days.push($('#'+doctor+'_Saturday').val());
+          days.push($('#'+doctor+'_Sunday').val());
+          var docRate = $('#docRate').val();
+          $.ajax({
+               url:baseurl+'schedule/save-docschedule',
+               data:{'doctor':doctor,'days':days,'rate':docRate},
+               type:'POST',
+               success:function(data){
+                $('.loading').css('display','none');
+                swal('Success!', 'Doctor Scheduled succesfully', 'success');
+                  // $('#investigationList').html(data);
+                  // $('select').selectpicker();
+               },
+               error:function(){
+                 $('.loading').css('display','none');
+                  // $('#investigationList').html('');
+               }
+          });
+        }else{
+          swal('Error!', 'Please select a doctor', 'error');
+        }
+      });
 
 
 
