@@ -216,6 +216,21 @@ class Schedule extends \yii\db\ActiveRecord
         $slotResult = $con->createCommand($sql)->queryAll();
         return $slotResult;
     }
+
+    public function getDoctorAmount($doc){
+        $con = \Yii::$app->db;
+        $hospital = Yii::$app->user->identity->id;
+        $sql = "SELECT amount FROM doctor_schedule_mapping WHERE doctor_id = '$doc'  AND hospital_clinic_id = '$hospital'";
+        $result = $con->createCommand($sql)->queryAll();
+        return (!empty($result)) ? $result[0]['amount'] : '0.00';
+    }
+
+    public function getDoctorDaySlotDetails($doc){
+        $con = \Yii::$app->db;
+        $sql = "SELECT day.doctor_id, day.hospital_id,day.day_id as dayId, GROUP_CONCAT(docTime.slot_time SEPARATOR ',') as slots FROM doctor_hospital_day_mapping day JOIN doctor_slot_time_mapping docTime ON day.id = docTime.day_mapping_id WHERE day.doctor_id = '$doc' GROUP BY docTime.day_mapping_id";
+        $slotResult = $con->createCommand($sql)->queryAll();
+        return $slotResult;
+    }
     
 
 

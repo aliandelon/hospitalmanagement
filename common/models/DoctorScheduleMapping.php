@@ -67,4 +67,17 @@ class DoctorScheduleMapping extends \yii\db\ActiveRecord
         }
 
     }
+
+    public function modelDoctorInsert($model){
+    $con = \Yii::$app->db;
+    $sql1 = "SELECT * FROM doctor_schedule_mapping WHERE doctor_id = '$model->doctor_id' AND hospital_clinic_id = '$model->hospital_clinic_id'";
+    $result = $con->createCommand($sql1)->queryAll();
+    if(sizeof($result) > 0){
+        $sql = "UPDATE doctor_schedule_mapping SET amount = '$model->amount' WHERE status = 1 AND hospital_clinic_id = '$model->hospital_clinic_id' AND doctor_id = '$model->doctor_id'";
+    }else{
+        $sql = "INSERT into doctor_schedule_mapping(doctor_id,hospital_clinic_id,amount,status)VALUES('$model->doctor_id','$model->hospital_clinic_id','$model->amount','1');";
+    }
+        $result = $con->createCommand($sql)->execute();
+        return $result;
+}
 }
