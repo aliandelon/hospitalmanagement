@@ -543,6 +543,28 @@ class ApiModel extends \yii\db\ActiveRecord
                 }
                 $investigation = $datas['sub_category_id'];
                 $date = $datas['date'];
+                $day =date("l",strtotime($date));
+                if($day == "Monday"){
+                    $dateDay = 0;
+                }elseif($day == "Tuesday")
+                {
+                    $dateDay = 1;
+                }elseif($day == "Wednesday")
+                {
+                    $dateDay = 2;
+                }elseif($day == "Thursday")
+                {
+                    $dateDay = 3;
+                }elseif($day == "Friday")
+                {
+                    $dateDay = 4;
+                }elseif($day == "Saturday")
+                {
+                    $dateDay = 5;
+                }else{
+                    $dateDay = 6;
+                }
+
                 $today = date('Y-m-d');
                 $typeVal = 1;
                 if($type == 'Hospital')
@@ -552,7 +574,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     $typeVal = 2;
                 }
                 $investigationsResponse = [];
-                $invQuery = "SELECT DISTINCT
+                /*$invQuery = "SELECT DISTINCT
                             slot.id as slotId,
                             CONCAT(DATE_FORMAT(slot.from_time, '%H:%i %p'),'-',DATE_FORMAT(slot.to_time, '%H:%i %p'))as time
                         FROM slot_day_time_mapping slot
@@ -567,7 +589,29 @@ class ApiModel extends \yii\db\ActiveRecord
                     holy1.investigation_id = slot.investigation_id AND 
                     holy1.hospital_id = slot.hospital_clinic_id AND holy1.holiday_date = '$date'
                         WHERE ap.slot_day_time_mapping_id IS NULL AND 
-                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$investigation' AND day.day ='$date' AND day.day>='$today' AND (slot.from_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T') AND slot.to_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T')) ORDER BY from_time asc;";
+                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$investigation' AND day.day ='$date' AND day.day>='$today' AND (slot.from_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T') AND slot.to_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T')) ORDER BY from_time asc;";*/
+                $invQuery = "SELECT DISTINCT
+                        slot.id AS slotId,
+                        slot.slot_time AS TIME
+                    FROM
+                        sloat_time_mapping slot
+                    JOIN hospital_investigation_day_mapping invday ON invday.id = slot. investigation_mapping_id
+                    JOIN hospital_clinic_details hp ON
+                        hp.user_id = invday.hospital_id
+                    LEFT JOIN appointments ap ON
+                        ap.investigation_id = invday.id AND ap.hospital_clinic_id = invday.hospital_id 
+                    LEFT JOIN holiday_list holy ON
+                        holy.hospital_id = invday.hospital_id  AND holy.holiday_date = '$date'
+                    LEFT JOIN holiday_list holy1 ON
+                        holy1.investigation_id = invday.investigation_id AND holy1.hospital_id = invday.hospital_id AND holy1.holiday_date = '$date'
+                    WHERE
+                        ap.slot_day_time_mapping_id IS NULL AND holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND invday.hospital_id  = '$id' AND invday.investigation_id = '$investigation'
+                        AND invday.day_id = '$dateDay' 
+                      AND  SUBSTRING_INDEX
+                      (slot.slot_time, '-', '1')  
+                      > DATE_FORMAT(NOW(), '%r')
+                        ORDER BY
+                            slot.id ASC;";
                     $result = $con->createCommand($invQuery)->queryAll();
                 break;
             default :
@@ -604,22 +648,65 @@ class ApiModel extends \yii\db\ActiveRecord
                 }else{
                     $typeVal = 2;
                 }
-                $docQuery = "SELECT DISTINCT
-                            slot.id as slotId,
-                            CONCAT(DATE_FORMAT(slot.from_time, '%H:%i %p'),'-',DATE_FORMAT(slot.to_time, '%H:%i %p'))as time
-                        FROM slot_day_time_mapping slot
-                        JOIN 
-                            hospital_clinic_details hp ON hp.user_id = slot.hospital_clinic_id 
-                        JOIN slot_day_mapping day ON day.hospital_clinic_id = slot.hospital_clinic_id  AND slot.doctor_id = day.doctor_id AND slot.slot_day_id = day.id
-                        LEFT JOIN appointments ap ON ap.doctor_id = slot.doctor_id AND ap.hospital_clinic_id = slot.hospital_clinic_id AND slot.id = ap.slot_day_time_mapping_id
-                        LEFT JOIN holiday_list holy ON 
-                        -- holy.doctor_id = slot.doctor_id AND 
-                        holy.hospital_id = slot.hospital_clinic_id AND holy.holiday_date = '$date'
-                        LEFT JOIN holiday_list holy1 ON 
-                         holy1.doctor_id = slot.doctor_id AND 
-                        holy1.hospital_id = slot.hospital_clinic_id AND holy1.holiday_date = '$date'
-                        WHERE ap.slot_day_time_mapping_id IS NULL AND 
-                            holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.doctor_id = '$doctorId' AND day.day ='$date' AND day.day>='$today' AND (slot.from_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T') AND slot.to_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T'))  ORDER BY from_time asc;";
+                $day =date("l",strtotime($date));
+                if($day == "Monday"){
+                    $dateDay = 0;
+                }elseif($day == "Tuesday")
+                {
+                    $dateDay = 1;
+                }elseif($day == "Wednesday")
+                {
+                    $dateDay = 2;
+                }elseif($day == "Thursday")
+                {
+                    $dateDay = 3;
+                }elseif($day == "Friday")
+                {
+                    $dateDay = 4;
+                }elseif($day == "Saturday")
+                {
+                    $dateDay = 5;
+                }else{
+                    $dateDay = 6;
+                }
+                // $docQuery = "SELECT DISTINCT
+                //             slot.id as slotId,
+                //             CONCAT(DATE_FORMAT(slot.from_time, '%H:%i %p'),'-',DATE_FORMAT(slot.to_time, '%H:%i %p'))as time
+                //         FROM slot_day_time_mapping slot
+                //         JOIN 
+                //             hospital_clinic_details hp ON hp.user_id = slot.hospital_clinic_id 
+                //         JOIN slot_day_mapping day ON day.hospital_clinic_id = slot.hospital_clinic_id  AND slot.doctor_id = day.doctor_id AND slot.slot_day_id = day.id
+                //         LEFT JOIN appointments ap ON ap.doctor_id = slot.doctor_id AND ap.hospital_clinic_id = slot.hospital_clinic_id AND slot.id = ap.slot_day_time_mapping_id
+                //         LEFT JOIN holiday_list holy ON 
+                //         -- holy.doctor_id = slot.doctor_id AND 
+                //         holy.hospital_id = slot.hospital_clinic_id AND holy.holiday_date = '$date'
+                //         LEFT JOIN holiday_list holy1 ON 
+                //          holy1.doctor_id = slot.doctor_id AND 
+                //         holy1.hospital_id = slot.hospital_clinic_id AND holy1.holiday_date = '$date'
+                //         WHERE ap.slot_day_time_mapping_id IS NULL AND 
+                //             holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.doctor_id = '$doctorId' AND day.day ='$date' AND day.day>='$today' AND (slot.from_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T') AND slot.to_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T'))  ORDER BY from_time asc;";
+            $docQuery = "SELECT DISTINCT
+                        slot.id AS slotId,
+                        slot.slot_time AS TIME
+                    FROM
+                        doctor_slot_time_mapping slot
+                    JOIN doctor_hospital_day_mapping invday ON invday.id = slot.day_mapping_id
+                    JOIN hospital_clinic_details hp ON
+                        hp.user_id = invday.hospital_id
+                    LEFT JOIN appointments ap ON
+                        ap.doctor_id = invday.doctor_id AND ap.hospital_clinic_id = invday.hospital_id 
+                    LEFT JOIN holiday_list holy ON
+                        holy.hospital_id = invday.hospital_id  AND holy.holiday_date = '$date'
+                    LEFT JOIN holiday_list holy1 ON
+                        holy1.doctor_id = invday.doctor_id AND holy1.hospital_id = invday.hospital_id AND holy1.holiday_date = '$date'
+                    WHERE
+                        ap.slot_day_time_mapping_id IS NULL AND holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND invday.hospital_id  = '$id' AND invday.doctor_id = '$doctorId'
+                        AND invday.day_id = '$dateDay' 
+                      AND  SUBSTRING_INDEX
+                      (slot.slot_time, '-', '1')  
+                      > DATE_FORMAT(NOW(), '%r')
+                        ORDER BY
+                            slot.id ASC;";
                     $result = $con->createCommand($docQuery)->queryAll();
                 break;
             default :
@@ -976,7 +1063,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 }else{
                     $whereCndn = " AND  app_date < '$today' ";
                 }
-                $query = "SELECT ap.id as appointmentId,ap.booking_id as bookingId,ap.app_date as appointmentDate,ap.app_time as appTime,hosp.user_id as hospId,hosp.name as hospName,hosp.city as city,case when hosp.hospital_clinic_image <> '' then concat('$images','hosp.hospitalClinicImage/',hosp.id,'/',hosp.id,'.',hosp.hospital_clinic_image) else '' end
+                $query = "SELECT ap.id as appointmentId,ap.booking_id as bookingId,ap.price as amount,ap.app_date as appointmentDate,REPLACE(ap.app_time, '-', ' To ') as appTime,hosp.user_id as hospId,hosp.name as hospName,hosp.city as city,case when hosp.hospital_clinic_image <> '' then concat('$images','hosp.hospitalClinicImage/',hosp.id,'/',hosp.id,'.',hosp.hospital_clinic_image) else '' end
                     as hospImage,
                     CASE WHEN ap.investigation_id = 0 then '' else inv.investigation_name end as invName,
                     ap.doctor_id as docId ,CASE WHEN ap.doctor_id  = 0 then '' else doc.name end as docName,
@@ -988,7 +1075,9 @@ class ApiModel extends \yii\db\ActiveRecord
                     LEFT JOIN doctors_details doc ON doc.id = ap.doctor_id
                     LEFT JOIN  doctor_specialty_mst docspec ON docspec.id = doc.id and docspec.status = 1
                     LEFT JOIN  investigations inv ON inv.id = ap.investigation_id
-                    WHERE patient_id = '$userId' $whereCndn;";
+                    WHERE patient_id = '$userId' $whereCndn AND SUBSTRING_INDEX
+                      (app_time, '-', '1')  
+                      > DATE_FORMAT(NOW(), '%r') ;";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];

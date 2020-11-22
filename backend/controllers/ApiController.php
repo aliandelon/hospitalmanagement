@@ -354,8 +354,8 @@ class ApiController extends \yii\rest\Controller
 
     public function actionGetLaboratorySlotdetails()
     {  
-        try
-        {
+        // try
+        // {
             $response = [];
             ini_set('memory_limit', '-1');
             $model = new ApiModel();
@@ -375,9 +375,9 @@ class ApiController extends \yii\rest\Controller
                 return $response;
             }
             $this->setResponseFormat(1);
-        }catch (yii\base\ErrorException $e) {
-            return $e;
-        }
+        // }catch (yii\base\ErrorException $e) {
+        //     return $e;
+        // }
     }
 
     public function actionGetDoctorSlotdetails()
