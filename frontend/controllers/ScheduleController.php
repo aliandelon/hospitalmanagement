@@ -18,6 +18,8 @@ use common\models\SlotDayMappingSearch;
 use common\models\SlotDayTimeMapping;
 use common\models\DoctorScheduleMapping;
 use common\models\HospitalInvestigationDayMapping;
+use common\models\DoctorHospitalDayMapping;
+use common\models\DoctorSlotTimeMapping;
 use common\models\SloatTimeMapping;
 /**
  * ScheduleController implements the CRUD actions for Schedule model.
@@ -594,7 +596,55 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
        
     }
    
+    public function actionSaveDocschedule(){
+        $model = new Schedule();
+        $post = Yii::$app->request->post();
+        $doctor = $post['doctor'];
+        $rate = $post['rate'];
+        $days=($post['days'])?$post['days']:'';
+        if(!empty($days)){
+                $model3=new DoctorScheduleMapping();
+                $model3->doctor_id=$doctor;
+                $model3->hospital_clinic_id=Yii::$app->user->identity->id;
+                $model3->amount = $rate;
+                $model3->modelDoctorInsert($model3);
+                $this->saveDaysTimeDoctor($days,$doctor);
+        }
+    }
 
+    protected function saveDaysTimeDoctor($days,$doctor){
+       
+        
+            foreach ($days as $key => $value) {
+                    $model = new DoctorHospitalDayMapping();
+                    $model->hospital_id=Yii::$app->user->identity->id;
+                    $model->doctor_id = $doctor;
+                    $model->day_id = $key;
+                    $lstId = $model->daySaveDoctor($model);
+                    $timeSlots  = $value;
+                    if($lstId){
+                        // print_r($linsertID);exit;
+                        if(!empty($value)){
+                            foreach ($value as $key2 => $value2) {
+                                 $model2 = new DoctorSlotTimeMapping();
+                                 $model2->hospital_id=Yii::$app->user->identity->id;
+                                 $model2->day_mapping_id=  $lstId;
+                                 $model2->slot_time =$value2;
+                                if($model2->timeSaveDoctor($model2)){
+                                    // continue;
+                                }else{
+                                print_r($model2->getErrors());
+                                };
+                            } 
+                        } 
+                    }else{
+                            print_r($model->getErrors());
+                        }
+                    
+
+            }
+       
+    }
 
 
 
@@ -723,18 +773,25 @@ $slotDayTime = SlotDayTimeMapping::find()->where(['slot_day_id'=>$slotid])->all(
         $model = new Schedule();
         $post = Yii::$app->request->post();
         $docId = $post['docId'];
-        $days = [];
+        $rate = ($model->getDoctorAmount($docId)) ? $model->getDoctorAmount($docId) : '0.00';
+        $docDetails = $model->getDoctorDaySlotDetails($docId);
         $designStr = '<div class="col-md-12">';
         $daysArray = array(0=>"Monday",1=>"Tuesday",2=>"Wednesday",3=>"Thursday",4=>"Friday",5=>"Saturday",6=>"Sunday");
-        foreach ($daysArray as $key => $value) {  
-            $designStr .= '<div class="col-md-6"><p>'.$value.'</p><select class="form-control doctimeslot" id="'.$docId.'_'.$value.'" name="timeSlots" multiple onchange="callSessionMaintain(\''.$docId.'\');">';
-            $chekValue = !empty($days) ? $days[$key] :  [];
+        foreach ($daysArray as $key => $value) { 
+            $days = [];
+            foreach ($docDetails as $key2 => $value2) {
+                if($value2['dayId']==$key){
+                    $days = explode(',', $value2['slots']);
+                }
+             } 
+            $designStr .= '<div class="col-md-6"><p>'.$value.'</p><select class="form-control doctimeslot" id="'.$docId.'_'.$value.'" name="timeSlots" multiple>';
+            $chekValue = !empty($days) ? $days :  [];
             $designStr .= $this->getDocTimeSlotOptions($chekValue);    
             $designStr .=  '</select> </div>';
         }
         $designStr .=  '<div class="col-md-12">
-                        <label>Amount</label>
-                      <input class="form-control" type="text" name="docRate" onkeypress="return isNumberKey(event)" id = "docRate" placeholder="Amount"></div></div>';
+                        <label class="control-label">Amount</label>
+                      <input class="form-control" type="text" name="docRate" onkeypress="return isNumberKey(event)" id = "docRate" placeholder="Amount" value="'.$rate.'"></div></div>';
         print_r($designStr);
     }
 
