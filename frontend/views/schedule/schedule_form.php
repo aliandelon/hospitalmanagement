@@ -9,6 +9,10 @@ use common\models\DoctorsDetails;
 // use kartik\select2\Select2;
 ?>
 <style>
+  .dropdown-menu{
+    transform: translate3d(0px, 0px, 0px) !important;
+  }
+
 .field-schedule-amount{
     display: none;
 }
