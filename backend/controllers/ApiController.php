@@ -650,4 +650,35 @@ class ApiController extends \yii\rest\Controller
             return $e;
         }
     }
+
+    public function actionCancelAppointment()
+    {  
+        try
+        {
+            $response = [];
+            ini_set('memory_limit', '-1');
+            $model = new ApiModel();
+            $rawData  = self::readData();
+            $inputData = $rawData;
+            $cancelAppointment = $model->cancelAppointment($inputData);
+            if ( $cancelAppointment && $cancelAppointment['status'] == 1)
+            {
+                try {
+                    $response['status']  = "success, Appointment Cancelled";
+                    $response['content'] = $cancelAppointment;
+                }catch (yii\base\ErrorException $e) {
+                    $response['status']  = "error";
+                    $response['message'] = $e->getMessage();
+                    return $response;
+                }
+            }else{
+                $response['status']  = "failure";
+                $response['content'] = $cancelAppointment;
+            }
+            return $response;
+            $this->setResponseFormat(1);
+        }catch (yii\base\ErrorException $e) {
+            return $e;
+        }
+    }
 }

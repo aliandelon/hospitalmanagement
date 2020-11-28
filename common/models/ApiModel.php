@@ -601,7 +601,7 @@ class ApiModel extends \yii\db\ActiveRecord
                         hp.user_id = invday.hospital_id
                     LEFT JOIN appointments ap ON
                         -- ap.investigation_id = invday.id AND ap.hospital_clinic_id = invday.hospital_id
-                    ap.investigation_id = invday.investigation_id AND ap.hospital_clinic_id = invday.hospital_id AND ap.app_date =  '$date'  AND slot.id  = ap.slot_day_time_mapping_id
+                    ap.investigation_id = invday.investigation_id AND ap.hospital_clinic_id = invday.hospital_id AND ap.app_date =  '$date'  AND slot.id  = ap.slot_day_time_mapping_id AND ap.cancelled = 0
                     LEFT JOIN holiday_list holy ON
                         holy.hospital_id = invday.hospital_id  AND holy.holiday_date = '$date'
                     LEFT JOIN holiday_list holy1 ON
@@ -698,7 +698,7 @@ class ApiModel extends \yii\db\ActiveRecord
                     JOIN hospital_clinic_details hp ON
                         hp.user_id = invday.hospital_id
                     LEFT JOIN appointments ap ON
-                        ap.doctor_id = invday.doctor_id AND ap.hospital_clinic_id = invday.hospital_id AND ap.app_date =  '$date' AND slot.id  = ap.slot_day_time_mapping_id 
+                        ap.doctor_id = invday.doctor_id AND ap.hospital_clinic_id = invday.hospital_id AND ap.app_date =  '$date' AND slot.id  = ap.slot_day_time_mapping_id AND ap.cancelled = 0
                     LEFT JOIN holiday_list holy ON
                         holy.hospital_id = invday.hospital_id  AND holy.holiday_date = '$date'
                     LEFT JOIN holiday_list holy1 ON
@@ -1092,6 +1092,48 @@ class ApiModel extends \yii\db\ActiveRecord
         try { 
             $result = $con->createCommand($query)->queryAll();
             $response = ["status" => 1, "content" => $result];
+            return $response;
+            $con->close();
+        } catch (yii\db\Exception $e) {
+            $response = ["status" => 0, "content" => $e];
+            $con->close();
+            return $response;
+        }
+    }
+
+    public function cancelAppointment($data) 
+    {
+        $con = \Yii::$app->db;
+        $response = [];
+        $idx = $data['idx'];
+        switch ($idx) {
+            case 100:
+                $bookId = $data['bookingId'];
+                $query = "UPDATE appointments SET cancelled = 1 WHERE booking_id = '$bookId';";
+                $query1 = "UPDATE payment_verification SET cancelled = 1 WHERE booking_id = '$bookId';";
+                break;
+            default :
+                $response = ["status" => 2, "content" => ""];
+                return $response;
+        }
+        try { 
+            $transaction = $con->beginTransaction();
+            $transactionVal = 0;
+            $result = $con->createCommand($query)->execute();
+            if($result)
+            {
+                $result1 = $con->createCommand($query1)->execute();
+                if($result1)
+                {
+                    $transactionVal = 1;
+                }
+            }
+            if($transactionVal == 1){
+               $transaction->commit(); 
+            }else{
+               $transaction->rollback();
+            }
+            $response = ["status" => 1, "content" => $transactionVal];
             return $response;
             $con->close();
         } catch (yii\db\Exception $e) {
