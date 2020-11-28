@@ -263,7 +263,7 @@ class ApiModel extends \yii\db\ActiveRecord
                                 $cityVal = $result['city'];
                                 $searchCndn.= "AND city like '%$cityVal%' ";
                                 $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn $limitOffset;";
-                                $countQuery = "SELECT count(user_id) as cntFROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn;";
+                                $countQuery = "SELECT count(user_id) as cnt FROM hospital_clinic_details WHERE status = 1 AND type = 1 $searchCndn;";
                             }else{
                                 $response = ["status" => 2, "content" => "user city is empty"];
                                 return $response;
@@ -338,7 +338,7 @@ class ApiModel extends \yii\db\ActiveRecord
                                 $cityVal = $result['city'];
                                 $searchCndn.= "AND city like '%$cityVal%' ";
                                 $query = "SELECT user_id as id,name,type,phone_number,email,address,pincode,street1,street2,city,area,case when hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',id,'/',id,'.',hospital_clinic_image) else '' end as image FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn $limitOffset;";
-                                $countQuery = "SELECT count(user_id) as cntFROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn;";
+                                $countQuery = "SELECT count(user_id) as cnt FROM hospital_clinic_details WHERE status = 1 AND type = 2 $searchCndn;";
                             }else{
                                 $response = ["status" => 2, "content" => "user city is empty"];
                                 return $response;
@@ -531,6 +531,7 @@ class ApiModel extends \yii\db\ActiveRecord
 
     public function getLaboratorySlotdetails($datas) 
     {   
+        date_default_timezone_set("Asia/Kolkata");
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
@@ -591,15 +592,16 @@ class ApiModel extends \yii\db\ActiveRecord
                         WHERE ap.slot_day_time_mapping_id IS NULL AND 
                             holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.investigation_id = '$investigation' AND day.day ='$date' AND day.day>='$today' AND (slot.from_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T') AND slot.to_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T')) ORDER BY from_time asc;";*/
                 $invQuery = "SELECT DISTINCT
-                        slot.id AS slotId,
-                        slot.slot_time AS TIME
+                        slot.id AS slotId,slot.slot_time AS time
+                        /*REPLACE(REPLACE(slot.slot_time, 'am', 'AM'),'pm','PM') AS time*/
                     FROM
                         sloat_time_mapping slot
                     JOIN hospital_investigation_day_mapping invday ON invday.id = slot. investigation_mapping_id
                     JOIN hospital_clinic_details hp ON
                         hp.user_id = invday.hospital_id
                     LEFT JOIN appointments ap ON
-                        ap.investigation_id = invday.id AND ap.hospital_clinic_id = invday.hospital_id 
+                        -- ap.investigation_id = invday.id AND ap.hospital_clinic_id = invday.hospital_id
+                    ap.investigation_id = invday.investigation_id AND ap.hospital_clinic_id = invday.hospital_id AND ap.app_date =  '$date'  AND slot.id  = ap.slot_day_time_mapping_id
                     LEFT JOIN holiday_list holy ON
                         holy.hospital_id = invday.hospital_id  AND holy.holiday_date = '$date'
                     LEFT JOIN holiday_list holy1 ON
@@ -607,9 +609,9 @@ class ApiModel extends \yii\db\ActiveRecord
                     WHERE
                         ap.slot_day_time_mapping_id IS NULL AND holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND invday.hospital_id  = '$id' AND invday.investigation_id = '$investigation'
                         AND invday.day_id = '$dateDay' 
-                      AND  SUBSTRING_INDEX
+                      /*AND  SUBSTRING_INDEX
                       (slot.slot_time, '-', '1')  
-                      > DATE_FORMAT(NOW(), '%r')
+                      > DATE_FORMAT(NOW(), '%r')*/
                         ORDER BY
                             slot.id ASC;";
                     $result = $con->createCommand($invQuery)->queryAll();
@@ -631,6 +633,7 @@ class ApiModel extends \yii\db\ActiveRecord
 
     public function getDoctorSlotdetails($datas) 
     {
+        date_default_timezone_set("Asia/Kolkata");
         $con = \Yii::$app->db;
         $response = [];
         $idx = $datas['idx'];
@@ -686,15 +689,16 @@ class ApiModel extends \yii\db\ActiveRecord
                 //         WHERE ap.slot_day_time_mapping_id IS NULL AND 
                 //             holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND slot.hospital_clinic_id = '$id' AND slot.doctor_id = '$doctorId' AND day.day ='$date' AND day.day>='$today' AND (slot.from_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T') AND slot.to_time > DATE_FORMAT(NOW(), '%Y-%m-%d %T'))  ORDER BY from_time asc;";
             $docQuery = "SELECT DISTINCT
-                        slot.id AS slotId,
-                        slot.slot_time AS TIME
+                        slot.id AS slotId,slot.slot_time AS time
+                        /*REPLACE(REPLACE(slot.slot_time, 'am', 'AM'),'pm','PM') AS time*/
+
                     FROM
                         doctor_slot_time_mapping slot
                     JOIN doctor_hospital_day_mapping invday ON invday.id = slot.day_mapping_id
                     JOIN hospital_clinic_details hp ON
                         hp.user_id = invday.hospital_id
                     LEFT JOIN appointments ap ON
-                        ap.doctor_id = invday.doctor_id AND ap.hospital_clinic_id = invday.hospital_id 
+                        ap.doctor_id = invday.doctor_id AND ap.hospital_clinic_id = invday.hospital_id AND ap.app_date =  '$date' AND slot.id  = ap.slot_day_time_mapping_id 
                     LEFT JOIN holiday_list holy ON
                         holy.hospital_id = invday.hospital_id  AND holy.holiday_date = '$date'
                     LEFT JOIN holiday_list holy1 ON
@@ -702,9 +706,9 @@ class ApiModel extends \yii\db\ActiveRecord
                     WHERE
                         ap.slot_day_time_mapping_id IS NULL AND holy.id IS NULL AND holy1.id IS NULL AND hp.status = 1 AND hp.type = '$typeVal' AND invday.hospital_id  = '$id' AND invday.doctor_id = '$doctorId'
                         AND invday.day_id = '$dateDay' 
-                      AND  SUBSTRING_INDEX
+                      /*AND  SUBSTRING_INDEX
                       (slot.slot_time, '-', '1')  
-                      > DATE_FORMAT(NOW(), '%r')
+                      > DATE_FORMAT(NOW(), '%r')*/
                         ORDER BY
                             slot.id ASC;";
                     $result = $con->createCommand($docQuery)->queryAll();
@@ -1031,7 +1035,8 @@ class ApiModel extends \yii\db\ActiveRecord
         $response = [];
         switch ($idx) {
             case 100:
-                $query = "INSERT INTO  payment_verification(razorpay_order_id,razorpay_payment_id,  razorpay_signature,status)VALUES('$data[orderId]','$data[paymentId]','$data[siganture]','$data[status]');";
+                $bookId = isset($data['bookingId'])?$data['bookingId']:0;
+                $query = "INSERT INTO  payment_verification(booking_id,razorpay_order_id,razorpay_payment_id,  razorpay_signature,status)VALUES('$bookId','$data[orderId]','$data[paymentId]','$data[siganture]','$data[status]');";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
@@ -1063,7 +1068,7 @@ class ApiModel extends \yii\db\ActiveRecord
                 }else{
                     $whereCndn = " AND  app_date < '$today' ";
                 }
-                $query = "SELECT ap.id as appointmentId,ap.booking_id as bookingId,ap.price as amount,ap.app_date as appointmentDate,REPLACE(ap.app_time, '-', ' To ') as appTime,hosp.user_id as hospId,hosp.name as hospName,hosp.city as city,case when hosp.hospital_clinic_image <> '' then concat('$images','hosp.hospitalClinicImage/',hosp.id,'/',hosp.id,'.',hosp.hospital_clinic_image) else '' end
+                $query = "SELECT ap.id as appointmentId,ap.booking_id as bookingId,ver.razorpay_payment_id as  transactionId,ap.price as amount,ap.app_date as appointmentDate,REPLACE(ap.app_time, '-', ' To ') as appTime,hosp.user_id as hospId,hosp.name as hospName,hosp.city as city,case when hosp.hospital_clinic_image <> '' then concat('$images','hospitalClinicImage/',hosp.id,'/',hosp.id,'.',hosp.hospital_clinic_image) else '' end
                     as hospImage,
                     CASE WHEN ap.investigation_id = 0 then '' else inv.investigation_name end as invName,
                     ap.doctor_id as docId ,CASE WHEN ap.doctor_id  = 0 then '' else doc.name end as docName,
@@ -1075,9 +1080,10 @@ class ApiModel extends \yii\db\ActiveRecord
                     LEFT JOIN doctors_details doc ON doc.id = ap.doctor_id
                     LEFT JOIN  doctor_specialty_mst docspec ON docspec.id = doc.id and docspec.status = 1
                     LEFT JOIN  investigations inv ON inv.id = ap.investigation_id
-                    WHERE patient_id = '$userId' $whereCndn AND SUBSTRING_INDEX
+                    LEFT JOIN payment_verification ver on ver.booking_id = ap.booking_id
+                    WHERE patient_id = '$userId' $whereCndn /*AND SUBSTRING_INDEX
                       (app_time, '-', '1')  
-                      > DATE_FORMAT(NOW(), '%r') ;";
+                      > DATE_FORMAT(NOW(), '%r')*/ ;";
                 break;
             default :
                 $response = ["status" => 2, "content" => ""];
