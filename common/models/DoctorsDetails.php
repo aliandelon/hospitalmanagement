@@ -22,7 +22,7 @@ use Yii;
  * @property integer $status
  * @property string $created_on
  */
-class DoctorsDetails extends \yii\db\ActiveRecord
+class Doctorsdetails extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -72,75 +72,5 @@ class DoctorsDetails extends \yii\db\ActiveRecord
             'status' => 'Status',
             'created_on' => 'Created On',
         ];
-    }
-
-    public function viewDoctors($con, $hospital,$id='')
-    {
-         $query = "SELECT doc.id,doc.name as name,doc.profile_image as img,doc.qualifications,doc.registration_no,doc.phone,doc.gender,doc.email,doc.address,spec.name as spectial FROM doctors_details doc LEFT JOIN doctor_specialty_mst spec ON doc.specialty_id = spec.id WHERE doc.hospital_clinic_id = '$hospital'";
-         if($id){
-            $query .= " AND doc.id = $id";
-         }
-        $result = $con->createCommand($query)->queryAll();
-        return $result;
-    }
-
-    public function upload($file, $id, $name) {
-
-       $targetFolder = \yii::$app->basePath . '/../uploads/doctors/'. $id . '/';
-        if (!file_exists($targetFolder)) {
-            mkdir($targetFolder, 0777, true);
-        }
-        if ($file->saveAs($targetFolder . $name . '.' . $file->extension)) {
-            return true;
-        } else {
-            return false;
-        }
-    } 
-
-    public function getDocCount($status='')
-    {
-
-        $con = \Yii::$app->db;
-        $query = "SELECT count(id) as count FROM doctors_details WHERE 1";
-         if($status){
-            $query .= " AND status = '$status'";
-         }
-        $result = $con->createCommand($query)->queryAll();
-        return $result[0]['count'];
-    }
-
-    public function getDoctorMonthwiseCount()
-    {
-
-        $con = \Yii::$app->db;
-        $query = "SELECT DATE_FORMAT(app_date, '%Y-%m') as period,count(id) as DoctorAppointments FROM `appointments` WHERE (app_date >= '".date('Y')."-01-01' OR app_date <= '".date('Y')."-12-31')  AND appointment_type = 1 GROUP BY MONTH(app_date) ORDER BY MONTH(app_date)";
-        $result = $con->createCommand($query)->queryAll();
-        return json_encode($result);
-    }
-
-    public function getOurDoctorsCount()
-    {
-
-        $con = \Yii::$app->db;
-        $query = "SELECT count(id) as count FROM doctors_details WHERE hospital_clinic_id = ".Yii::$app->user->identity->id." AND status = 1";
-        $result = $con->createCommand($query)->queryAll();
-        return $result[0]['count'];
-    }
-
-    public function getDoctorSummary($hospital)
-    {
-
-        $con = \Yii::$app->db;
-        $query = "SELECT count(app.doctor_id) as docId, doc.name as name, app.app_date,holi.doctor_id FROM doctors_details doc LEFT JOIN appointments app ON app.doctor_id = doc.id AND app.app_date = DATE_FORMAT(now(),'%Y-%m-%d') LEFT JOIN holiday_list holi ON holi.holiday_date = DATE_FORMAT(now(),'%Y-%m-%d') AND holi.doctor_id = doc.id WHERE doc.hospital_clinic_id = '$hospital' GROUP BY doc.id ORDER BY doc.name";
-        $result = $con->createCommand($query)->queryAll();
-        return $result;
-    }
-
-    public function viewDoctorsDashboard($hospital)
-    {
-        $con = \Yii::$app->db;
-         $query = "SELECT doc.id,doc.name as name,doc.profile_image as img,doc.qualifications,doc.registration_no,doc.phone,doc.gender,doc.email,doc.address,spec.name as spectial, holi.doctor_id FROM doctors_details doc LEFT JOIN doctor_specialty_mst spec ON doc.specialty_id = spec.id LEFT JOIN holiday_list holi ON holi.holiday_date = DATE_FORMAT(now(),'%Y-%m-%d') AND holi.doctor_id = doc.id WHERE doc.hospital_clinic_id = '$hospital' ORDER BY name LIMIT 20";
-        $result = $con->createCommand($query)->queryAll();
-        return $result;
     }
 }
