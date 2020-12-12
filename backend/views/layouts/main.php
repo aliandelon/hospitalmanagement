@@ -102,9 +102,11 @@ DashboardAsset::register($this);
                                         'template' => '<a href="{url}" >{label}</a>',
                                         'items' => [ 
 
-                                    ['label' => '<span class="fa fa-sitemap" title="Create Investigations"></span>&nbsp;<span class="menulist">Cancellation Requests</span>', 'url' => ['/appointments/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Investigations"></span>&nbsp;<span class="menulist">Refund Requests</span>', 'url' => ['/appointments/index']],
                                     
-                                    ['label' => '<span class="fa fa-sitemap" title="List Investigations"></span>&nbsp;<span class="menulist">List Investigations</span> ', 'url' => ['/investigations/index']],
+                                    ['label' => '<span class="fa fa-sitemap" title="Rejected Refunds"></span>&nbsp;<span class="menulist">Rejected  Refunds</span> ', 'url' => ['/refund/reject-refund']],
+
+                                     ['label' => '<span class="fa fa-sitemap" title="Approved Refunds"></span>&nbsp;<span class="menulist">Approved Refunds</span> ', 'url' => ['/refund/approved-refund']],
                                     
                                 ],], 
 
