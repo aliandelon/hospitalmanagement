@@ -10,6 +10,7 @@ use common\models\Refund;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Razorpay\Api\Api;
 
 /**
  * AppointmentsController implements the CRUD actions for Appointments model.
@@ -129,6 +130,7 @@ class AppointmentsController extends Controller
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $post = Yii::$app->request->post();
         $appid = $post['appid'];
+        $reason =$post['reason'];
         $appointments=Appointments::find()->where(['id'=>$appid])->one(); 
         if(!empty($appointments)){
          $paymentVerification=PaymentVerification::find()->where(['booking_id'=>$appointments->booking_id])->one();
@@ -145,8 +147,13 @@ class AppointmentsController extends Controller
             $model->app_date=$appointments->app_date;
             $model->app_time=$appointments->app_time;
             $model->price=$appointments->price;
+            $model->rejection_reason=$reason;
             $model->status=1;
             if($model->save()){
+                $appointments->cancelled=2;
+                 $appointments->save(false);
+                 $paymentVerification->cancelled=2;
+                 $paymentVerification->save(false);
                 return ['response' => 200,'message'=>'Successfully Rejected'];
             }else{
                 return ['response' => 400,'message'=>'Sorry something went wrong'];
@@ -160,7 +167,55 @@ class AppointmentsController extends Controller
         
     }
 
-
+    public function actionApproveRepayment(){
+         $this->layout = FALSE;
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $post = Yii::$app->request->post();
+        $appid = $post['appid'];
+        $appointments=Appointments::find()->where(['id'=>$appid])->one(); 
+         if(!empty($appointments)){
+         $paymentVerification=PaymentVerification::find()->where(['booking_id'=>$appointments->booking_id])->one();
+         if(!empty($paymentVerification)){
+           $model=new Refund();
+            $api = new Api('rzp_test_bTrHANOgDU4a8o','kIgswUqnhz1iGTA38M5hiZSN');
+            $refund = $api->refund->create(array('payment_id' => $paymentVerification->razorpay_payment_id));
+            
+            if(!empty($refund)){
+                
+                $model->razorpay_payment_id=$paymentVerification->razorpay_payment_id;
+                $model->razorpay_order_id=$paymentVerification->razorpay_order_id;
+                $model->booking_id=$paymentVerification->booking_id;
+                $model->patient_id=$appointments->patient_id;
+                $model->doctor_id=$appointments->doctor_id;
+                $model->investigation_id=$appointments->investigation_id;
+                $model->hospital_clinic_id=$appointments->hospital_clinic_id;
+                $model->app_date=$appointments->app_date;
+                $model->app_time=$appointments->app_time;
+                $model->price=$appointments->price;
+                $model->rejection_reason='';
+                $model->razorpay_refund_id=$refund['id'];
+                $model->status=2;
+                if($model->save()){
+                    $appointments->cancelled=4;
+                     $appointments->save(false);
+                     $paymentVerification->cancelled=4;
+                     $paymentVerification->save(false);
+                    return ['response' => 200,'message'=>'Successfully Rejected'];
+                }else{
+                    return ['response' => 400,'message'=>'Sorry something went wrong'];
+                }
+            }else{
+                    return ['response' => 400,'message'=>'Sorry something went wrong'];
+            }
+         }else{
+            return ['response' => 400,'message'=>'Sorry something went wrong'];
+         }
+        }else{
+            return ['response' => 300,'message'=>'Appointment not found'];    
+        }
+        
+        
+    }
 
 
 

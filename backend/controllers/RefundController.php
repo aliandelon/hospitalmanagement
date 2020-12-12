@@ -44,6 +44,30 @@ class RefundController extends Controller
         ]);
     }
 
+
+      public function actionRejectRefund()
+    {
+        $searchModel = new RefundSearch();
+        $dataProvider = $searchModel->rejectrefund(Yii::$app->request->queryParams);
+
+        return $this->render('reject-refund', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+      public function actionApprovedRefund()
+    {
+        $searchModel = new RefundSearch();
+        $dataProvider = $searchModel->approverefund(Yii::$app->request->queryParams);
+
+        return $this->render('approved-refund', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+
     /**
      * Displays a single Refund model.
      * @param integer $id
