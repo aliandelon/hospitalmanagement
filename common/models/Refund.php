@@ -20,6 +20,7 @@ use Yii;
  * @property string $app_time
  * @property string $price
  * @property integer $status
+ * @property string $rejection_reason
  */
 class Refund extends \yii\db\ActiveRecord
 {
@@ -40,7 +41,7 @@ class Refund extends \yii\db\ActiveRecord
         return [
             [[ 'razorpay_payment_id', 'razorpay_order_id', 'booking_id', 'patient_id', 'hospital_clinic_id', 'app_date', 'app_time', 'status'], 'required'],
             [['booking_id', 'patient_id', 'doctor_id', 'investigation_id', 'hospital_clinic_id', 'status'], 'integer'],
-            [['app_date', 'app_time'], 'safe'],
+            [['app_date', 'app_time','rejection_reason'], 'safe'],
             [['price'], 'number'],
             [['razorpay_refund_id', 'razorpay_payment_id', 'razorpay_order_id'], 'string', 'max' => 255],
         ];
@@ -65,6 +66,7 @@ class Refund extends \yii\db\ActiveRecord
             'app_time' => 'App Time',
             'price' => 'Price',
             'status' => 'Status',
+            'rejection_reason'=>'Reason for rejuction',
         ];
     }
 }
