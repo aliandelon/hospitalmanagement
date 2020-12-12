@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
+use Razorpay\Api\Api;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -31,7 +32,7 @@ class SiteController extends Controller {
                         'class' => AccessControl::className(),
                         'rules' => [
                             [
-                                'actions' => ['login', 'error'],
+                                'actions' => ['login', 'error','test-razorpay'],
                                 'allow' => true,
                             ],
                             [
@@ -77,12 +78,14 @@ class SiteController extends Controller {
             $last_day_this_month  = date('Y-m-t');
             $params['registeredHospital'] = $model->getUserCountBasedOnTypes('3');
             $params['registeredSubAdmins'] = $model->getUserCountBasedOnTypes('2');
-            $params['registeredDoctors'] = $model1->getDocCount();
+             $params['registeredDoctors'] =0;
+            // $params['registeredDoctors'] = $model1->getDocCount();
             $params['registeredPatients'] =  $model->getUserCountBasedOnTypes('4');
             $params['totalAppointments'] =  $model2->getAppointmentCount();
             $params['totalInvestigations'] =  $model3->getInvestigationCount();
             $params['totalInvestigationsMonthwise'] =  $model3->getInvestigationMonthwiseCount();
-            $params['totalDocAppointmentsMonthwise'] = $model1->getDoctorMonthwiseCount();
+            // $params['totalDocAppointmentsMonthwise'] = $model1->getDoctorMonthwiseCount();
+            $params['totalDocAppointmentsMonthwise']=0;
             $params['totalBanners'] =  $model4->getBannerCount();
             $params['activeHospital'] = $model->getUserCountBasedOnTypes('3','1');
             $params['topRatedHospital'] = $model2->getTopRatedHospitals($first_day_this_month,$last_day_this_month);
@@ -124,6 +127,13 @@ class SiteController extends Controller {
                 return $this->goHome();
         }
 
-       
+       public function actionTestRazorpay(){
+        $api = new Api('rzp_test_bTrHANOgDU4a8o','kIgswUqnhz1iGTA38M5hiZSN');
+        // $payment  = $api->payment->fetch('pay_G6I2ItLH99m3gW');
+        $refund = $api->refund->create(array('payment_id' => 'pay_G6I2ItLH99m3gW'));
+        echo '<pre>';
+        print_r($refund);exit;
+        // $api = new Api($api_key, $api_secret);
+       }    
 
 }
