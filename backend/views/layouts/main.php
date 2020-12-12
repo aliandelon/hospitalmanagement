@@ -93,7 +93,26 @@ DashboardAsset::register($this);
                                     'url' => ['patient-details/'],
                                     ],
 
-                                  
+                                   
+
+
+
+                            ['label' => '<span class="fa fa-medkit icon-wrap"></span>&nbsp;<span class="menulist">Cancellations<i class="fa fa-angle-left pull-right"></i></span>', 
+                                    'url' => ['#'],
+                                        'template' => '<a href="{url}" >{label}</a>',
+                                        'items' => [ 
+
+                                    ['label' => '<span class="fa fa-sitemap" title="Create Investigations"></span>&nbsp;<span class="menulist">Cancellation Requests</span>', 'url' => ['/appointments/index']],
+                                    
+                                    ['label' => '<span class="fa fa-sitemap" title="List Investigations"></span>&nbsp;<span class="menulist">List Investigations</span> ', 'url' => ['/investigations/index']],
+                                    
+                                ],], 
+
+
+
+
+
+
 
 
 
