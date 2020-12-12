@@ -61,6 +61,7 @@ class DashboardAsset extends AssetBundle {
             'js/calendar/fullcalendar-active.js',
             'js/plugins.js',
             'js/main.js',
+            'https://unpkg.com/sweetalert/dist/sweetalert.min.js',
             // 'js/tawk-chat.js',
         ];
         public $depends = [
