@@ -5,10 +5,12 @@ namespace frontend\controllers;
 use Yii;
 use common\models\Packages;
 use common\models\PackagesSearch;
+use common\models\PackagePayment;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\HospitalClinicDetails;
+use Razorpay\Api\Api;
 /**
  * PackagesController implements the CRUD actions for Packages model.
  */
@@ -132,6 +134,51 @@ class PackagesController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+
+    public function actionRazorpay()
+    {
+        $model = new PackagePayment();
+        // echo 'reach';exit;
+        $api = new Api('rzp_test_bTrHANOgDU4a8o','kIgswUqnhz1iGTA38M5hiZSN');
+        $post = Yii::$app->request->post();
+        $id = $post['payId'];
+
+        // Payments
+        // $payments = $api->payment->all($options); // Returns array of payment objects
+        $payment  = $api->payment->fetch($id); // Returns a particular payment
+
+            $model->payment_id = $payment['id'];
+            $model->entity = $payment['entity'];
+            $model->amount = $payment['amount']/100;
+            $model->currency = $payment['currency'];
+            $model->status = $payment['status'];
+            $model->order_id = $payment['order_id'];
+            $model->invoice_id = $payment['invoice_id'];
+            $model->method = $payment['method'];
+            $model->amount_refunded = $payment['amount_refunded'];
+            $model->refund_status = $payment['refund_status'];
+            $model->description = $payment['description'];
+            $model->card_id = $payment['card_id'];
+            $model->bank = $payment['bank'];
+            $model->wallet = $payment['wallet'];
+            $model->email = $payment['email'];
+            $model->contact = $payment['contact'];
+            $model->fee = $payment['fee']/100;
+            $model->tax = $payment['tax']/100;
+            $model->expiry_date = date('Y-m-d');
+            if($model->save()){
+                return  json_encode($payment);
+            }else{
+                return false;
+            }
+
+        // $payment  = $api->payment->fetch($id)->capture(array('amount'=>'50000')); // Captures a payment
+
+        // To get the payment details
+        // echo $payment->amount;
+        // echo $payment->currency;
     }
 
 }
