@@ -60,16 +60,16 @@ $address = ($selectHospitalId['address']) ? $selectHospitalId['address'] : "";
           <h6></h6>
         </div>
         <div class="modal-body">
-          <p>Payment Type <span style="float:right">Net Banking</span></p>
-          <p>Bank <span style="float:right">SIB</span></p>
-          <p>Mobile <span style="float:right">7189065340</span></p>
-          <p>Email <span style="float:right">test@test.com</span></p>
+          <p>Payment Type <span style="float:right" id='paytype'></span></p>
+          <!-- <p>Bank <span style="float:right">SIB</span></p> -->
+          <p>Mobile <span style="float:right" id='paymobile'></span></p>
+          <p>Email <span style="float:right" id='payemail'></span></p>
         </div>
         <div class="modal-body">
-            <h6>Amount Paid<span style="float:right">500.00</span></h6>
+            <h6>Amount Paid<span style="float:right" id='payamount'></span></h6>
         </div>
          <div class="modal-body">
-            <p>Transaction Id<span style="float:right">12356789023456</span></h6>
+            <p>Payment Id<span style="float:right" id='payid'></span></h6>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-info" data-dismiss="modal">Print</button>
@@ -86,34 +86,56 @@ $address = ($selectHospitalId['address']) ? $selectHospitalId['address'] : "";
 // document.getElementById('rzp-button1').onclick = function(e){
 function test(apiKey,amount,name,description,images,email,mobile,address){
     var options = {
-    "key":apiKey,
-    "amount": amount, 
-    "currency": "INR",
-    "name": name,
-    "description": description,
-    "image": images,
-    "handler": function (response){
-        console.log(response);
-        if(response)
-       $('#modalBtn').click()
-    },
-    "prefill": {
+        "key":'rzp_test_bTrHANOgDU4a8o',
+        "amount": amount, 
+        "currency": "INR",
         "name": name,
-        "email": email,
-        "contact": mobile
-    },
-    "notes": {
-        "address": address
-    },
-    "theme": {
-        "color": "#F37254"
-    }
-};
-
-
-
-
-   var rzp1 = new Razorpay(options);
+        "description": description,
+        "image": images,
+        "handler": function (response){
+            alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            alert(response.razorpay_signature);
+            console.log("My Log",response);
+            if(response){
+                $.ajax({
+                    url:baseurl+'packages/razorpay',
+                    data:{'payId':response.razorpay_payment_id},
+                    type:'POST',
+                    success:function(data){
+                        console.log(data);
+                        $("#payid").html(data.id);
+                        $("#paymobile").html(data.contact);
+                        $("#payemail").html(data.email);
+                        $("#paytype").html(data.entity);
+                        $("#payamount").html(parseFloat(data.amount)/100);
+                    }
+                });
+                $('#modalBtn').click()
+            }
+        },
+        "prefill": {
+            "name": name,
+            "email": email,
+            "contact": mobile
+        },
+        "notes": {
+            "address": address
+        },
+        "theme": {
+            "color": "#F37254"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
     rzp1.open();
     e.preventDefault();
 }
